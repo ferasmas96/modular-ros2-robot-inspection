@@ -1,0 +1,26 @@
+Historical ROS 2 launch log excerpt; inspection only; no simulation started by this task.
+Source log: /home/feras/.ros/log/2026-11-12-11-42-13-800240-DESKTOP-UV9RVE0-8458/launch.log
+1794480134.2194393 [INFO] [gazebo-1]: process started with pid [8461]
+1794480134.2195561 [INFO] [parameter_bridge-2]: process started with pid [8462]
+1794480134.2196155 [INFO] [generate_description-3]: process started with pid [8463]
+1794480134.2895427 [INFO] [generate_description-3]: process has finished cleanly [pid 8463]
+1794480134.2904859 [INFO] [generate_semantic_description-4]: process started with pid [8465]
+1794480136.2912383 [INFO] [generate_semantic_description-4]: process has finished cleanly [pid 8465]
+1794480136.2929580 [INFO] [generate_launch-5]: process started with pid [8634]
+1794480136.3587072 [INFO] [generate_launch-5]: process has finished cleanly [pid 8634]
+1794480136.3598161 [INFO] [generate_param-6]: process started with pid [8636]
+1794480136.4800563 [INFO] [generate_param-6]: process has finished cleanly [pid 8636]
+1794480136.6125357 [INFO] [robot_state_publisher-7]: process started with pid [8674]
+1794480136.6126893 [INFO] [spawner-8]: process started with pid [8675]
+1794480136.6127708 [INFO] [ekf_node-9]: process started with pid [8676]
+1794480136.6128757 [INFO] [marker_server-10]: process started with pid [8677]
+1794480136.6130247 [INFO] [twist_mux-11]: process started with pid [8678]
+1794480136.6130772 [INFO] [joy_linux_node-12]: process started with pid [8679]
+1794480136.6131201 [INFO] [teleop_node-13]: process started with pid [8680]
+1794480136.6131580 [INFO] [parameter_bridge-14]: process started with pid [8681]
+1794480136.6131909 [INFO] [parameter_bridge-15]: process started with pid [8682]
+1794480136.6132212 [INFO] [create-16]: process started with pid [8683]
+1794480136.6601570 [robot_state_publisher-7] [INFO] [1794480136.660061630] [a300_00000.robot_state_publisher]: Robot initialized
+1794480137.0947447 [INFO] [create-16]: process has finished cleanly [pid 8683]
+1794480174.5767205 [INFO] [gazebo-1]: process has finished cleanly [pid 8461]
+1794480178.8011777 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)

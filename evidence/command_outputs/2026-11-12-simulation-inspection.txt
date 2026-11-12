@@ -1,0 +1,115 @@
+Inspection date: 2026-11-12
+Historical shell command (from ~/.bash_history):
+      3 ros2 launch clearpath_gz simulation.launch.py
+      5 source /opt/ros/jazzy/setup.bash
+Launch arguments (read-only --show-args; no simulation started):
+Arguments (pass arguments as '<name>:=<value>'):
+
+    'rviz':
+        Start rviz. Valid choices are: ['true', 'false']
+        (default: 'false')
+
+    'world':
+        Gazebo World. Valid choices are: ['construction', 'office', 'orchard', 'pipeline', 'solar_farm', 'warehouse']
+        (default: 'warehouse')
+
+    'setup_path':
+        Clearpath setup path
+        (default: EnvVar('HOME') + '/clearpath/')
+
+    'use_sim_time':
+        use_sim_time. Valid choices are: ['true', 'false']
+        (default: 'true')
+
+    'x':
+        x component of the robot pose.
+        (default: '0.0')
+
+    'y':
+        y component of the robot pose.
+        (default: '0.0')
+
+    'yaw':
+        yaw component of the robot pose.
+        (default: '0.0')
+
+    'z':
+        z component of the robot pose.
+        (default: '0.3')
+
+    'auto_start':
+        Auto-start Gazebo simulation. Valid choices are: ['true', 'false']
+        (default: 'true')
+
+    'generate':
+        Generate parameters and launch files. Valid choices are: ['true', 'false']
+        (default: 'true')
+Package provenance:
+ros-jazzy-clearpath-gz: /opt/ros/jazzy/share/clearpath_gz/launch/simulation.launch.py
+ros-jazzy-clearpath-gz: /opt/ros/jazzy/share/clearpath_gz/worlds/warehouse.sdf
+Robot configuration:
+Path: /home/feras/clearpath/robot.yaml; not Debian-owned; byte-identical to clearpath_config sample/a300_outline.yaml
+1:serial_number: a300-00000
+9:    namespace: a300_00000
+10:    domain_id: 0
+12:      implementation: rmw_fastrtps_cpp
+18:  controller: ps4
+20:    control: diff_4wd
+22:      front: outdoor
+23:      rear: outdoor
+39:      platform_velocity_controller:
+64:sensors:
+65:  camera: []
+66:  gps: []
+67:  imu: []
+68:  lidar2d: []
+69:  lidar3d: []
+Generated files:
+/home/feras/clearpath/robot.urdf.xacro | modified=2026-11-12 11:42:14.283004943 +0100
+/home/feras/clearpath/platform/launch/platform-service.launch.py | modified=2026-11-12 11:42:16.352980161 +0100
+/home/feras/clearpath/sensors/launch/sensors-service.launch.py | modified=2026-11-12 11:42:16.352873358 +0100
+Teleop/bridge static configuration:
+1011:        <property key="enabled" type="bool">true</property>
+1012:        <property key="visible" type="bool">true</property>
+1071:<plugin filename="Teleop">
+1079:        <property key="enabled" type="bool">true</property>
+1080:        <property key="visible" type="bool">true</property>
+35:    DeclareLaunchArgument('world', default_value='warehouse',
+37:    DeclareLaunchArgument('auto_start', default_value='true',
+40:    DeclareLaunchArgument('setup_path',
+61:    setup_path = LaunchConfiguration('setup_path').perform(context)
+62:    robot_yaml = os.path.join(setup_path, 'robot.yaml')
+66:        topic = f'/{namespace}/cmd_vel' if namespace not in ('', '/') else '/cmd_vel'
+81:    auto_start_option = ''
+82:    auto_start = LaunchConfiguration('auto_start').perform(context)
+83:    if (auto_start == 'true'):
+84:        auto_start_option = ' -r'
+90:            ('gz_args', [LaunchConfiguration('world'),
+92:                         auto_start_option,
+115:            os.path.join(pkg_clearpath_gz, 'worlds') + ':',
+/home/feras/clearpath/platform/launch/platform-service.launch.py:65:                'a300_00000/cmd_vel@geometry_msgs/msg/TwistStamped[gz.msgs.Twist'
+/home/feras/clearpath/platform/launch/platform-service.launch.py:67:                '/model/a300_00000/robot/cmd_vel@geometry_msgs/msg/TwistStamped]gz.msgs.Twist'
+/home/feras/clearpath/platform/launch/platform-service.launch.py:82:                    'platform/cmd_vel'
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:65:    config_twist_mux = [
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:67:        '/twist_mux.yaml'
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:90:    node_twist_mux = Node(
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:91:        package='twist_mux',
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:92:        executable='twist_mux',
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:95:            ('cmd_vel_out', 'platform/cmd_vel'),
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:101:            config_twist_mux,
+/home/feras/clearpath_ws/src/clearpath_common/clearpath_control/launch/teleop_base.launch.py:111:    ld.add_action(node_twist_mux)
+/home/feras/clearpath/platform/config/twist_mux.yaml:2:  twist_mux:
+World:
+3:  <world name='warehouse'>
+4:    <physics type="ode">
+5:      <max_step_size>0.003</max_step_size>
+6:      <real_time_factor>1.0</real_time_factor>
+7:      <real_time_update_rate>1000</real_time_update_rate>
+8:      <gravity>0 0 -9.8</gravity>
+10:    <plugin name='gz::sim::systems::Physics' filename='libgz-sim-physics-system.so'/>
+11:    <plugin name='gz::sim::systems::UserCommands' filename='libgz-sim-user-commands-system.so'/>
+12:    <plugin name='gz::sim::systems::SceneBroadcaster' filename='libgz-sim-scene-broadcaster-system.so'/>
+13:    <plugin name="gz::sim::systems::Sensors" filename="libgz-sim-sensors-system.so">
+16:    <plugin name="gz::sim::systems::Imu" filename="libgz-sim-imu-system.so"/>
+17:    <plugin name="gz::sim::systems::NavSat" filename="libgz-sim-navsat-system.so"/>
+44:    <model name='ground_plane'>

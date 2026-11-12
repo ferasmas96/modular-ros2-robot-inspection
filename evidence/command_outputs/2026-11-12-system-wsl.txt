@@ -1,0 +1,26 @@
+Inspection date: 2026-11-12
+$ grep selected /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+VERSION_ID="24.04"
+VERSION_CODENAME=noble
+$ uname -r; uname -m
+6.18.58.1-microsoft-standard-WSL2
+x86_64
+WSL kernel marker:
+microsoft-standard-WSL2
+WSL_DISTRO_NAME=Ubuntu-24.04
+$ wsl.exe --status (UTF-16 decoded)
+Default Distribution: Ubuntu-24.04
+Default Version: 2
+$ wsl.exe --list --verbose (UTF-16 decoded)
+  NAME            STATE           VERSION
+* Ubuntu-24.04    Running         2
+$ nproc; lscpu model
+16
+Model name:                              AMD Ryzen 7 7800X3D 8-Core Processor
+$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           7.3Gi       1.7Gi       5.1Gi       5.4Mi       684Mi       5.6Gi
+Swap:          2.0Gi          0B       2.0Gi
+$ df -h /
+/dev/sdd       1007G  8.1G  948G   1% /

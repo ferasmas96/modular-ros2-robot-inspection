@@ -1,0 +1,13 @@
+Inspection date: 2026-11-12
+clearpath_common: branch=jazzy; commit=ca416eaf752e1db86fb1c725122dc5a33c758170; worktree=clean
+  origin (fetch): https://github.com/clearpathrobotics/clearpath_common.git
+  origin (push): https://github.com/clearpathrobotics/clearpath_common.git
+clearpath_config: branch=jazzy; commit=5b861f8e5b8d9f12ffcc795f79a7e74f348b9e97; worktree=clean
+  origin (fetch): https://github.com/clearpathrobotics/clearpath_config.git
+  origin (push): https://github.com/clearpathrobotics/clearpath_config.git
+clearpath_generator_tests: branch=jazzy; commit=de9a45058a402b500ffba6db27674de6f3ee7ea0; worktree=clean
+  origin (fetch): https://github.com/clearpathrobotics/clearpath_generator_tests.git
+  origin (push): https://github.com/clearpathrobotics/clearpath_generator_tests.git
+clearpath_msgs: branch=jazzy; commit=0014d0afafea2715d1336ff58f2562450b6debda; worktree=clean
+  origin (fetch): https://github.com/clearpathrobotics/clearpath_msgs.git
+  origin (push): https://github.com/clearpathrobotics/clearpath_msgs.git
