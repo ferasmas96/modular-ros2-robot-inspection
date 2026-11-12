@@ -1,0 +1,31 @@
+Command: timeout 8s ros2 topic echo /a300_00000/diagnostics --once
+header:
+  stamp:
+    sec: 88
+    nanosec: 752000000
+  frame_id: ''
+status:
+- level: "\0"
+  name: 'ekf_node: Filter diagnostic updater'
+  message: The robot_localization state estimation node appears to be functioning properly.
+  hardware_id: none
+  values: []
+- level: "\0"
+  name: 'ekf_node: odometry/filtered topic status'
+  message: ''
+  hardware_id: none
+  values:
+  - key: Events in window
+    value: '255'
+  - key: Events since startup
+    value: '4409'
+  - key: Duration of window (s)
+    value: '5.130293'
+  - key: Actual frequency (Hz)
+    value: '49.704762'
+  - key: Minimum acceptable frequency (Hz)
+    value: '43.200000'
+  - key: Maximum acceptable frequency (Hz)
+    value: '57.200000'
+---
+Result: one message received

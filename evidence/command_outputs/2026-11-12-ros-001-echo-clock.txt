@@ -1,0 +1,6 @@
+Command: timeout 8s ros2 topic echo /clock --once
+clock:
+  sec: 86
+  nanosec: 889000000
+---
+Result: one message received

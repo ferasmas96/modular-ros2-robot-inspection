@@ -1,0 +1,16 @@
+Command: source /opt/ros/jazzy/setup.bash; source /home/feras/clearpath_ws/install/setup.bash; timeout 20s ros2 node list
+ROS_DISTRO=jazzy ROS_DOMAIN_ID=<unset> RMW_IMPLEMENTATION=<unset>
+/a300_00000/cmd_vel_bridge
+/a300_00000/controller_manager
+/a300_00000/ekf_node
+/a300_00000/gz_ros_control
+/a300_00000/joint_state_broadcaster
+/a300_00000/joy_node
+/a300_00000/odom_base_tf_bridge
+/a300_00000/platform_velocity_controller
+/a300_00000/robot_state_publisher
+/a300_00000/teleop_twist_joy_node
+/a300_00000/transform_listener_impl_59f17541eeb0
+/a300_00000/twist_mux
+/a300_00000/twist_server_node
+/clock_bridge

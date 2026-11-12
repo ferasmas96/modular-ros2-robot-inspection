@@ -1,0 +1,366 @@
+
+### ros2 node info /a300_00000/cmd_vel_bridge
+/a300_00000/cmd_vel_bridge
+  Subscribers:
+    /a300_00000/platform/cmd_vel: geometry_msgs/msg/TwistStamped
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/cmd_vel: geometry_msgs/msg/TwistStamped
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/cmd_vel_bridge/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/cmd_vel_bridge/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/cmd_vel_bridge/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/cmd_vel_bridge/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/cmd_vel_bridge/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/cmd_vel_bridge/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/cmd_vel_bridge/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/ekf_node
+/a300_00000/ekf_node
+  Subscribers:
+    /a300_00000/platform/odom: nav_msgs/msg/Odometry
+    /a300_00000/set_pose: geometry_msgs/msg/PoseWithCovarianceStamped
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/diagnostics: diagnostic_msgs/msg/DiagnosticArray
+    /a300_00000/platform/odom/filtered: nav_msgs/msg/Odometry
+    /a300_00000/tf: tf2_msgs/msg/TFMessage
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/ekf_node/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/ekf_node/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/ekf_node/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/ekf_node/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/ekf_node/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/ekf_node/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/ekf_node/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+    /a300_00000/enable: std_srvs/srv/Empty
+    /a300_00000/reset: std_srvs/srv/Empty
+    /a300_00000/set_pose: robot_localization/srv/SetPose
+    /a300_00000/toggle: robot_localization/srv/ToggleFilterProcessing
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/gz_ros_control
+/a300_00000/gz_ros_control
+  Subscribers:
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/gz_ros_control/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/gz_ros_control/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/gz_ros_control/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/gz_ros_control/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/gz_ros_control/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/gz_ros_control/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/gz_ros_control/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/platform_velocity_controller
+/a300_00000/platform_velocity_controller
+  Subscribers:
+    /a300_00000/platform/cmd_vel: geometry_msgs/msg/TwistStamped
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/platform/odom: nav_msgs/msg/Odometry
+    /a300_00000/platform_velocity_controller/cmd_vel_out: geometry_msgs/msg/TwistStamped
+    /a300_00000/platform_velocity_controller/transition_event: lifecycle_msgs/msg/TransitionEvent
+    /a300_00000/tf: tf2_msgs/msg/TFMessage
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/platform_velocity_controller/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/platform_velocity_controller/get_logger_levels: rcl_interfaces/srv/GetLoggerLevels
+    /a300_00000/platform_velocity_controller/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/platform_velocity_controller/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/platform_velocity_controller/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/platform_velocity_controller/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/platform_velocity_controller/set_logger_levels: rcl_interfaces/srv/SetLoggerLevels
+    /a300_00000/platform_velocity_controller/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/platform_velocity_controller/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/robot_state_publisher
+/a300_00000/robot_state_publisher
+  Subscribers:
+    /a300_00000/platform/joint_states: sensor_msgs/msg/JointState
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/robot_description: std_msgs/msg/String
+    /a300_00000/tf: tf2_msgs/msg/TFMessage
+    /a300_00000/tf_static: tf2_msgs/msg/TFMessage
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/robot_state_publisher/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/robot_state_publisher/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/robot_state_publisher/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/robot_state_publisher/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/robot_state_publisher/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/robot_state_publisher/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/robot_state_publisher/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/teleop_twist_joy_node
+/a300_00000/teleop_twist_joy_node
+  Subscribers:
+    /a300_00000/joy_teleop/joy: sensor_msgs/msg/Joy
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/joy_teleop/cmd_vel: geometry_msgs/msg/TwistStamped
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/teleop_twist_joy_node/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/teleop_twist_joy_node/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/teleop_twist_joy_node/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/teleop_twist_joy_node/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/teleop_twist_joy_node/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/teleop_twist_joy_node/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/teleop_twist_joy_node/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/twist_mux
+/a300_00000/twist_mux
+  Subscribers:
+    /a300_00000/cmd_vel: geometry_msgs/msg/TwistStamped
+    /a300_00000/joy_teleop/bt_quality_stop: std_msgs/msg/Bool
+    /a300_00000/joy_teleop/cmd_vel: geometry_msgs/msg/TwistStamped
+    /a300_00000/platform/emergency_stop: std_msgs/msg/Bool
+    /a300_00000/platform/safety_stop: std_msgs/msg/Bool
+    /a300_00000/rc_teleop/cmd_vel: geometry_msgs/msg/TwistStamped
+    /a300_00000/twist_marker_server/cmd_vel: geometry_msgs/msg/TwistStamped
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/diagnostics: diagnostic_msgs/msg/DiagnosticArray
+    /a300_00000/platform/cmd_vel: geometry_msgs/msg/TwistStamped
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/twist_mux/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/twist_mux/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/twist_mux/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/twist_mux/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/twist_mux/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/twist_mux/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/twist_mux/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /clock_bridge
+/clock_bridge
+  Subscribers:
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /clock_bridge/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /clock_bridge/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /clock_bridge/get_parameters: rcl_interfaces/srv/GetParameters
+    /clock_bridge/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /clock_bridge/list_parameters: rcl_interfaces/srv/ListParameters
+    /clock_bridge/set_parameters: rcl_interfaces/srv/SetParameters
+    /clock_bridge/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/controller_manager
+/a300_00000/controller_manager
+  Subscribers:
+    /a300_00000/robot_description: std_msgs/msg/String
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/controller_manager/activity: controller_manager_msgs/msg/ControllerManagerActivity
+    /a300_00000/controller_manager/introspection_data/full: pal_statistics_msgs/msg/Statistics
+    /a300_00000/controller_manager/introspection_data/names: pal_statistics_msgs/msg/StatisticsNames
+    /a300_00000/controller_manager/introspection_data/values: pal_statistics_msgs/msg/StatisticsValues
+    /a300_00000/controller_manager/statistics/full: pal_statistics_msgs/msg/Statistics
+    /a300_00000/controller_manager/statistics/names: pal_statistics_msgs/msg/StatisticsNames
+    /a300_00000/controller_manager/statistics/values: pal_statistics_msgs/msg/StatisticsValues
+    /a300_00000/diagnostics: diagnostic_msgs/msg/DiagnosticArray
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/controller_manager/cleanup_controller: controller_manager_msgs/srv/CleanupController
+    /a300_00000/controller_manager/configure_controller: controller_manager_msgs/srv/ConfigureController
+    /a300_00000/controller_manager/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/controller_manager/get_logger_levels: rcl_interfaces/srv/GetLoggerLevels
+    /a300_00000/controller_manager/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/controller_manager/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/controller_manager/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/controller_manager/list_controller_types: controller_manager_msgs/srv/ListControllerTypes
+    /a300_00000/controller_manager/list_controllers: controller_manager_msgs/srv/ListControllers
+    /a300_00000/controller_manager/list_hardware_components: controller_manager_msgs/srv/ListHardwareComponents
+    /a300_00000/controller_manager/list_hardware_interfaces: controller_manager_msgs/srv/ListHardwareInterfaces
+    /a300_00000/controller_manager/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/controller_manager/load_controller: controller_manager_msgs/srv/LoadController
+    /a300_00000/controller_manager/reload_controller_libraries: controller_manager_msgs/srv/ReloadControllerLibraries
+    /a300_00000/controller_manager/set_hardware_component_state: controller_manager_msgs/srv/SetHardwareComponentState
+    /a300_00000/controller_manager/set_logger_levels: rcl_interfaces/srv/SetLoggerLevels
+    /a300_00000/controller_manager/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/controller_manager/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+    /a300_00000/controller_manager/switch_controller: controller_manager_msgs/srv/SwitchController
+    /a300_00000/controller_manager/unload_controller: controller_manager_msgs/srv/UnloadController
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/joint_state_broadcaster
+/a300_00000/joint_state_broadcaster
+  Subscribers:
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/dynamic_joint_states: control_msgs/msg/DynamicJointState
+    /a300_00000/joint_state_broadcaster/transition_event: lifecycle_msgs/msg/TransitionEvent
+    /a300_00000/platform/joint_states: sensor_msgs/msg/JointState
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/joint_state_broadcaster/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/joint_state_broadcaster/get_logger_levels: rcl_interfaces/srv/GetLoggerLevels
+    /a300_00000/joint_state_broadcaster/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/joint_state_broadcaster/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/joint_state_broadcaster/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/joint_state_broadcaster/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/joint_state_broadcaster/set_logger_levels: rcl_interfaces/srv/SetLoggerLevels
+    /a300_00000/joint_state_broadcaster/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/joint_state_broadcaster/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/joy_node
+/a300_00000/joy_node
+  Subscribers:
+    /a300_00000/joy_teleop/joy/set_feedback: sensor_msgs/msg/JoyFeedbackArray
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/diagnostics: diagnostic_msgs/msg/DiagnosticArray
+    /a300_00000/joy_teleop/joy: sensor_msgs/msg/Joy
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/joy_node/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/joy_node/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/joy_node/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/joy_node/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/joy_node/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/joy_node/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/joy_node/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/odom_base_tf_bridge
+/a300_00000/odom_base_tf_bridge
+  Subscribers:
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/tf: tf2_msgs/msg/TFMessage
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/odom_base_tf_bridge/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/odom_base_tf_bridge/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/odom_base_tf_bridge/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/odom_base_tf_bridge/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/odom_base_tf_bridge/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/odom_base_tf_bridge/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/odom_base_tf_bridge/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+
+### ros2 node info /a300_00000/twist_server_node
+/a300_00000/twist_server_node
+  Subscribers:
+    /a300_00000/twist_marker_server/feedback: visualization_msgs/msg/InteractiveMarkerFeedback
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /a300_00000/twist_marker_server/cmd_vel: geometry_msgs/msg/TwistStamped
+    /a300_00000/twist_marker_server/update: visualization_msgs/msg/InteractiveMarkerUpdate
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/twist_server/get_interactive_markers: visualization_msgs/srv/GetInteractiveMarkers
+    /a300_00000/twist_server_node/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/twist_server_node/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/twist_server_node/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/twist_server_node/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/twist_server_node/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/twist_server_node/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/twist_server_node/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+

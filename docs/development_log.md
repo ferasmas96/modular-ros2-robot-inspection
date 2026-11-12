@@ -32,3 +32,14 @@
 - **Verification results:** PASS — inspected launch/config/world, successful runtime world startup, robot entity creation, controller activation, visible Gazebo window, and user-confirmed keyboard control. NOT TESTED — topics, odometry, TF, RViz2, and sensors. All four nested source repositories remained clean and generated setup-file timestamps were unchanged.
 - **Problems encountered:** The PS4 joystick device `/dev/input/ps4` was unavailable; this was separate from the working GUI keyboard path. Screenshot capture failed with an X11 `XGetImage` error. The controller reported a 0.02 s update period versus the 0.003 s Gazebo period. Gazebo also required SIGTERM escalation after not exiting within 5 seconds of SIGINT; remaining processes were stopped by their recorded PIDs. No configuration was changed.
 - **Outstanding tasks:** Task 4 — inspect ROS 2 communication, velocity/odometry interfaces, and TF; RViz2 and sensor integration remain untested.
+
+## 2026-11-12 — ROS-001 — ROS 2 Communication Inspection
+
+- **Date:** 2026-11-12
+- **Task ID:** ROS-001
+- **Objective:** Inspect the running Husky A300 simulation's ROS 2 nodes, topics, endpoint relationships, QoS, and basic message flow.
+- **Actions performed:** Verified Jazzy and the workspace overlay in temporary sourced shells; recorded unset `ROS_DOMAIN_ID` and `RMW_IMPLEMENTATION`. After user approval, launched the existing simulation with `generate:=false`, discovered nodes/topics, inspected key node and topic endpoint information, received bounded one-message samples for clock, joint states, odometry, and diagnostics, and—at the user's request—observed a keyboard-generated velocity message. Stopped the simulation and cleaned up its remaining Gazebo processes.
+- **Files updated:** Modified `docs/03_ros2_communication.md` and this log. Created date-prefixed node/topic lists, node/topic details, one-message command outputs, and a concise runtime log excerpt under `evidence/`.
+- **Verification results:** PASS — 14 ROS 2 nodes and 34 topics discovered; basic clock, joint-state, odometry, diagnostics, and keyboard velocity communication observed. NOT TESTED — TF correctness, sensor streams/accuracy, SLAM, navigation, and gamepad data.
+- **Problems encountered:** The PS4 device `/dev/input/ps4` was unavailable. Several configured mux inputs had no publisher in the runtime graph. Gazebo required SIGTERM escalation after the SIGINT shutdown timeout; all remaining processes were stopped by their recorded PIDs.
+- **Remaining tasks:** Task 5 — inspect TF transformations; Task 8 — inspect sensor integration. Investigate the currently unconnected command/safety interfaces if required by later system design.
