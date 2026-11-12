@@ -1,0 +1,41 @@
+# ROS 2 workspace build artifacts
+/build/
+/install/
+/log/
+
+# Third-party repositories managed by dependencies.repos
+/src/clearpath_common/
+/src/clearpath_config/
+/src/clearpath_generator_tests/
+/src/clearpath_msgs/
+
+# Temporary and editor files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Large recordings and datasets
+*.bag/
+*.mcap
+*.db3
+*.sqlite3
+rosbag2_*/
+/recordings/
+/datasets/
+
+# Credentials and private keys
+.env
+.env.*
+!.env.example
+**/credentials.*
+**/secrets.*
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/id_rsa
+**/id_ed25519
