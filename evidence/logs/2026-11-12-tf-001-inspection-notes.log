@@ -1,0 +1,7 @@
+TF-001 inspection notes
+
+- The simulation publishes `/a300_00000/tf` and `/a300_00000/tf_static`; unremapped root-namespace `tf2_echo`/`view_frames` queries initially found no frames. Explicit remaps to the namespaced topics produced a populated tree and successful transform queries.
+- `ros2 topic echo --once /a300_00000/tf_static --qos-durability transient_local` ended at the 8-second timeout without a message. The live topic info showed a transient-local publisher/subscriber; `tf2_echo` resolved the fixed base_link-to-base_footprint transform and `view_frames` included fixed links. The direct echo discrepancy was not diagnosed.
+- `tf2_echo` initially reported invalid frames while waiting for the first transform; it subsequently returned transforms with advancing simulation timestamps.
+- The bounded `ros2 topic hz` commands ended at their timeout after reporting rates. This was expected bounded inspection, not a publication failure.
+- During shutdown, Gazebo did not exit within 5 seconds after SIGINT; launch escalated to SIGTERM. Remaining processes were stopped by their recorded PIDs and confirmed absent.

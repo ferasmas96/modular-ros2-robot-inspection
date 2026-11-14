@@ -1,0 +1,117 @@
+$ timeout 8s ros2 topic echo /clock --once
+A message was lost!!!
+	total count change:1
+	total count: 1---
+A message was lost!!!
+	total count change:1
+	total count: 2---
+A message was lost!!!
+	total count change:1
+	total count: 3---
+clock:
+  sec: 82
+  nanosec: 752000000
+---
+\n$ timeout 8s ros2 topic echo /a300_00000/platform/odom --once
+header:
+  stamp:
+    sec: 85
+    nanosec: 344000000
+  frame_id: odom
+child_frame_id: base_link
+pose:
+  pose:
+    position:
+      x: 0.9313443152212943
+      y: 2.3115184877545545
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.11107035065467374
+      w: 0.993812546311148
+  covariance:
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.01
+twist:
+  twist:
+    linear:
+      x: -0.9999999999936808
+      y: 0.0
+      z: 0.0
+    angular:
+      x: 0.0
+      y: 0.0
+      z: -7.605467167067746e-16
+  covariance:
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.001
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.01
+---

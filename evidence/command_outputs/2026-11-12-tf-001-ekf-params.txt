@@ -1,0 +1,33 @@
+
+Command: ros2 param get /a300_00000/ekf_node frequency
+Double value is: 50.0
+
+Command: ros2 param get /a300_00000/ekf_node two_d_mode
+Boolean value is: True
+
+Command: ros2 param get /a300_00000/ekf_node use_sim_time
+Boolean value is: True
+
+Command: ros2 param get /a300_00000/ekf_node odom_frame
+String value is: odom
+
+Command: ros2 param get /a300_00000/ekf_node base_link_frame
+String value is: base_link
+
+Command: ros2 param get /a300_00000/ekf_node world_frame
+String value is: odom
+
+Command: ros2 param get /a300_00000/ekf_node publish_tf
+Boolean value is: True
+
+Command: ros2 param get /a300_00000/ekf_node odom0
+String value is: platform/odom
+
+Command: ros2 param get /a300_00000/ekf_node odom0_config
+Boolean values are: [True, True, False, False, False, True, True, True, False, False, False, True, False, False, False]
+
+Command: ros2 param get /a300_00000/ekf_node odom0_differential
+Boolean value is: False
+
+Command: ros2 param get /a300_00000/ekf_node odom0_queue_size
+Integer value is: 10

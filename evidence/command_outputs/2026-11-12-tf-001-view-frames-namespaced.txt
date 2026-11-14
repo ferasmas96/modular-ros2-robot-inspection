@@ -1,0 +1,9 @@
+Command: ROS_NAMESPACE=/a300_00000 timeout 20s ros2 run tf2_tools view_frames
+[INFO] [1794491502.416246369] [view_frames]: Listening to tf data for 5.0 seconds...
+[INFO] [1794491507.438921684] [view_frames]: Generating graph...
+[INFO] [1794491507.443551549] [view_frames]: Result:tf2_msgs.srv.FrameGraph_Response(frame_yaml='[]')
+[INFO] [1794491507.444202320] [view_frames]: Exporting graph in frames_2026-11-12_14.51.47.pdf file...
+view_frames exit status: 0
+Generated files:
+frames_2026-11-12_14.51.47.pdf (6021 bytes)
+frames_2026-11-12_14.51.47.gv (35 bytes)

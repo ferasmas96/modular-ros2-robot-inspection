@@ -1,0 +1,16 @@
+$ timeout 45s ros2 topic echo --once /a300_00000/cmd_vel
+header:
+  stamp:
+    sec: 0
+    nanosec: 0
+  frame_id: ''
+twist:
+  linear:
+    x: 1.0
+    y: 0.0
+    z: 0.0
+  angular:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+---

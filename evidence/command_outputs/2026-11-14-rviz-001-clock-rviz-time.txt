@@ -1,0 +1,16 @@
+$ timeout 5s ros2 param get /a300_00000/rviz2 use_sim_time
+Boolean value is: True
+\n$ timeout 5s ros2 topic echo /clock --once
+A message was lost!!!
+	total count change:1
+	total count: 1---
+A message was lost!!!
+	total count change:1
+	total count: 2---
+A message was lost!!!
+	total count change:1
+	total count: 3---
+clock:
+  sec: 343
+  nanosec: 983000000
+---

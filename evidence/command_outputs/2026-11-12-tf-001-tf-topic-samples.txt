@@ -1,0 +1,70 @@
+Command: timeout 8s ros2 topic echo --once /a300_00000/tf
+Some, but not all, publishers are offering QoSDurabilityPolicy.TRANSIENT_LOCAL. Falling back to QoSDurabilityPolicy.VOLATILE as it will connect to all publishers
+transforms:
+- header:
+    stamp:
+      sec: 184
+      nanosec: 590000000
+    frame_id: front_left_motor_mount
+  child_frame_id: front_left_wheel_link
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    rotation:
+      x: 0.0
+      y: -8.522415010257968e-17
+      z: 0.0
+      w: 1.0
+- header:
+    stamp:
+      sec: 184
+      nanosec: 590000000
+    frame_id: front_right_motor_mount
+  child_frame_id: front_right_wheel_link
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    rotation:
+      x: 0.0
+      y: 3.0337343464179696e-17
+      z: 0.0
+      w: 1.0
+- header:
+    stamp:
+      sec: 184
+      nanosec: 590000000
+    frame_id: rear_left_motor_mount
+  child_frame_id: rear_left_wheel_link
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    rotation:
+      x: 0.0
+      y: 1.132142874542281e-17
+      z: 0.0
+      w: 1.0
+- header:
+    stamp:
+      sec: 184
+      nanosec: 590000000
+    frame_id: rear_right_motor_mount
+  child_frame_id: rear_right_wheel_link
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    rotation:
+      x: 0.0
+      y: -3.333881448467704e-17
+      z: 0.0
+      w: 1.0
+---
+
+Command: timeout 8s ros2 topic echo --qos-durability transient_local --once /a300_00000/tf_static

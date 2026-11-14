@@ -1,0 +1,33 @@
+\n$ timeout 5s gz topic -i -t /clock
+Publishers [Address, Message Type]:
+  tcp://172.25.211.85:41205, gz.msgs.Clock
+Subscribers [Address, Message Type]:
+  tcp://172.25.211.85:37709, gz.msgs.Clock
+\n$ timeout 5s gz topic -i -t /world/warehouse/clock
+Publishers [Address, Message Type]:
+  tcp://172.25.211.85:41205, gz.msgs.Clock
+No subscribers on topic [/world/warehouse/clock]
+\n$ timeout 5s gz topic -i -t /a300_00000/cmd_vel
+Publishers [Address, Message Type]:
+  tcp://172.25.211.85:39415, gz.msgs.Twist
+Subscribers [Address, Message Type]:
+  tcp://172.25.211.85:42867, gz.msgs.Twist
+\n$ timeout 5s gz topic -i -t /model/a300_00000/robot/cmd_vel
+Publishers [Address, Message Type]:
+  tcp://172.25.211.85:42867, gz.msgs.Twist
+No subscribers on topic [/model/a300_00000/robot/cmd_vel]
+\n$ timeout 5s gz topic -i -t /model/a300_00000/robot/pose
+Publishers [Address, Message Type]:
+  tcp://172.25.211.85:41205, gz.msgs.Pose_V
+No subscribers on topic [/model/a300_00000/robot/pose]
+\n$ timeout 5s gz topic -i -t /model/a300_00000/robot/tf
+No publishers on topic [/model/a300_00000/robot/tf]
+Subscribers [Address, Message Type]:
+  tcp://172.25.211.85:43065, gz.msgs.Pose_V
+\n$ timeout 5s gz topic -i -t /world/warehouse/stats
+Publishers [Address, Message Type]:
+  tcp://172.25.211.85:41205, gz.msgs.WorldStatistics
+Subscribers [Address, Message Type]:
+  tcp://172.25.211.85:39415, gz.msgs.WorldStatistics
+  tcp://172.25.211.85:39415, gz.msgs.WorldStatistics
+  tcp://172.25.211.85:39415, gz.msgs.WorldStatistics

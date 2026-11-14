@@ -1,0 +1,17 @@
+RVIZ-001 selected startup/runtime events (2026-11-14)
+32:[joy_linux_node-8] [ERROR] [1794666582.998574303] [a300_00000.joy_node]: Couldn't open joystick /dev/input/ps4. Will retry every second.
+34:[robot_state_publisher-3] [INFO] [1794666583.006431151] [a300_00000.robot_state_publisher]: Robot initialized
+86:[create-12] [INFO] [1794666587.271788985] [a300_00000.ros_gz_sim]: Entity creation successful.
+88:[gazebo-1] [Msg] Detected Wayland. Setting Qt to use the xcb plugin: 'QT_QPA_PLATFORM=xcb'.
+315:[gazebo-1] [INFO] [1794666590.736432834] [a300_00000.controller_manager]: Successfully switched controllers!
+324:[gazebo-1] [INFO] [1794666590.841193868] [a300_00000.controller_manager]: Successfully switched controllers!
+698:[ekf_node-5] [ERROR] [1794666976.117412220] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.11100000000000000144seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+699:[ekf_node-5] [ERROR] [1794666976.117720940] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.057000000000000002054seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+700:[ekf_node-5] [ERROR] [1794666976.117909268] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.042000000000000002609seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+1058:[ekf_node-5] [ERROR] [1794667389.466150595] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.14999999999999999445seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+1059:[ekf_node-5] [ERROR] [1794667389.468015117] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.021000000000000001305seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+1060:[ekf_node-5] [ERROR] [1794667389.468141931] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.02999999999999999889seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+1061:[ekf_node-5] [ERROR] [1794667389.468248770] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.0240000000000000005seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+1062:[ekf_node-5] [ERROR] [1794667389.468348790] [a300_00000.ekf_node]: Failed to meet update rate! Took 0.0240000000000000005seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+1398:[ERROR] [gazebo-1]: process[gazebo-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+1400:[ERROR] [gazebo-1]: process has died [pid 1764, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim warehouse.sdf -r -v 4 --gui-config /tmp/tmpryotcciw.config --force-version 8'].

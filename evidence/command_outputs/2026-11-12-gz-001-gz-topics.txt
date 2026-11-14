@@ -1,0 +1,20 @@
+$ source /opt/ros/jazzy/setup.bash && timeout 10s gz topic -l
+/a300_00000/cmd_vel
+/clock
+/gazebo/resource_paths
+/gui/camera/pose
+/gui/currently_tracked
+/gui/track
+/model/a300_00000/robot/cmd_vel
+/model/a300_00000/robot/pose
+/stats
+/world/warehouse/clock
+/world/warehouse/dynamic_pose/info
+/world/warehouse/pose/info
+/world/warehouse/scene/deletion
+/world/warehouse/scene/info
+/world/warehouse/state
+/world/warehouse/stats
+/model/a300_00000/robot/tf
+/world/warehouse/light_config
+/world/warehouse/material_color

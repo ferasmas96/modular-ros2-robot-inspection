@@ -1,0 +1,9 @@
+21:[joy_linux_node-8] [ERROR] [1794492628.696661620] [a300_00000.joy_node]: Couldn't open joystick /dev/input/ps4. Will retry every second.
+35:[parameter_bridge-2] [INFO] [1794492628.729332548] [clock_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+36:[parameter_bridge-11] [INFO] [1794492628.732798827] [a300_00000.odom_base_tf_bridge]: Creating GZ->ROS Bridge: [/model/a300_00000/robot/tf (gz.msgs.Pose_V) -> /model/a300_00000/robot/tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+37:[parameter_bridge-10] [INFO] [1794492628.733141387] [a300_00000.cmd_vel_bridge]: Creating GZ->ROS Bridge: [a300_00000/cmd_vel (gz.msgs.Twist) -> a300_00000/cmd_vel (geometry_msgs/msg/TwistStamped)] (Lazy 0)
+38:[parameter_bridge-10] [INFO] [1794492628.734665650] [a300_00000.cmd_vel_bridge]: Creating ROS->GZ Bridge: [/model/a300_00000/robot/cmd_vel (geometry_msgs/msg/TwistStamped) -> /model/a300_00000/robot/cmd_vel (gz.msgs.Twist)] (Lazy 0)
+86:[create-12] [INFO] [1794492629.888232111] [a300_00000.ros_gz_sim]: Entity creation successful.
+313:[gazebo-1] [WARN] [1794492633.490350483] [a300_00000.gz_ros_control]:  Desired controller update period (0.02 s) is slower than the gazebo simulation period (0.003 s).
+315:[gazebo-1] [INFO] [1794492633.504638847] [a300_00000.controller_manager]: Successfully switched controllers!
+324:[gazebo-1] [INFO] [1794492633.609528658] [a300_00000.controller_manager]: Successfully switched controllers!

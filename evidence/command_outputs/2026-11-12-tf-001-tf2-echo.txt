@@ -1,0 +1,7 @@
+Command: timeout 8s ros2 run tf2_ros tf2_echo odom base_link
+[INFO] [1794491426.307347727] [tf2_echo]: Waiting for transform odom ->  base_link: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1794491428.290585117] [tf2_echo]: Waiting for transform odom ->  base_link: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1794491429.290646114] [tf2_echo]: Waiting for transform odom ->  base_link: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1794491431.290604059] [tf2_echo]: Waiting for transform odom ->  base_link: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1794491432.290715785] [tf2_echo]: Waiting for transform odom ->  base_link: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1794491434.082763542] [rclcpp]: signal_handler(SIGINT/SIGTERM)

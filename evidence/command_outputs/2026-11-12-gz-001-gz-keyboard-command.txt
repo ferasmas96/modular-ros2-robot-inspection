@@ -1,0 +1,7 @@
+$ timeout 45s gz topic -e -t /a300_00000/cmd_vel -n 1
+linear {
+  x: 1
+}
+angular {
+}
+

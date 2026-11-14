@@ -1,0 +1,12 @@
+\n$ timeout 5s ros2 param get /a300_00000/ekf_node use_sim_time
+Boolean value is: True
+\n$ timeout 5s ros2 param get /a300_00000/robot_state_publisher use_sim_time
+Boolean value is: True
+\n$ timeout 5s ros2 param get /a300_00000/controller_manager use_sim_time
+Boolean value is: True
+\n$ timeout 5s ros2 param get /a300_00000/platform_velocity_controller use_sim_time
+Boolean value is: True
+\n$ timeout 5s ros2 param get /a300_00000/cmd_vel_bridge use_sim_time
+Boolean value is: True
+\n$ timeout 5s ros2 param get /a300_00000/odom_base_tf_bridge use_sim_time
+Boolean value is: True

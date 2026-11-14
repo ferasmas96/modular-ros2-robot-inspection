@@ -1,0 +1,31 @@
+
+Command: timeout 8s ros2 topic hz /a300_00000/platform/odom
+average rate: 47.116
+	min: 0.018s max: 0.025s std dev: 0.00123s window: 49
+average rate: 47.133
+	min: 0.012s max: 0.030s std dev: 0.00189s window: 97
+average rate: 47.291
+	min: 0.012s max: 0.030s std dev: 0.00203s window: 145
+average rate: 47.371
+	min: 0.012s max: 0.030s std dev: 0.00196s window: 193
+average rate: 44.490
+	min: 0.012s max: 0.346s std dev: 0.02126s window: 235
+average rate: 45.078
+	min: 0.011s max: 0.346s std dev: 0.01937s window: 284
+Rate command ended with status 124 (bounded timeout expected)
+
+Command: timeout 8s ros2 topic hz /a300_00000/platform/odom/filtered
+WARNING: topic [/a300_00000/platform/odom/filtered] does not appear to be published yet
+average rate: 47.888
+	min: 0.017s max: 0.042s std dev: 0.00440s window: 49
+average rate: 47.962
+	min: 0.015s max: 0.042s std dev: 0.00458s window: 98
+average rate: 43.719
+	min: 0.000s max: 0.358s std dev: 0.02975s window: 134
+average rate: 44.819
+	min: 0.000s max: 0.358s std dev: 0.02557s window: 183
+average rate: 45.267
+	min: 0.000s max: 0.358s std dev: 0.02292s window: 231
+average rate: 44.222
+	min: 0.000s max: 0.358s std dev: 0.02792s window: 271
+Rate command ended with status 124 (bounded timeout expected)

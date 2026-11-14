@@ -1,0 +1,15 @@
+$ timeout 45s gz topic -e -t /model/a300_00000/robot/cmd_vel -n 1
+header {
+  stamp {
+  }
+  data {
+    key: "frame_id"
+    value: ""
+  }
+}
+linear {
+  x: 1
+}
+angular {
+}
+

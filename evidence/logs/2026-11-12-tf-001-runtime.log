@@ -1,0 +1,45 @@
+TF-001 runtime launch excerpt; existing simulation launched with user approval and generate:=false.
+[INFO] [gazebo-1]: process started with pid [45073]
+[INFO] [parameter_bridge-2]: process started with pid [45074]
+[INFO] [robot_state_publisher-3]: process started with pid [45075]
+[INFO] [spawner-4]: process started with pid [45076]
+[INFO] [ekf_node-5]: process started with pid [45078]
+[INFO] [marker_server-6]: process started with pid [45079]
+[INFO] [twist_mux-7]: process started with pid [45080]
+[INFO] [joy_linux_node-8]: process started with pid [45085]
+[INFO] [teleop_node-9]: process started with pid [45088]
+[INFO] [parameter_bridge-10]: process started with pid [45089]
+[INFO] [parameter_bridge-11]: process started with pid [45090]
+[INFO] [create-12]: process started with pid [45091]
+[joy_linux_node-8] [ERROR] [1794491363.484156736] [a300_00000.joy_node]: Couldn't open joystick /dev/input/ps4. Will retry every second.
+[robot_state_publisher-3] [INFO] [1794491363.492794970] [a300_00000.robot_state_publisher]: Robot initialized
+[create-12] [INFO] [1794491364.792273730] [a300_00000.ros_gz_sim]: Entity creation successful.
+[INFO] [create-12]: process has finished cleanly [pid 45091]
+[gazebo-1] [Dbg] [UserCommands.cc:1093] Created entity [136] named [a300_00000/robot]
+[gazebo-1] [WARN] [1794491368.406808769] [a300_00000.gz_ros_control]:  Desired controller update period (0.02 s) is slower than the gazebo simulation period (0.003 s).
+[gazebo-1] [INFO] [1794491368.420195151] [a300_00000.controller_manager]: Successfully switched controllers!
+[gazebo-1] [INFO] [1794491368.524992900] [a300_00000.controller_manager]: Successfully switched controllers!
+[INFO] [spawner-4]: process has finished cleanly [pid 45076]
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [parameter_bridge-11]: sending signal 'SIGINT' to process[parameter_bridge-11]
+[INFO] [parameter_bridge-10]: sending signal 'SIGINT' to process[parameter_bridge-10]
+[INFO] [teleop_node-9]: sending signal 'SIGINT' to process[teleop_node-9]
+[INFO] [joy_linux_node-8]: sending signal 'SIGINT' to process[joy_linux_node-8]
+[INFO] [twist_mux-7]: sending signal 'SIGINT' to process[twist_mux-7]
+[INFO] [marker_server-6]: sending signal 'SIGINT' to process[marker_server-6]
+[INFO] [ekf_node-5]: sending signal 'SIGINT' to process[ekf_node-5]
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[INFO] [parameter_bridge-10]: process has finished cleanly [pid 45089]
+[INFO] [parameter_bridge-11]: process has finished cleanly [pid 45090]
+[INFO] [teleop_node-9]: process has finished cleanly [pid 45088]
+[INFO] [twist_mux-7]: process has finished cleanly [pid 45080]
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 45074]
+[INFO] [joy_linux_node-8]: process has finished cleanly [pid 45085]
+[INFO] [marker_server-6]: process has finished cleanly [pid 45079]
+[INFO] [robot_state_publisher-3]: process has finished cleanly [pid 45075]
+[INFO] [ekf_node-5]: process has finished cleanly [pid 45078]
+[ERROR] [gazebo-1]: process[gazebo-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [gazebo-1]: sending signal 'SIGTERM' to process[gazebo-1]
+[ERROR] [gazebo-1]: process has died [pid 45073, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim warehouse.sdf -r -v 4 --gui-config /tmp/tmp9a2aavtq.config --force-version 8'].

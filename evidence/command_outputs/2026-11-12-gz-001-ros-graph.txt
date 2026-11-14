@@ -1,0 +1,445 @@
+$ timeout 10s ros2 node list
+/a300_00000/cmd_vel_bridge
+/a300_00000/controller_manager
+/a300_00000/ekf_node
+/a300_00000/gz_ros_control
+/a300_00000/joint_state_broadcaster
+/a300_00000/joy_node
+/a300_00000/odom_base_tf_bridge
+/a300_00000/platform_velocity_controller
+/a300_00000/robot_state_publisher
+/a300_00000/teleop_twist_joy_node
+/a300_00000/transform_listener_impl_5b71235b03d0
+/a300_00000/twist_mux
+/a300_00000/twist_server_node
+/clock_bridge
+\n$ timeout 10s ros2 topic list -t
+/a300_00000/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/controller_manager/activity [controller_manager_msgs/msg/ControllerManagerActivity]
+/a300_00000/controller_manager/introspection_data/full [pal_statistics_msgs/msg/Statistics]
+/a300_00000/controller_manager/introspection_data/names [pal_statistics_msgs/msg/StatisticsNames]
+/a300_00000/controller_manager/introspection_data/values [pal_statistics_msgs/msg/StatisticsValues]
+/a300_00000/controller_manager/statistics/full [pal_statistics_msgs/msg/Statistics]
+/a300_00000/controller_manager/statistics/names [pal_statistics_msgs/msg/StatisticsNames]
+/a300_00000/controller_manager/statistics/values [pal_statistics_msgs/msg/StatisticsValues]
+/a300_00000/diagnostics [diagnostic_msgs/msg/DiagnosticArray]
+/a300_00000/dynamic_joint_states [control_msgs/msg/DynamicJointState]
+/a300_00000/joint_state_broadcaster/transition_event [lifecycle_msgs/msg/TransitionEvent]
+/a300_00000/joy_teleop/bt_quality_stop [std_msgs/msg/Bool]
+/a300_00000/joy_teleop/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/joy_teleop/joy [sensor_msgs/msg/Joy]
+/a300_00000/joy_teleop/joy/set_feedback [sensor_msgs/msg/JoyFeedbackArray]
+/a300_00000/platform/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/platform/emergency_stop [std_msgs/msg/Bool]
+/a300_00000/platform/joint_states [sensor_msgs/msg/JointState]
+/a300_00000/platform/odom [nav_msgs/msg/Odometry]
+/a300_00000/platform/odom/filtered [nav_msgs/msg/Odometry]
+/a300_00000/platform/safety_stop [std_msgs/msg/Bool]
+/a300_00000/platform_velocity_controller/cmd_vel_out [geometry_msgs/msg/TwistStamped]
+/a300_00000/platform_velocity_controller/transition_event [lifecycle_msgs/msg/TransitionEvent]
+/a300_00000/rc_teleop/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/robot_description [std_msgs/msg/String]
+/a300_00000/set_pose [geometry_msgs/msg/PoseWithCovarianceStamped]
+/a300_00000/tf [tf2_msgs/msg/TFMessage]
+/a300_00000/tf_static [tf2_msgs/msg/TFMessage]
+/a300_00000/twist_marker_server/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/twist_marker_server/feedback [visualization_msgs/msg/InteractiveMarkerFeedback]
+/a300_00000/twist_marker_server/update [visualization_msgs/msg/InteractiveMarkerUpdate]
+/clock [rosgraph_msgs/msg/Clock]
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/rosout [rcl_interfaces/msg/Log]
+\n$ timeout 8s ros2 topic info /clock --verbose
+Type: rosgraph_msgs/msg/Clock
+
+Publisher count: 1
+
+Node name: clock_bridge
+Node namespace: /
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.80.c5.73.a3.00.00.00.00.00.00.14.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 11
+
+Node name: controller_manager
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.3b.c6.94.48.00.00.00.00.00.00.22.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: joint_state_broadcaster
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.3b.c6.94.48.00.00.00.00.00.00.57.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: platform_velocity_controller
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.3b.c6.94.48.00.00.00.00.00.00.70.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: robot_state_publisher
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.81.c5.0b.3c.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: ekf_node
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.84.c5.f4.d6.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: twist_server_node
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.85.c5.65.12.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: twist_mux
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.86.c5.00.7a.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: joy_node
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.87.c5.3c.6b.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: teleop_twist_joy_node
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.8a.c5.32.c3.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: cmd_vel_bridge
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.8b.c5.41.87.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: odom_base_tf_bridge
+Node namespace: /a300_00000
+Topic type: rosgraph_msgs/msg/Clock
+Topic type hash: RIHS01_692f7a66e93a3c83e71765d033b60349ba68023a8c689a79e48078bcb5c58564
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.8c.c5.fe.52.00.00.00.00.00.00.11.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+\n$ timeout 8s ros2 topic info /a300_00000/cmd_vel --verbose
+Type: geometry_msgs/msg/TwistStamped
+
+Publisher count: 1
+
+Node name: cmd_vel_bridge
+Node namespace: /a300_00000
+Topic type: geometry_msgs/msg/TwistStamped
+Topic type hash: RIHS01_5f0fcd4f81d5d06ad9b4c4c63e3ea51b82d6ae4d0558f1d475229b1121db6f64
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.8b.c5.41.87.00.00.00.00.00.00.15.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: twist_mux
+Node namespace: /a300_00000
+Topic type: geometry_msgs/msg/TwistStamped
+Topic type hash: RIHS01_5f0fcd4f81d5d06ad9b4c4c63e3ea51b82d6ae4d0558f1d475229b1121db6f64
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.86.c5.00.7a.00.00.00.00.00.00.15.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+\n$ timeout 8s ros2 topic info /a300_00000/platform/cmd_vel --verbose
+Type: geometry_msgs/msg/TwistStamped
+
+Publisher count: 1
+
+Node name: twist_mux
+Node namespace: /a300_00000
+Topic type: geometry_msgs/msg/TwistStamped
+Topic type hash: RIHS01_5f0fcd4f81d5d06ad9b4c4c63e3ea51b82d6ae4d0558f1d475229b1121db6f64
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.86.c5.00.7a.00.00.00.00.00.00.1c.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 2
+
+Node name: platform_velocity_controller
+Node namespace: /a300_00000
+Topic type: geometry_msgs/msg/TwistStamped
+Topic type hash: RIHS01_5f0fcd4f81d5d06ad9b4c4c63e3ea51b82d6ae4d0558f1d475229b1121db6f64
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.3b.c6.94.48.00.00.00.00.00.00.7a.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: cmd_vel_bridge
+Node namespace: /a300_00000
+Topic type: geometry_msgs/msg/TwistStamped
+Topic type hash: RIHS01_5f0fcd4f81d5d06ad9b4c4c63e3ea51b82d6ae4d0558f1d475229b1121db6f64
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.8b.c5.41.87.00.00.00.00.00.00.16.04
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+\n$ timeout 8s ros2 topic info /a300_00000/platform/odom --verbose
+Type: nav_msgs/msg/Odometry
+
+Publisher count: 1
+
+Node name: platform_velocity_controller
+Node namespace: /a300_00000
+Topic type: nav_msgs/msg/Odometry
+Topic type hash: RIHS01_3cc97dc7fb7502f8714462c526d369e35b603cfc34d946e3f2eda2766dfec6e0
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.3b.c6.94.48.00.00.00.00.00.00.7b.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: ekf_node
+Node namespace: /a300_00000
+Topic type: nav_msgs/msg/Odometry
+Topic type hash: RIHS01_3cc97dc7fb7502f8714462c526d369e35b603cfc34d946e3f2eda2766dfec6e0
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.84.c5.f4.d6.00.00.00.00.00.00.26.04
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+\n$ timeout 8s ros2 topic info /a300_00000/tf --verbose
+Type: tf2_msgs/msg/TFMessage
+
+Publisher count: 4
+
+Node name: platform_velocity_controller
+Node namespace: /a300_00000
+Topic type: tf2_msgs/msg/TFMessage
+Topic type hash: RIHS01_e369d0f05a23ae52508854b66f6aa0437f3449d652e8cbf22d5abe85d020f087
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.3b.c6.94.48.00.00.00.00.00.00.7c.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: robot_state_publisher
+Node namespace: /a300_00000
+Topic type: tf2_msgs/msg/TFMessage
+Topic type hash: RIHS01_e369d0f05a23ae52508854b66f6aa0437f3449d652e8cbf22d5abe85d020f087
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.81.c5.0b.3c.00.00.00.00.00.00.15.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: ekf_node
+Node namespace: /a300_00000
+Topic type: tf2_msgs/msg/TFMessage
+Topic type hash: RIHS01_e369d0f05a23ae52508854b66f6aa0437f3449d652e8cbf22d5abe85d020f087
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.84.c5.f4.d6.00.00.00.00.00.00.1c.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: odom_base_tf_bridge
+Node namespace: /a300_00000
+Topic type: tf2_msgs/msg/TFMessage
+Topic type hash: RIHS01_e369d0f05a23ae52508854b66f6aa0437f3449d652e8cbf22d5abe85d020f087
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.8c.c5.fe.52.00.00.00.00.00.00.15.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: transform_listener_impl_5b71235b03d0
+Node namespace: /a300_00000
+Topic type: tf2_msgs/msg/TFMessage
+Topic type hash: RIHS01_e369d0f05a23ae52508854b66f6aa0437f3449d652e8cbf22d5abe85d020f087
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.84.c5.f4.d6.00.00.00.00.00.00.19.04
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+

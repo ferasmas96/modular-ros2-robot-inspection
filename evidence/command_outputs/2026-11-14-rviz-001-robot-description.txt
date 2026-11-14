@@ -1,0 +1,111 @@
+$ timeout 10s ros2 node list
+/a300_00000/cmd_vel_bridge
+/a300_00000/controller_manager
+/a300_00000/ekf_node
+/a300_00000/gz_ros_control
+/a300_00000/joint_state_broadcaster
+/a300_00000/joy_node
+/a300_00000/odom_base_tf_bridge
+/a300_00000/platform_velocity_controller
+/a300_00000/robot_state_publisher
+/a300_00000/rviz2
+/a300_00000/teleop_twist_joy_node
+/a300_00000/transform_listener_impl_59d301d3ffd0
+/a300_00000/transform_listener_impl_5cb2e77d8680
+/a300_00000/twist_mux
+/a300_00000/twist_server_node
+/clock_bridge
+\n$ timeout 10s ros2 topic list -t
+/a300_00000/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/controller_manager/activity [controller_manager_msgs/msg/ControllerManagerActivity]
+/a300_00000/controller_manager/introspection_data/full [pal_statistics_msgs/msg/Statistics]
+/a300_00000/controller_manager/introspection_data/names [pal_statistics_msgs/msg/StatisticsNames]
+/a300_00000/controller_manager/introspection_data/values [pal_statistics_msgs/msg/StatisticsValues]
+/a300_00000/controller_manager/statistics/full [pal_statistics_msgs/msg/Statistics]
+/a300_00000/controller_manager/statistics/names [pal_statistics_msgs/msg/StatisticsNames]
+/a300_00000/controller_manager/statistics/values [pal_statistics_msgs/msg/StatisticsValues]
+/a300_00000/diagnostics [diagnostic_msgs/msg/DiagnosticArray]
+/a300_00000/dynamic_joint_states [control_msgs/msg/DynamicJointState]
+/a300_00000/joint_state_broadcaster/transition_event [lifecycle_msgs/msg/TransitionEvent]
+/a300_00000/joy_teleop/bt_quality_stop [std_msgs/msg/Bool]
+/a300_00000/joy_teleop/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/joy_teleop/joy [sensor_msgs/msg/Joy]
+/a300_00000/joy_teleop/joy/set_feedback [sensor_msgs/msg/JoyFeedbackArray]
+/a300_00000/platform/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/platform/emergency_stop [std_msgs/msg/Bool]
+/a300_00000/platform/joint_states [sensor_msgs/msg/JointState]
+/a300_00000/platform/odom [nav_msgs/msg/Odometry]
+/a300_00000/platform/odom/filtered [nav_msgs/msg/Odometry]
+/a300_00000/platform/safety_stop [std_msgs/msg/Bool]
+/a300_00000/platform_velocity_controller/cmd_vel_out [geometry_msgs/msg/TwistStamped]
+/a300_00000/platform_velocity_controller/transition_event [lifecycle_msgs/msg/TransitionEvent]
+/a300_00000/rc_teleop/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/robot_description [std_msgs/msg/String]
+/a300_00000/set_pose [geometry_msgs/msg/PoseWithCovarianceStamped]
+/a300_00000/tf [tf2_msgs/msg/TFMessage]
+/a300_00000/tf_static [tf2_msgs/msg/TFMessage]
+/a300_00000/twist_marker_server/cmd_vel [geometry_msgs/msg/TwistStamped]
+/a300_00000/twist_marker_server/feedback [visualization_msgs/msg/InteractiveMarkerFeedback]
+/a300_00000/twist_marker_server/update [visualization_msgs/msg/InteractiveMarkerUpdate]
+/clock [rosgraph_msgs/msg/Clock]
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/rosout [rcl_interfaces/msg/Log]
+\n$ timeout 10s ros2 topic info /a300_00000/robot_description --verbose
+Type: std_msgs/msg/String
+
+Publisher count: 1
+
+Node name: robot_state_publisher
+Node namespace: /a300_00000
+Topic type: std_msgs/msg/String
+Topic type hash: RIHS01_df668c740482bbd48fb39d76a70dfd4bd59db1288021743503259e948f6b1a18
+Endpoint type: PUBLISHER
+GID: 01.0f.3c.f5.e6.06.1e.e5.00.00.00.00.00.00.17.03
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 2
+
+Node name: rviz2
+Node namespace: /a300_00000
+Topic type: std_msgs/msg/String
+Topic type hash: RIHS01_df668c740482bbd48fb39d76a70dfd4bd59db1288021743503259e948f6b1a18
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.04.09.97.89.00.00.00.00.00.00.1d.04
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: controller_manager
+Node namespace: /a300_00000
+Topic type: std_msgs/msg/String
+Topic type hash: RIHS01_df668c740482bbd48fb39d76a70dfd4bd59db1288021743503259e948f6b1a18
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.3c.f5.a0.07.66.da.00.00.00.00.00.00.32.04
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+\n$ timeout 8s ros2 topic echo --once /a300_00000/robot_description
+data: '<?xml version="1.0" ?>
+
+  <!-- =================================================================================== -->
+
+  <!-- |    Th...'
+---

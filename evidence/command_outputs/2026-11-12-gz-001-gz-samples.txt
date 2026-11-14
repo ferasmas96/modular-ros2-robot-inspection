@@ -1,0 +1,206 @@
+\n$ timeout 5s gz topic -e -t /clock -n 1
+system {
+  sec: 1794492721
+  nsec: 836740939
+}
+real {
+  sec: 84
+  nsec: 887479108
+}
+sim {
+  sec: 81
+  nsec: 135000000
+}
+
+\n$ timeout 5s gz topic -e -t /world/warehouse/clock -n 1
+system {
+  sec: 1794492721
+  nsec: 938740330
+}
+real {
+  sec: 84
+  nsec: 989478409
+}
+sim {
+  sec: 81
+  nsec: 237000000
+}
+
+\n$ timeout 5s gz topic -e -t /model/a300_00000/robot/pose -n 1
+pose {
+  header {
+    stamp {
+      sec: 81
+      nsec: 333000000
+    }
+    data {
+      key: "frame_id"
+      value: "a300_00000/robot"
+    }
+    data {
+      key: "child_frame_id"
+      value: "a300_00000/robot::rear_right_wheel_link"
+    }
+  }
+  name: "a300_00000/robot::rear_right_wheel_link"
+  position {
+    x: -0.25600000000000023
+    y: -0.28289999999999971
+    z: 0.029129999999999989
+  }
+  orientation {
+    x: -3.4694469519536142e-18
+    y: 0.1643436775262154
+    z: -4.163336342344337e-17
+    w: 0.98640314053492328
+  }
+}
+pose {
+  header {
+    stamp {
+      sec: 81
+      nsec: 333000000
+    }
+    data {
+      key: "frame_id"
+      value: "a300_00000/robot"
+    }
+    data {
+      key: "child_frame_id"
+      value: "a300_00000/robot::front_right_wheel_link"
+    }
+  }
+  name: "a300_00000/robot::front_right_wheel_link"
+  position {
+    x: 0.25600000000000023
+    y: -0.28289999999999971
+    z: 0.029130000000000017
+  }
+  orientation {
+    y: 0.16434367716735179
+    z: -1.3877787807814457e-17
+    w: 0.98640314059471323
+  }
+}
+pose {
+  header {
+    stamp {
+      sec: 81
+      nsec: 333000000
+    }
+    data {
+      key: "frame_id"
+      value: "a300_00000/robot"
+    }
+    data {
+      key: "child_frame_id"
+      value: "a300_00000/robot::rear_left_wheel_link"
+    }
+  }
+  name: "a300_00000/robot::rear_left_wheel_link"
+  position {
+    x: -0.256
+    y: 0.2829000000000006
+    z: 0.029129999999999989
+  }
+  orientation {
+    x: -6.9388939039072284e-18
+    y: -0.48689312294202047
+    w: 0.87346155429518846
+  }
+}
+pose {
+  header {
+    stamp {
+      sec: 81
+      nsec: 333000000
+    }
+    data {
+      key: "frame_id"
+      value: "a300_00000/robot"
+    }
+    data {
+      key: "child_frame_id"
+      value: "a300_00000/robot::front_left_wheel_link"
+    }
+  }
+  name: "a300_00000/robot::front_left_wheel_link"
+  position {
+    x: 0.25599999999999978
+    y: 0.28290000000000015
+    z: 0.029129999999999989
+  }
+  orientation {
+    x: -6.9388939039072284e-18
+    y: -0.486893122900618
+    z: -1.3877787807814457e-17
+    w: 0.87346155431826733
+  }
+}
+pose {
+  header {
+    stamp {
+      sec: 81
+      nsec: 333000000
+    }
+    data {
+      key: "frame_id"
+      value: "a300_00000/robot"
+    }
+    data {
+      key: "child_frame_id"
+      value: "a300_00000/robot::base_link"
+    }
+  }
+  name: "a300_00000/robot::base_link"
+  position {
+  }
+  orientation {
+    w: 1
+  }
+}
+pose {
+  header {
+    stamp {
+      sec: 81
+      nsec: 333000000
+    }
+    data {
+      key: "frame_id"
+      value: "warehouse"
+    }
+    data {
+      key: "child_frame_id"
+      value: "a300_00000/robot"
+    }
+  }
+  name: "a300_00000/robot"
+  position {
+    x: 1.646291151331172
+    y: 2.4392220162662133
+    z: 0.13596994613248187
+  }
+  orientation {
+    x: 9.9825385118303621e-12
+    y: -1.0279808096454199e-10
+    z: 0.10512649670536617
+    w: 0.99445885771632436
+  }
+}
+
+\n$ timeout 5s gz topic -e -t /model/a300_00000/robot/tf -n 1
+\n$ timeout 5s gz topic -e -t /world/warehouse/stats -n 1
+sim_time {
+  sec: 86
+  nsec: 451000000
+}
+real_time {
+  sec: 90
+  nsec: 203478033
+}
+iterations: 28817
+real_time_factor: 0.99979570841024812
+step_size {
+  nsec: 3000000
+}
+

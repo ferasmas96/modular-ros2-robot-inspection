@@ -1,0 +1,8 @@
+$ timeout 5s gz topic -i -t /model/a300_00000/robot/tf
+No publishers on topic [/model/a300_00000/robot/tf]
+Subscribers [Address, Message Type]:
+  tcp://172.25.211.85:43065, gz.msgs.Pose_V
+\n$ timeout 5s gz topic -i -t /model/a300_00000/robot/pose
+Publishers [Address, Message Type]:
+  tcp://172.25.211.85:41205, gz.msgs.Pose_V
+No subscribers on topic [/model/a300_00000/robot/pose]

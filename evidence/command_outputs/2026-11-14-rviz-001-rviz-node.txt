@@ -1,0 +1,28 @@
+$ timeout 8s ros2 node info /a300_00000/rviz2
+/a300_00000/rviz2
+  Subscribers:
+    /a300_00000/robot_description: std_msgs/msg/String
+    /clock: rosgraph_msgs/msg/Clock
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+  Publishers:
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+  Service Servers:
+    /a300_00000/rviz2/describe_parameters: rcl_interfaces/srv/DescribeParameters
+    /a300_00000/rviz2/get_parameter_types: rcl_interfaces/srv/GetParameterTypes
+    /a300_00000/rviz2/get_parameters: rcl_interfaces/srv/GetParameters
+    /a300_00000/rviz2/get_type_description: type_description_interfaces/srv/GetTypeDescription
+    /a300_00000/rviz2/list_parameters: rcl_interfaces/srv/ListParameters
+    /a300_00000/rviz2/reset_time: std_srvs/srv/Empty
+    /a300_00000/rviz2/set_parameters: rcl_interfaces/srv/SetParameters
+    /a300_00000/rviz2/set_parameters_atomically: rcl_interfaces/srv/SetParametersAtomically
+  Service Clients:
+
+  Action Servers:
+
+  Action Clients:
+
+\n$ timeout 5s ros2 param get /a300_00000/rviz2 use_sim_time
+Boolean value is: True
+\n$ timeout 5s ros2 param get /a300_00000/robot_state_publisher use_sim_time
+Boolean value is: True
