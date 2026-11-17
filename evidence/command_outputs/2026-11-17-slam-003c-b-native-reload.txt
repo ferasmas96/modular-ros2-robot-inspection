@@ -1,0 +1,125 @@
+SLAM-003C-B — Headless Native GLIM Dump Reload
+Date: 2026-11-17
+Result: PASS. Exactly one bounded native reload; no GUI, ROS node or live mapping.
+
+Safety and input
+- Branch codex-work; preserved checkpoint 136ca1d35404a7d4f0c361985ea2215b76e2d43e.
+- main unchanged at ca1140ef760bd6e28c32229347e75d896bfb38b4.
+- Existing unstaged SLAM-003B documentation/evidence were hashed and copied
+  byte-for-byte to the new private validation directory before writing utility code.
+- Input: /home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/glim_dump.
+- Original 22-file path set, sizes and SHA256 recorded in before.json and matched
+  the previous artifact_validation.json before execution; all match afterward.
+- Separate build/result directory: /home/feras/glim_ws/validation/slam003c_b_001.
+- Source: tools/glim_dump_reload/validate_dump.cpp and standalone CMakeLists.txt.
+- No original map/configuration/log file was overwritten or made writable.
+
+API/source inspection before code
+- Installed GLIM/core ROS version 1.2.2-0noble, GTSAM Points 1.2.2, GTSAM 4.3.0.
+- Inspected installed GlobalMapping, SubMap, mapping callbacks, Config/logging,
+  point-cloud and ISAM2ExtDummy headers plus exported CMake targets/libraries.
+- Cross-checked upstream v1.2.2 implementations:
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/global_mapping.cpp
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/sub_map.cpp
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/util/config.cpp
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/util/logging.cpp
+  https://github.com/koide3/gtsam_points/blob/v1.2.2/src/gtsam_points/types/point_cloud_cpu.cpp
+- GlobalMapping::load reads submaps and graph/value archives, reconstructs maps,
+  calls a smoother update, and can log/recover caught deserialization errors.
+- SubMap::load uses native metadata and PointCloudCPU::load compact data; it may
+  repair corrupt contents in memory. No save call is part of the inspected load path.
+- create_module_logger normally creates/appends module logs; pre-registering
+  console-only glim/global loggers prevents that path. Error/corruption/recovery
+  diagnostics are observed, so load() true alone is not treated as success.
+- params.enable_optimization=false is an in-memory override only. It constructs
+  native ISAM2ExtDummy, whose update stores factors/values without optimization.
+  Runtime callback verifies the backend type before update. The info message
+  'optimize' is the native call-site label, not evidence an optimizer ran.
+- Additional Landlock rules deny write-open, truncation, creation, removal and
+  rename/link operations before GLIM configuration/object initialization. ABI 7
+  active; denied file-creation probe confirms enforcement. Only inherited stdout/
+  stderr descriptors are used for new result captures. No modified input permissions.
+
+Build
+- Existing installed CMake under /opt/ros/jazzy/share/glim/cmake failed to include
+  its missing glim-targets.cmake; intact installed export at share/glim was used.
+  No installed metadata/source was edited. Configuration then compiled successfully.
+- source /opt/ros/jazzy/setup.bash
+- cmake -S /home/feras/clearpath_ws/tools/glim_dump_reload
+    -B /home/feras/glim_ws/validation/slam003c_b_001/build
+    -DCMAKE_BUILD_TYPE=Release -Dglim_DIR=/opt/ros/jazzy/share/glim
+- cmake --build /home/feras/glim_ws/validation/slam003c_b_001/build --parallel 2
+- C++17, installed glim::glim imported target and already-installed dependencies.
+  No new build dependency, installation, colcon/package rebuild or GLIM source edit.
+- ldd on the resulting validator found no missing dependencies.
+- Validator source SHA256: afb7affb82d843bf4b5ae10afde90f17e3a0381dba0b62fb8f68986505a59062
+- Executable SHA256: 026d22c576a128d862f0df95700d0f3abaa525258796e3550746831776fbfc03
+
+Exact bounded execution (once)
+Working directory: /home/feras/glim_ws/validation/slam003c_b_001
+Environment: Jazzy sourced; OMP_NUM_THREADS=2.
+Command:
+  timeout --signal=TERM --kill-after=5s 30s \
+    /home/feras/glim_ws/validation/slam003c_b_001/build/glim_dump_reload \
+    /home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/glim_dump 1 300 2648
+Parent process opened new validator.stdout.json / validator.stderr.log with
+exclusive creation before invoking the program; no existing output was replaced.
+Return code: 0; measured wall seconds: 0.013375.
+No timeout, restart or second reload invocation.
+
+Native loaded results
+- GlobalMapping::load returned true.
+- Native on_insert_submap callback: 1 submap, 300 frames,
+  2648 points, original/optimized frame counts agree.
+- Frames have finite stamps and finite sensor poses; stamps strictly increasing.
+- Compact points, normals, covariances and intensities loaded through native APIs
+  and checked finite. Attributes are present on the restored cloud.
+- Native on_smoother_update exposed 4 non-null deserialized graph factors
+  and 4 values; every factor key exists in the deserialized values.
+- Native post-load submap callback confirms expected count and finite global poses.
+- Native in-memory export_points returns 2648 points; no file export/save.
+- Thus graph/value and native submap/compact-cloud deserialization are verified;
+  this is stronger than the previous archive-header-only check.
+- Errors: 0. Corruption/recovery detected: false. No exception escaped.
+- Warnings: 6 lines (three missing-option/default pairs):
+  global_mapping.submap_voxel_resolution_max=0.5,
+  global_mapping.submap_voxel_resolution_dmin=5,
+  global_mapping.submap_voxel_resolution_dmax=20.
+- Four trajectory text files are not read by GlobalMapping::load; their original
+  hashes are unchanged and the SLAM-003B trajectory validation remains applicable.
+
+Original artifact integrity (before == after)
+10132ddad2849adb84e2f896eb81434b66f94cadfdd3cdac0277ac2cd7a198a4  000000/covs_compact.bin  (63552 bytes)
+7cdb13a8465f9aafaa068665e3ea5369c902757e7d42174f5e3d1c275e7557d9  000000/data.txt  (162060 bytes)
+f484f754302f4a581ea90048f278d54767de254854321ec31a7772c2a976c561  000000/imu_rate.txt  (267166 bytes)
+fb5e53c8e109657465e146d13d5cd215450aee6255561382827ac8af438b186d  000000/intensities_compact.bin  (10592 bytes)
+a0650a6eeffb909c39ddad87c2be27ef93f842be10b9a9a8091eeadcf229835d  000000/normals_compact.bin  (31776 bytes)
+f04c6d070a36794f1a3212e8c1da54fea85ffed60de5a92ba89b74e849d298d7  000000/points_compact.bin  (31776 bytes)
+fda3ab1a125ce80709189ea1c4a4275821d0321d22d9877c521476e7e2a56b84  config/config.json  (573 bytes)
+43161f70ef8c9f4c420cc055aa9014a0b8b09e8341805ff1a81d92afe285ab89  config/config_global_mapping_cpu.json  (619 bytes)
+abc5a9c17f9d4bc96f7bb659e3ad01b761b56ca7a9a7f32c241638a1cd0aa144  config/config_logging.json  (202 bytes)
+33005791035a4e6184ba0c11ff7de10b6483751efd3d89c67901d6e13590d3df  config/config_odometry_cpu.json  (744 bytes)
+4f642f41da2892f6c78b678a58ae4af590bc63f20540b9fd24df18a49605428b  config/config_preprocess.json  (589 bytes)
+bf9fa490355c69475a42615d5c1909dcbb21e8a035aad40a6f81c9d422d6ccc4  config/config_ros.json  (911 bytes)
+15f9836f204b596641634a31e6205079184e8930718eabf550a45b595d9c2bb8  config/config_sensors.json  (1039 bytes)
+0acdae7c7abac984aa73c3e3c8cc77d2446e91740dde80f09858142497c592ef  config/config_sub_mapping_cpu.json  (711 bytes)
+74954e3d93af21ce7ce93ddf223b3a1033288e4d86dd759cc6b793a6cc7086d8  config/config_viewer.json  (706 bytes)
+dd13c45eebb3c64e881458341d5cea7587967891b862a3fc2c7c9346f2272b56  graph.bin  (1463 bytes)
+81eac96a34258869bfa49ef218a5961efd0aa0a4b5a8d8ce20843427f11c3e7e  graph.txt  (64 bytes)
+c7527a56f23319fd6a7273d5773b3f962c9ffff4cfc9d7be52c2c83477433fcd  odom_imu.txt  (24287 bytes)
+8d29b6f5123a40158f2f3e0fbeb427db06c9ecd934ccea81fd53f16d07487915  odom_lidar.txt  (23987 bytes)
+c7527a56f23319fd6a7273d5773b3f962c9ffff4cfc9d7be52c2c83477433fcd  traj_imu.txt  (24287 bytes)
+8d29b6f5123a40158f2f3e0fbeb427db06c9ecd934ccea81fd53f16d07487915  traj_lidar.txt  (23987 bytes)
+0f9e8cfefe349f9775673599dfb9b54dc54b490bbb0efd282bfd86fc035b4898  values.bin  (573 bytes)
+All 22 original files unchanged; no extra artifact inside the input dump.
+All 187 previously protected configuration/source contents also unchanged.
+Existing SLAM-003B evidence unchanged. Existing documentation changes preserved;
+only appended SLAM-003C-B records are added after successful validation.
+
+Scope/final state
+No Gazebo, GUI, ROS initialization, sensor input, live GLIM mapping, TF publisher,
+movement, Mode B, Nav2, accuracy evaluation, source-package rebuild or software
+installation. No custom graph/submap parser or serialization implementation.
+No commit/stash/reset/clean/push. Build/results remain private; project-owned
+utility and sanitized evidence remain untracked, documentation unstaged.
+Native reload validation is complete; no further experiment was started.

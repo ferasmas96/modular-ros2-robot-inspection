@@ -1,0 +1,172 @@
+SLAM-003B — Stationary GLIM 1.2.2 CPU Mapping Smoke Test
+Date: 2026-11-17
+Overall result: PASS for one stationary CPU mapping/native-persistence smoke test.
+Accuracy, moving-robot mapping, loop closure and native dump reload: NOT TESTED.
+
+Git checkpoint
+- Branch verified codex-work; no unrelated changes found.
+- Local commit: 136ca1d35404a7d4f0c361985ea2215b76e2d43e
+- Message: SLAM-003A: Add validated GLIM CPU mapping configuration
+- Exactly 20 project-owned files committed: portable configuration/README,
+  relevant documentation and sanitized SLAM-003A static/portability evidence.
+- Documentation clarified portable vs operational logging before checkpoint.
+- Upstream-copy comment whitespace retained for configuration hash consistency.
+- Private configurations, raw logs and runtime results excluded; no push/merge/reset.
+- main remains ca1140ef760bd6e28c32229347e75d896bfb38b4.
+- Working tree clean after checkpoint and immediately before runtime documentation.
+
+Authorization and setup
+- Separate explicit user authorizations received for Gazebo/input startup and
+  then the single GLIM mapping run, after live input checks passed.
+- Combined setup /home/feras/clearpath_lidar11b_test, generate:=false.
+- Existing Helios bridge and one unchanged timing adapter; no generator/build.
+- Operational config /home/feras/glim_ws/configs/mode_a_cpu_mapping.
+- Run directory /home/feras/glim_ws/runs/mode_a_mapping/slam003b_001.
+- Viewer/output extensions=[], publish_imu2lidar=false, CPU modules only.
+- Preserved cloud /a300_00000/sensors/helios_16p/points_glim and IMU
+  /a300_00000/sensors/imu_0/data; Mode A zero relative times/global shutter.
+- Exact extrinsic [0,0,-0.0475,0,0,0,1], scales/offsets/QoS unchanged.
+- use_sim_time=true, debug=false, dump_on_unload=false; private absolute
+  dump_path, module log_dir and ROS_LOG_DIR; no repository config was loaded.
+- Config hash manifest matched; all three CPU libraries loaded with RTLD_NOW
+  during preflight without invoking factories; selected modules then loaded at runtime.
+- Unique output paths were unused/writable. No existing task processes.
+- Initial available memory about 5.1 GiB, free disk about 945.9 GiB.
+
+Live input check
+- 12.003-second bounded observer; original/adapted clouds about 9.998/9.999 Hz
+  simulation time and 9.991/9.990 Hz wall arrival rate after discovery.
+- IMU about 100 Hz, clock about 333.3 Hz; sensor/clock stamps strictly increasing.
+- Adapted cloud nonempty 360x16, little-endian, tightly packed, point_step=36,
+  row_step=12960, payload=207360 bytes; frame helios_16p_link.
+- Five timestamp-matched pairs preserve original point bytes; all 28,800
+  sampled FLOAT32 time values exactly zero.
+- Original bridge/IMU publishers RELIABLE/VOLATILE, adapted publisher
+  BEST_EFFORT/VOLATILE; GLIM subscriptions observed BEST_EFFORT/VOLATILE.
+- Sensor TF identity rotations; base->IMU Z=0.294759 m,
+  base->LiDAR Z=0.342259 m. odom->base_link resolved near identity.
+- TF tree had no conflicting parents in captured transforms.
+- The initial inspection helper failed twice on unavailable rclpy message-info
+  publisher-GID access. A supported message/endpoint probe then completed.
+  These were inspection-code errors, not sensor failures; no simulator/input restart.
+- Per-transform duplicate-authority audit was not available from this rclpy API;
+  TF checks used graph endpoints, resolved transforms and existing ownership configs.
+
+GLIM run and processing evidence
+- Exactly one GLIM start; no retries or configuration edits.
+- Console logs: 18:21:50.841 config load; 18:21:54.046 IMU initialization;
+  18:22:27.002 shutdown wait; 18:22:27.170 native saved confirmation.
+- Loaded libodometry_estimation_cpu.so, libsub_mapping.so, libglobal_mapping.so.
+- IMU initialization after 3.524 observer wall seconds.
+- Initialization clock 270.897; stop clock
+  300.897: exactly 30.000 simulation seconds later.
+- Monotonic-clock observation 33.544 s; total through
+  GLIM exit 33.882 s. 120-second safety ceiling not reached.
+- SIGINT sent to the identified GLIM node; normal odometry/local/global queue
+  drain and native save; exit code 0. No forced GLIM termination.
+- Independent observer received 347 clouds and
+  3542 IMUs across its entire discovery/run/shutdown window.
+  These are observer counts, not GLIM callback counters (TRACE disabled).
+- graph.txt: num_submaps=1, num_all_frames=300, num_matching_cost_factors=0.
+- Submap 000000 metadata and each main trajectory independently contain 300
+  frames: concrete evidence of odometry/local/global mapping retention and saving.
+- One submap was flushed on end of sequence, without robot movement; zero
+  inter-submap matching factors is expected for a single-submap smoke test.
+- Compact cloud contains 2648 finite XYZ points; normals/intensities/covariances
+  all finite with matching point counts. Covariance minimum eigenvalue about
+  0.000999974; normals near unit norm. 604 finite rigid metadata matrices checked.
+- Filtered wheel/EKF odometry position/speed/yaw-rate remained effectively zero.
+  No command was published to move the robot; no RViz/Mode B/Nav2 or accuracy test.
+
+Trajectory validation
+- odom_lidar.txt, traj_lidar.txt, odom_imu.txt and traj_imu.txt: 300 rows each,
+  eight finite columns (timestamp x y z qx qy qz qw).
+- Stamps 270.801 to 300.702 s; span 29.901 s; intervals 0.099 to 0.102 s;
+  strictly increasing, no duplicate or decreasing timestamps in these four files.
+- Quaternion norms about 1.0000000000005 to 1.000000000204.
+- Maximum displacement from first pose about 0.0010543 m. This is a stationary
+  numerical observation, NOT an accuracy/ground-truth claim.
+- Odometry and mapping-adjusted files are byte-identical for each sensor in this run.
+- 000000/imu_rate.txt: 3300 finite eight-column rows, near-unit quaternions;
+  timestamps nondecreasing with 299 adjacent duplicates, exactly at joins
+  between 11-row scan segments. No decreases. Consumers may need boundary deduplication.
+- Saved config: 9 valid JSON files. Eight match operational parsed config;
+  config.json additionally records resolved absolute config_path and detected
+  imu_0_link/helios_16p_link meta frame IDs; other references match.
+
+Artifact inventory (all exist; sizes in bytes)
+Relative to glim_dump/:
+Filename	Bytes	Content validation
+000000/covs_compact.bin	63552	PASS parsed finite data and matching metadata/array dimensions
+000000/data.txt	162060	PASS parsed finite data and matching metadata/array dimensions
+000000/imu_rate.txt	267166	PASS parsed finite data and matching metadata/array dimensions
+000000/intensities_compact.bin	10592	PASS parsed finite data and matching metadata/array dimensions
+000000/normals_compact.bin	31776	PASS parsed finite data and matching metadata/array dimensions
+000000/points_compact.bin	31776	PASS parsed finite data and matching metadata/array dimensions
+config/config.json	573	PASS parseable saved configuration
+config/config_global_mapping_cpu.json	619	PASS parseable saved configuration
+config/config_logging.json	202	PASS parseable saved configuration
+config/config_odometry_cpu.json	744	PASS parseable saved configuration
+config/config_preprocess.json	589	PASS parseable saved configuration
+config/config_ros.json	911	PASS parseable saved configuration
+config/config_sensors.json	1039	PASS parseable saved configuration
+config/config_sub_mapping_cpu.json	711	PASS parseable saved configuration
+config/config_viewer.json	706	PASS parseable saved configuration
+graph.bin	1463	PASS nonempty Boost binary archive signature; full reload not tested
+graph.txt	64	PASS positive submap/frame counts, consistent with metadata and trajectories
+odom_imu.txt	24287	PASS eight finite columns, increasing timestamps, near-unit quaternions
+odom_lidar.txt	23987	PASS eight finite columns, increasing timestamps, near-unit quaternions
+traj_imu.txt	24287	PASS eight finite columns, increasing timestamps, near-unit quaternions
+traj_lidar.txt	23987	PASS eight finite columns, increasing timestamps, near-unit quaternions
+values.bin	573	PASS nonempty Boost binary archive signature; full reload not tested
+Total: 22 files, 671664 bytes.
+- graph.bin/values.bin: nonempty Boost archive headers verified and native save
+  completed, but full GLIM/GTSAM deserialization/reload was NOT tested.
+- Numbered submap compact formats checked against upstream GTSAM Points v1.2.2:
+  https://github.com/koide3/gtsam_points/blob/v1.2.2/src/gtsam_points/types/point_cloud.cpp
+- No merged PCD/PLY or online GLIM map/odometry topic was produced or required.
+
+TF and resource observations
+- Namespaced TF publisher sets exactly unchanged before/during/after GLIM:
+  dynamic: robot_state_publisher, ekf_node, platform_velocity_controller,
+  odom_base_tf_bridge; static: robot_state_publisher, imu_0_static_tf.
+- No root /tf or /tf_static publisher; GLIM absent from all TF publisher sets.
+- Existing EKF publish_tf=true; diff-drive enable_odom_tf=false.
+- 34 approximately one-second process/resource samples during observation.
+- GLIM CPU 19.96–24.98% of one logical CPU; mean 21.99%.
+- GLIM RSS 89.09–179.23 MiB.
+- System available memory 2775.67–2883.95 MiB; swap used zero.
+- Samples cover observation, not a benchmark or guaranteed shutdown/save peak.
+- Observer cloud max wall gap 0.119 s, IMU 0.020 s, clock 0.0095 s.
+- No memory-pressure abort, severe input stall, GLIM error/exception or repeated
+  restart. No EKF missed-update message in the captured simulation log.
+
+Warnings and cleanup
+- GLIM used documented code defaults for absent installed-config options:
+  sub_mapping.submap_target_num_points=-1;
+  global_mapping.submap_voxel_resolution_max=0.5,
+  submap_voxel_resolution_dmin=5, submap_voxel_resolution_dmax=20.
+  Four missing-option warnings plus four default-value lines; no config edits.
+- Gazebo/Clearpath warnings: unavailable PS4, IMU not registered in hardware_info
+  (separate bridge works), controller 20 ms vs simulation 3 ms, gz_frame_id/SDF
+  gravity, Collada rendering/remapping notices, stationary no-command braking.
+- Adapter's known KeyboardInterrupt/exit -2 on requested SIGINT; bridge clean.
+- Gazebo wrapper reported signal-related exit -2 during requested SIGINT; logs
+  show server/render-thread shutdown. No SIGTERM escalation needed in this run.
+- All launch sessions exited; independent host ps check found no remaining
+  task-owned GLIM/Gazebo/bridge/adapter/platform process. No unrelated PID signaled.
+- Runtime helper versions and validation data remain private in the run directory.
+
+Protected state and final scope
+- Post-run comparison: 187 file contents across 11 roots unchanged,
+  including all five Clearpath setups, three validated GLIM baselines, operational
+  mapping config, installed defaults and project sensor source package.
+- main unchanged; no configuration regeneration, software install/upgrade or build.
+- Runtime evidence/docs remain uncommitted for user review; no push.
+- Private domain/network values, raw clouds, raw logs and map/trajectory payloads
+  excluded from this sanitized evidence. Full artifact hashes/validation and raw logs
+  are retained privately under the experiment directory.
+- Recommended next action: review results and separately verify native dump reload
+  before considering an explicitly authorized movement/multi-submap experiment.
+- Stop condition met: one authorized stationary test, inspection, documentation and
+  cleanup only. No automatic movement, accuracy evaluation or further experiment.

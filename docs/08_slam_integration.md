@@ -1,6 +1,6 @@
 # 08. SLAM Integration
 
-**Current status (2026-11-17):** SLAM-002E verified Mode A cloud conversion, preprocessing, CPU odometry insertion and internal state updates. SLAM-003A has prepared and statically validated a separate CPU local/global mapping configuration. Mapping, native saved artifacts, trajectory accuracy and Mode B runtime remain **NOT TESTED**. Earlier milestone results below describe their status at the time.
+**Current status (2026-11-17):** SLAM-002E verified Mode A internal odometry processing. SLAM-003B subsequently passed one stationary CPU local/global mapping smoke test: one submap retained 300 frames and 2,648 finite points, and native graph/configuration/trajectory artifacts were saved. All four main trajectories have valid finite, ordered pose rows. Full native graph reload, moving-robot mapping, loop closure, trajectory accuracy and Mode B runtime remain **NOT TESTED**. Earlier milestone results below describe their status at the time.
 
 ### 1. Objective
 
@@ -582,3 +582,152 @@ printf 'GLIM exit status: %s\n' "$mapping_exit"
 ```
 
 The observation/shutdown bounds above are operator/agent monitoring limits, not an automatic kill timer that could interrupt native saving. With OVERLAP keyframes a stationary submap may appear only on shutdown; this is a persistence smoke test, not multi-submap mapping, loop-closure or accuracy evaluation. No SLAM-003B action has been authorized or performed in SLAM-003A.
+
+### 16. SLAM-003B — Stationary GLIM CPU Mapping Smoke Test
+
+**Date:** 2026-11-17. **Result:** PASS for stationary CPU mapping, native persistence, numeric pose validation and cleanup. This is not an accuracy experiment or moving-robot mapping validation.
+
+#### Checkpoint, authorization and preserved configuration
+
+Reviewed all pending SLAM-003A changes; no unrelated files were found. Clarified the portable repository logging path in the documentation, then committed exactly 20 configuration/documentation/sanitized-evidence files on `codex-work`:
+
+```text
+136ca1d35404a7d4f0c361985ea2215b76e2d43e
+SLAM-003A: Add validated GLIM CPU mapping configuration
+```
+
+The working tree was clean after this checkpoint. `main` remains `ca1140ef760bd6e28c32229347e75d896bfb38b4`; nothing was pushed or merged. Runtime results were not included in the checkpoint and remain uncommitted for review.
+
+The user explicitly authorized Gazebo plus the existing inputs, then separately authorized one GLIM run after live input verification. Used the existing combined `/home/feras/clearpath_lidar11b_test` setup with `generate:=false`, existing Helios bridge and existing timing adapter. No generator, source/configuration change, build, package installation, robot command, RViz, viewer, Mode B or Nav2 was used.
+
+Operational config: `/home/feras/glim_ws/configs/mode_a_cpu_mapping`. Private experiment: `/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001`. The operational hash manifest matched; the portable repository configuration was not loaded. The actual GLIM invocation retained the command in section 15, including simulation time, `debug=false`, `dump_on_unload=false`, the operational absolute config path and unique private dump/log paths. Output files were created exclusively without overwriting existing run files.
+
+All three CPU shared libraries loaded during preflight without calling factories, then actual GLIM startup logged `libodometry_estimation_cpu.so`, `libsub_mapping.so` and `libglobal_mapping.so`. Local/global mapping flags were true; local optimization retained the installed false default, while global optimization remained true. Sensor topics, QoS, timestamps, frames and exact `T_lidar_imu=[0,0,-0.0475,0,0,0,1]` were preserved. Extensions stayed empty and `publish_imu2lidar=false`.
+
+#### Input verification and bounded observation
+
+- Original/adapted clouds were approximately 9.998/9.999 Hz in simulation time; IMU was 100 Hz and `/clock` 333.3 Hz in the 12-second input check. All sensor/clock timestamps advanced monotonically.
+- Adapted clouds were nonempty 360×16, little-endian and tightly packed (`point_step=36`, `row_step=12960`, 207,360 bytes). Five timestamp-matched pairs preserved original point bytes and all 28,800 sampled point times were zero.
+- Original cloud and IMU publishers were RELIABLE/VOLATILE; adapted cloud was BEST_EFFORT/VOLATILE. GLIM's actual cloud/IMU BEST_EFFORT/VOLATILE subscriptions were observed and compatible.
+- Sensor TF resolved with identity rotations and exact simulated heights: IMU 0.294759 m, LiDAR 0.342259 m above `base_link`. `odom → base_link` remained near identity.
+- Two initial read-only inspection probes failed on unsupported rclpy publisher-GID access. A corrected probe using supported message/graph APIs passed; the simulation and sensor processes were not restarted. This was inspection-code failure, not sensor/GLIM failure.
+- GLIM initialized the IMU after 3.524 observer wall seconds. The clock advanced from 270.897 to 300.897 s during the subsequent 30.000-second observation; the 120-second wall ceiling was not reached.
+- Observation lasted 33.544 monotonic wall seconds from GLIM start; total through wrapper exit was 33.882 s. Console timestamps record config load at 18:21:50.841, IMU initialization at 18:21:54.046 and native save completion at 18:22:27.170.
+- The independent observer received 347 clouds and 3,542 IMUs over its full discovery/run/shutdown capture. These are observer counts, not GLIM callback counters: TRACE was intentionally disabled. Actual retained mapping frames are established by saved structures below.
+
+#### Mapping and native artifact validation
+
+SIGINT was sent to the identified GLIM node first while sensor inputs remained active. GLIM drained odometry, local and global mapping queues, serialized the output, logged `saved`, and exited with status **0**. No forced GLIM termination was needed. The stationary partial submap was flushed at end of sequence; no motion was needed to produce valid structures.
+
+`graph.txt` reports `num_submaps=1`, `num_all_frames=300`, `num_matching_cost_factors=0`. Submap metadata and each main trajectory independently contain 300 frames. The single submap `000000` contains 2,648 finite points, with matching finite normal/intensity/covariance arrays; all 604 stored rigid-transform matrices checked were finite and coherent. Zero inter-submap matching factors is expected here and does not demonstrate loop closure.
+
+All artifacts below exist under `glim_dump/`; sizes are bytes:
+
+| Artifact | Size | Content validation |
+|---|---:|---|
+| `graph.bin` | 1,463 | Nonempty Boost archive header; full deserialization/reload NOT TESTED |
+| `values.bin` | 573 | Nonempty Boost archive header; full deserialization/reload NOT TESTED |
+| `graph.txt` | 64 | Positive submap/frame counts match metadata and trajectories |
+| `odom_lidar.txt` | 23,987 | 300 valid pose rows |
+| `traj_lidar.txt` | 23,987 | 300 valid pose rows |
+| `odom_imu.txt` | 24,287 | 300 valid pose rows |
+| `traj_imu.txt` | 24,287 | 300 valid pose rows |
+| `000000/data.txt` | 162,060 | Parsed frame metadata and rigid transforms |
+| `000000/imu_rate.txt` | 267,166 | 3,300 finite poses; boundary timestamp repeats described below |
+| `000000/points_compact.bin` | 31,776 | 2,648 finite XYZ float32 triples |
+| `000000/normals_compact.bin` | 31,776 | Matching finite, near-unit normal triples |
+| `000000/intensities_compact.bin` | 10,592 | 2,648 finite float32 intensities |
+| `000000/covs_compact.bin` | 63,552 | Matching six-float symmetric covariance records; positive eigenvalues |
+| `config/config.json` | 573 | Valid JSON; resolved config path and detected frame metadata |
+| `config/config_ros.json` | 911 | Parsed settings match operational config |
+| `config/config_sensors.json` | 1,039 | Parsed settings match operational config |
+| `config/config_preprocess.json` | 589 | Parsed settings match operational config |
+| `config/config_odometry_cpu.json` | 744 | Parsed settings match operational config |
+| `config/config_sub_mapping_cpu.json` | 711 | Parsed settings match operational config |
+| `config/config_global_mapping_cpu.json` | 619 | Parsed settings match operational config |
+| `config/config_logging.json` | 202 | Parsed settings match operational config |
+| `config/config_viewer.json` | 706 | Parsed settings match operational config; viewer remains disabled |
+
+Total native output: **22 files, 671,664 bytes**. Binary compact layouts were checked against [GTSAM Points v1.2.2 saving code](https://github.com/koide3/gtsam_points/blob/v1.2.2/src/gtsam_points/types/point_cloud.cpp). This verifies numerical contents and dimensions, not full native dump reload. No merged PCD/PLY or ROS map/odometry output was produced or required.
+
+The four main trajectories contain eight finite columns (`timestamp x y z qx qy qz qw`), strictly increasing timestamps from 270.801 to 300.702 s, and 0.099–0.102 s intervals. Quaternion norms are within approximately 2.1×10⁻¹⁰ of one. Odometry and mapping-adjusted files are byte-identical per sensor in this single-submap run. Maximum displacement from the first pose is about 1.0543 mm; this is a stationary numerical observation, not accuracy against ground truth. GLIM sensor-frame poses are not base-link poses.
+
+`imu_rate.txt` contains 3,300 finite, near-unit-quaternion poses with nondecreasing timestamps. Its 299 adjacent repeated timestamps occur exactly at joins between 11-row scan segments; none decrease. Downstream consumers may require scan-boundary deduplication. Saved `config.json` resolves the absolute operational `config_path` and adds detected `imu_0_link`/`helios_16p_link` metadata; other references match the operational input.
+
+#### TF, resources, warnings and cleanup
+
+Namespaced TF publisher sets were identical before, during and after GLIM: four existing dynamic publishers and two existing static publishers. GLIM appeared in none; root `/tf` and `/tf_static` had no publishers. Existing EKF/controller TF settings were unchanged. Captured transforms had no conflicting parents. This checks that GLIM added no competing TF authority; it is not an exhaustive upstream per-transform duplicate-authority audit.
+
+Thirty-four approximately one-second samples measured GLIM at 19.96–24.98% of one logical CPU (mean 21.99%) and 89.09–179.23 MiB RSS. System available memory stayed at 2,775.67–2,883.95 MiB with zero swap use. These are observation samples, not benchmark results or guaranteed save-time peaks. Maximum observed cloud/IMU wall gaps were 0.119/0.020 s. No memory-pressure abort, processing exception, severe backlog/input stall or EKF missed-update message was observed.
+
+GLIM logged four absent-option/default pairs from the installed CPU config set: `submap_target_num_points=-1`, `submap_voxel_resolution_max=0.5`, `submap_voxel_resolution_dmin=5`, and `submap_voxel_resolution_dmax=20`. These defaults did not prevent mapping; no tuning/restart was attempted. Gazebo/Clearpath retained known missing-joystick, IMU hardware-info, controller-period, SDF `gz_frame_id`/gravity, rendering/remapping and idle-braking warnings.
+
+After GLIM saved, stopped the adapter, bridge and simulation with SIGINT. The adapter had its known `KeyboardInterrupt`/exit -2; the bridge exited cleanly; the Gazebo wrapper reported signal-related exit -2 while server/render threads shut down. No SIGTERM escalation was needed. All launch sessions exited, and an independent host process check found no remaining task-owned runtime processes.
+
+Post-run hashes confirm **187 files across 11 protected roots unchanged**, including all five Clearpath setups, the three validated GLIM modes, operational mapping config, installed defaults and project sensor source. Nested repositories and `main` remain unchanged. Private raw logs, helper scripts, JSON observations/validation results and map payloads remain in the experiment directory; no private domain/network values or sensor payloads were added to Git.
+
+Evidence: [sanitized SLAM-003B runtime validation](../evidence/command_outputs/2026-11-17-slam-003b-runtime-validation.txt). Runtime documentation/evidence remain uncommitted. Recommended next step: review these results and separately verify native dump reload before any explicitly authorized movement/multi-submap experiment. No further experiment was started.
+
+### 17. SLAM-003C-B — Headless Native Dump Reload Validation
+
+**Date:** 2026-11-17. **Updated status:** PASS — native graph/value and submap/compact-cloud loading are now verified for the stationary SLAM-003B dump. This closes the native-reload limitation recorded at the earlier SLAM-003B milestone. Accuracy, motion mapping, loop closure and Mode B remain outside scope.
+
+SLAM-003C inspected installed `offline_viewer`/`map_editor` arguments and found no headless CLI path; no GUI was launched. SLAM-003C-B explicitly authorized a minimal standalone C++ caller of the installed GLIM 1.2.2 APIs. It is a validation utility, not a ROS package, parser or SLAM component: [source/build instructions](../tools/glim_dump_reload/README.md), [C++ caller](../tools/glim_dump_reload/validate_dump.cpp).
+
+#### Inspection and read-only execution
+
+Before code creation, verified `codex-work`, checkpoint `136ca1d35404a7d4f0c361985ea2215b76e2d43e`, existing SLAM-003B changes and all 22 original artifact hashes. Existing documentation/evidence changes were copied byte-for-byte to the new private validation directory. These existing records are preserved; only this section and a development-log entry are appended after successful validation.
+
+Inspected installed GlobalMapping/SubMap/callback/configuration/logging headers, exported targets, and native `ISAM2ExtDummy`, and cross-checked the v1.2.2 `GlobalMapping::load`, `SubMap::load`, `PointCloudCPU::load`, configuration and logging implementations. Native loading reads the saved graph/values and compact submaps, rebuilds in-memory voxel maps and updates its backend. Native errors can be caught and recovery attempted, so a true load return alone is insufficient. Module logging can otherwise append existing files.
+
+The caller therefore registers console-only `glim`/`global` loggers before native initialization and uses `GlobalConfig::instance(dump + "/config")`. It sets only the in-memory `GlobalMappingParams.enable_optimization=false`, selecting the installed `ISAM2ExtDummy` backend. The pre-update callback verifies that exact backend; its update stores deserialized factors/values without nonlinear optimization. The native informational line `optimize` is still emitted by the load call site and does not mean optimization was enabled. No saved configuration is edited, no async worker/viewer/ROS node is instantiated, and no save/configuration-dump method is called.
+
+Additionally, a fail-closed Landlock ruleset is installed before GLIM object construction. ABI 7 was available; write-open, truncation, creation, removal and rename/link operations are denied. A denied creation probe confirms enforcement. New stdout/stderr captures are opened exclusively by the parent before execution; the validator itself uses inherited streams only. No input permissions were changed. There were no errors or corruption/recovery diagnostics during loading.
+
+#### Separate build and one bounded reload
+
+Project source: `tools/glim_dump_reload/`; build/results: `/home/feras/glim_ws/validation/slam003c_b_001/`. CMake consumes installed `glim::glim` and its already-installed dependencies, with C++17. No colcon/package rebuild, new dependency, installation or GLIM source modification was needed.
+
+The installed config under `/opt/ros/jazzy/share/glim/cmake` initially failed because it includes a missing `glim-targets.cmake`. The intact installed export under `/opt/ros/jazzy/share/glim` resolved this packaging issue without editing installed files. The corrected standalone build succeeded. This was a build-configuration correction; the dump reload itself ran exactly once.
+
+```bash
+source /opt/ros/jazzy/setup.bash
+cmake -S /home/feras/clearpath_ws/tools/glim_dump_reload \
+  -B /home/feras/glim_ws/validation/slam003c_b_001/build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -Dglim_DIR=/opt/ros/jazzy/share/glim
+cmake --build /home/feras/glim_ws/validation/slam003c_b_001/build --parallel 2
+```
+
+With working directory `/home/feras/glim_ws/validation/slam003c_b_001`, `OMP_NUM_THREADS=2` and exclusive stdout/stderr capture by the parent process:
+
+```bash
+timeout --signal=TERM --kill-after=5s 30s \
+  /home/feras/glim_ws/validation/slam003c_b_001/build/glim_dump_reload \
+  /home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/glim_dump \
+  1 300 2648
+```
+
+The single call returned **0** in approximately **0.0134 wall seconds**, without timeout or restart. Linkage inspection found no missing dependencies. Build output and full execution/hash records remain private; no existing run output was reused or overwritten.
+
+#### Results and integrity
+
+| Check | Result |
+|---|---|
+| Native `GlobalMapping::load` | PASS — returned true |
+| Native graph/value deserialization | PASS — 4 non-null factors and 4 values observed through the native pre-update callback; factor keys resolve |
+| Native `SubMap::load` / compact-cloud loading | PASS — reached through global loading, without a custom parser |
+| Loaded submaps / retained frames / points | PASS — 1 / 300 / 2,648 |
+| Loaded frame stamps and poses | PASS — finite; stamps strictly increasing |
+| Loaded normals, covariances, intensities and points | PASS — attributes present and finite |
+| Post-load submap pose/update | PASS — native callback received expected count and finite poses |
+| Native in-memory `export_points()` | PASS — 2,648 points; no file export |
+| Native errors / recovery | PASS — 0 errors; no corruption/recovery detected |
+| Optimization / filesystem writes | Disabled in memory / Landlock write denial verified |
+| Original dump integrity | PASS — all 22 file hashes, sizes and path set unchanged |
+
+Three optional global-mapping settings emitted missing-option/default pairs (six warning lines): `submap_voxel_resolution_max=0.5`, `submap_voxel_resolution_dmin=5`, `submap_voxel_resolution_dmax=20`. No corrupted-file, missing-library or deserialization exception appeared.
+
+The four trajectory text files are not consumed by the native map loader. Their hashes are unchanged, so the previous SLAM-003B text-trajectory validation remains applicable; this task does not claim a separate trajectory import or accuracy result. The 187 protected configuration/source contents, original SLAM-003B evidence, `main` and checkpoint remain unchanged.
+
+Evidence: [SLAM-003C-B native reload result](../evidence/command_outputs/2026-11-17-slam-003c-b-native-reload.txt). Only appended documentation and the new utility/evidence are pending review; no commit, stash, reset, clean, push, simulation, live mapping, GUI, movement or next experiment was performed.
