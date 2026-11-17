@@ -1,0 +1,97 @@
+SLAM-002B/C — GLIM 1.2.2 installation verification and CPU config preparation
+Date: 2026-11-17
+Scope: Read-only package verification and static config preparation. No APT
+commands, sudo, install, upgrade, GLIM/Gazebo/RViz/sensor launch, mapping, or
+robot movement was performed in this task.
+
+Installation status
+- User-reported Task 12B procedure: official CPU PPA setup, apt update,
+  simulated install review, installation, and ldconfig succeeded; 10 new
+  packages, 0 upgrades, 0 removals.
+- Independent read-only dpkg-query verification:
+  ros-jazzy-glim-ros 1.2.2-0noble
+  ros-jazzy-glim 1.2.2-0noble
+  libgtsam-notbb-dev 4.3.0
+  libgtsam-points-dev 1.2.2
+  libiridescence-dev 1.0.2
+- Sourced ROS Jazzy and clearpath_ws overlay. `ros2 pkg executables glim_ros`
+  lists glim_rosnode, glim_rosbag, validator_node, offline_viewer, map_editor.
+- Prefixes: glim_ros and clearpath_gz -> /opt/ros/jazzy;
+  husky_a300_sensor_extensions ->
+  /home/feras/clearpath_ws/install/husky_a300_sensor_extensions.
+- ldd on installed GLIM, CPU odometry/mapping, and viewer libraries, with the
+  ROS environment sourced, had no unresolved shared-library dependencies.
+- Ten-package count and transaction additions/removals are user-reported;
+  package state and executable discovery were independently verified.
+
+Installed defaults and version-specific behavior
+- Config source: /opt/ros/jazzy/share/glim/config; 15 JSON-with-comments files.
+- Installed CPU odometry config uses LOOSE initialization and a 3.0 s window,
+  not the ROBUST mode stated in earlier floating/master-source notes.
+- Installed sensor config has imu_bias_noise; ROS config has no ang_scale key.
+  The v1.2.2 ROS callback passes angular velocity through in its input rad/s;
+  acc_scale is configured as 1.0.
+- CPU modules selected: libodometry_estimation_cpu.so, libsub_mapping.so,
+  libglobal_mapping.so. Local and global mapping flags are false, so v1.2.2
+  continues odometry only. No extension modules are enabled.
+- GLIM 1.2.2 v1.2.2 source references checked:
+  https://github.com/koide3/glim/tree/v1.2.2
+  https://github.com/koide3/glim_ros2/tree/v1.2.2
+  Config parser ignores JSON comments. Absolute config_path is supported;
+  glim_rosnode declares config_path and dump_path.
+- Missing point times are synthesized by TimeKeeper from point order and
+  median cloud-header intervals. First cloud gets zeros; out-of-range scan
+  durations warn and yield zero pseudo-times; timestamp rewinds skip a cloud.
+  Empty clouds are unsafe in the inspected v1.2.2 path; exclude them.
+- `librviz_viewer.so` publishes map/odom and broadcasts map->odom->base plus
+  optional imu->lidar TF. With extension_modules=[] and
+  publish_imu2lidar=false, prepared configs do not load these TF publishers.
+
+Exact model-derived transform
+- Static sources: isolated robot.urdf.xacro, installed A300 and top_plate
+  Xacros, installed microstrain_imu Xacro, and project rs_helios_16p Xacro.
+- base_link -> chassis_link: [0,0,0].
+  chassis_link -> default_mount: [0,0,0.229559].
+  default_mount -> top_plate_link: [0,0,0].
+  top_plate_link -> top_plate_default_mount: [0,0,0.0127].
+  top_plate_default_mount -> IMU: +0.05 then +0.0025 m Z.
+  top_plate_default_mount -> LiDAR: +0.10 m Z.
+- All rotations are identity:
+  T_base_imu Z=0.294759 m; T_base_lidar Z=0.342259 m.
+  T_imu_lidar=inv(T_base_imu)*T_base_lidar has +0.0475 m Z.
+  GLIM defines p_lidar=T_lidar_imu*p_imu, so its inverse is:
+  T_lidar_imu=[0,0,-0.0475,0,0,0,1] in [x,y,z,qx,qy,qz,qw] order.
+  This is the simulated Xacro transform, not physical calibration.
+
+Prepared configurations
+- /home/feras/glim_ws/configs/mode_a_zero_time
+  points=/a300_00000/sensors/helios_16p/points_glim
+  autoconf_perpoint_times=false; relative=true; scale=1.0;
+  global_shutter_lidar=true.
+- /home/feras/glim_ws/configs/mode_b_timekeeper
+  points=/a300_00000/sensors/helios_16p/points
+  autoconf_perpoint_times=true; global_shutter_lidar=false.
+- Both: IMU=/a300_00000/sensors/imu_0/data; frames imu_0_link,
+  helios_16p_link, base_link; acc_scale=1; time offsets zero; intensity/ring
+  fields set; sensor_data QoS. Explicit points QoS is BEST_EFFORT, VOLATILE,
+  KEEP_LAST depth 5. Prior evidence confirms original cloud RELIABLE/VOLATILE
+  and adapter BEST_EFFORT. IMU publisher QoS was not captured; confirm live.
+- Both modes have CPU config references, local/global mapping disabled,
+  extension_modules=[], publish_imu2lidar=false. ROS viewer outputs and GLIM
+  TF are therefore not expected. Directories under glim_ws use mode 0700,
+  copied JSON files mode 0600. No pre-existing glim_ws was found.
+
+Static checks
+- PASS: parsed all 15 JSON-with-comments files in each mode using a
+  comment-aware parser consistent with the installed GLIM parser.
+- PASS: all active config references exist and all selected CPU module files
+  exist. Active config references no GPU module.
+- PASS: topics, frame IDs, offsets/scales, QoS, exact extrinsic, mapping flags,
+  empty extensions and TF safeguards have expected values.
+- PASS: mode trees differ only in points_topic, autoconf_perpoint_times, and
+  global_shutter_lidar.
+- PASS: no GLIM runtime/static validator was executed; config parsing is not
+  proof of successful GLIM startup.
+- NOT TESTED: GLIM startup, odometry output, ROS outputs, mapping, live QoS
+  compatibility for IMU, or performance with GLIM.
+- Private ROS domain value and full sensor payloads are omitted.

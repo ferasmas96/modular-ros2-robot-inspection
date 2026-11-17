@@ -1,0 +1,80 @@
+LiDAR-001A — RS-Helios-16P simulation design research
+Date: 2026-11-15
+Scope: read-only research and planning. No sensor/setup/software changes; no launch.
+
+Manufacturer verification
+-------------------------
+RoboSense official downloads page:
+  https://www.robosense.ai/en/resources-81
+It lists a Helios 16 User Guide EN (2023-11-30) and describes Helios 16 as
+16-beam. Download action requires submitting a contact form; no form was
+submitted and no contact details were provided.
+
+Official RoboSense SDK:
+  https://github.com/RoboSense-LiDAR/rslidar_sdk
+  https://github.com/RoboSense-LiDAR/rslidar_sdk/blob/main/doc/intro/02_parameter_intro.md
+  https://github.com/RoboSense-LiDAR/rs_driver/blob/897b14d3bdb6186a75df27ba51b65b5bd5557723/src/rs_driver/driver/decoder/decoder_RSHELIOS_16P.hpp
+Confirmed from SDK: RSHELIOS_16P decoder has 16 laser channels; SDK supports
+XYZI and XYZIRT (x,y,z,intensity,ring,timestamp), ROS PointCloud2 output,
+LiDAR-clock or host-clock cloud timestamps, configurable first/last point
+cloud stamp, per-channel timestamps in decoder, and dual/strongest/last/nearest
+return modes.
+
+Not verified from accessible model-specific official material: physical
+horizontal/vertical FOV, vertical channel angles, scan frequency, horizontal
+angular resolution, manufacturer detection range, and point rate. SDK decode
+bounds/config defaults were not used as hardware performance specifications.
+The decoder's code-level coordinate calculation is documented in
+docs/07_sensor_integration.md; a REP-103 convention was not found in the
+accessible manual.
+
+Gazebo and bridge
+-----------------
+Existing local Clearpath Xacros inspected:
+  clearpath_sensors_description/urdf/velodyne_lidar.urdf.xacro
+  clearpath_sensors_description/urdf/ouster_os1.urdf.xacro
+Both use Gazebo gpu_lidar with configurable scan geometry and range.
+
+Gazebo Harmonic documentation:
+  https://gazebosim.org/docs/harmonic/sensors/
+GPU lidar source:
+  https://github.com/gazebosim/gz-sensors/blob/gz-sensors8/src/GpuLidarSensor.cc
+It appends /points to the configured sensor topic; outputs packed cloud fields
+XYZ (float32), intensity (float32), ring (uint16); no point-time field appears.
+Jazzy bridge supports PointCloud2 <-> PointCloudPacked:
+  https://docs.ros.org/en/jazzy/p/ros_gz_bridge/
+Official demo mapping:
+  https://github.com/gazebosim/ros_gz/blob/jazzy/ros_gz_sim_demos/launch/gpu_lidar_bridge.launch.py
+
+GLIM
+----
+  https://github.com/koide3/glim/blob/1a197c999e4865f5cab7c9cd25474128413ebbca/config/config_sensors.json
+  https://github.com/koide3/glim/blob/1a197c999e4865f5cab7c9cd25474128413ebbca/include/glim/util/ros_cloud_converter.hpp
+  https://github.com/koide3/glim_ros2/blob/4d4ec524ccf1b02aa09b0af2af767ecc54343798/src/glim_ros/glim_ros.cpp
+Confirmed from the implementation: ROS input topics are PointCloud2 and Imu;
+XYZ fields are required; intensity and ring are optional/configurable. The
+converter recognizes configurable per-point time fields, but when none is
+present it leaves the time vector empty; the inspected preprocessor still
+passes a time vector for each non-empty cloud. The cloud and IMU header stamps
+are consumed, message frame IDs are autodetected if not configured, and
+T_lidar_imu transforms IMU-frame points into the LiDAR frame. GLIM has a
+global_shutter_lidar option to zero point
+times/disable deskew. The inspected cloud preprocessor calls
+add_times(raw_points->times) for a non-empty cloud. The global shutter setting
+zeroes times only after add_times, and does not create a missing field.
+Therefore direct GPU-LiDAR/bridge-to-GLIM input is not verified; an approved
+adapter adding per-point zero relative times or another compatible producer/
+revision must be tested first. Zero times do not validate physical
+motion compensation.
+
+Plan
+----
+Preserve /home/feras/clearpath_imu001a_test. In Task 11B, verify fresh paths,
+then copy it to a new combined test setup. Add a project-owned gpu_lidar Xacro
+and explicit PointCloudPacked -> PointCloud2 bridge only to that copy. Proposed
+Gazebo base topic: /a300_00000/sensors/helios_16p; expected cloud topic:
+/a300_00000/sensors/helios_16p/points; ROS type sensor_msgs/msg/PointCloud2;
+frame helios_16p_link. Parent top_plate_default_mount; mount pose is TBD pending
+the exact mechanical drawing, clearance check, and frame convention.
+Do not set numeric scan parameters until the model-specific documentation is
+available. Do not edit Clearpath source or run generators.

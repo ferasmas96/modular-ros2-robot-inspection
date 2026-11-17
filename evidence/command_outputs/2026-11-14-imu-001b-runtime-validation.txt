@@ -1,0 +1,88 @@
+Task IMU-001B — runtime validation of the isolated simulated IMU
+Date: 2026-11-14
+
+Launch command
+--------------
+source /opt/ros/jazzy/setup.bash
+source /home/feras/clearpath_ws/install/setup.bash
+ros2 launch clearpath_gz simulation.launch.py \
+  setup_path:=/home/feras/clearpath_imu001a_test \
+  generate:=false
+No generator was run. The active /home/feras/clearpath setup was not launched.
+
+Startup
+-------
+World: warehouse.sdf loaded.
+User observation: Husky was visible in Gazebo.
+Controllers: joint_state_broadcaster and platform_velocity_controller loaded
+and activated according to the launch log.
+Gazebo IMU sensor advertised:
+  /a300_00000/sensors/imu_0/data
+
+Runtime interfaces
+------------------
+Gazebo:
+  topic: /a300_00000/sensors/imu_0/data
+  type: gz.msgs.IMU
+  publishers: 1
+  bridge subscribers: 1
+ROS:
+  topic: /a300_00000/sensors/imu_0/data
+  type: sensor_msgs/msg/Imu
+  publisher: 1, node /a300_00000/sensors/imu_0_gz_bridge
+  direction: Gazebo to ROS
+  ROS publisher at topic-info check: 1; subscriber count at that instant: 0
+data_raw:
+  Gazebo publishers: 0; bridge subscribers: 1
+  A ROS publisher endpoint was created by the bridge, but no Gazebo raw
+  publisher or raw messages were observed.
+
+Messages, timing, and frame
+---------------------------
+ROS header frame_id: imu_0_link
+ROS sample stamps: 100.752 s and 103.761 s; simulation clock advanced.
+Bounded topic hz: mean 99.985 Hz; interval extrema 5–16 ms; 505-sample window.
+Motion capture: 4,404 messages over 44.028 simulation seconds; mean interval
+10.000 ms, min 9 ms, max 12 ms; 0 non-increasing timestamp pairs; 0
+non-finite numeric values. The quaternion norm ranged from approximately
+0.9999999999999994 to 1.0000000000000002.
+Stationary start/end: angular velocity effectively zero; linear acceleration
+approximately (0, 0, +9.8) m/s^2; orientation populated; covariance arrays
+all zero (not an accuracy claim).
+Manual movement capture: user drove W, then A, then stopped.
+  angular_velocity.z peak: +0.475 rad/s
+  peak horizontal linear acceleration: 11.63 m/s^2
+  captured quaternion-derived yaw: about 0.926 rad at start, -2.437 rad at end
+Final raw and filtered odometry position: approximately (2.724, 1.916, 0) m.
+Final odometry velocities: near zero.
+
+TF, regression, and EKF
+-----------------------
+With /tf and /tf_static remapped to the namespaced topics,
+base_link -> imu_0_link resolved to approximately (0, 0, 0.295) m with
+identity rotation.
+odom -> base_link resolved; /a300_00000/tf and /tf_static were active.
+Raw and filtered odometry topics each had one publisher. /clock had one
+publisher and advanced.
+EKF odom0: platform/odom. EKF imu0: parameter not set.
+EKF and IMU bridge use_sim_time: true.
+The test-copy localization.yaml matches the active baseline; no IMU fusion.
+The active setup matched its private backup after the test.
+
+Warnings and shutdown
+---------------------
+Gazebo warned that gz_frame_id is not a standard SDF element and copied it as
+an extension; the resulting ROS frame_id was nevertheless imu_0_link.
+Controller update period warning: 20 ms controller period vs 3 ms Gazebo
+period. The configured PS4 joystick device was unavailable; keyboard movement
+was user-confirmed. Repeated timeout/braking notices occurred while idle.
+ros2 control CLI was unavailable; controller activation was verified in logs
+and the live ROS graph.
+The launch wrapper exited with status 143 and left child processes. Each
+remaining test process was individually identified and stopped by PID; a final
+process check found no test/Gazebo processes. No unrelated process was signaled.
+
+Not tested
+----------
+GX5-25 hardware fidelity, IMU noise/bias/calibration, data_raw publication,
+long-duration timing, and GLIM integration. No screenshot was captured.

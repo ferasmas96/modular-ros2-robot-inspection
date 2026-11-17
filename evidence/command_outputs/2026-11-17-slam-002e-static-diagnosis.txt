@@ -1,0 +1,48 @@
+SLAM-002E — GLIM 1.2.2 odometry processing diagnosis (static phase)
+Date: 2026-11-17
+Runtime status: NOT RUN; no Gazebo or GLIM launch in this phase.
+
+Sources inspected
+- GLIM ROS 2 commit 4d4ec524ccf1b02aa09b0af2af767ecc54343798:
+  src/glim_ros/glim_ros.cpp
+  src/glim_rosnode.cpp
+- GLIM commit 1a197c999e4865f5cab7c9cd25474128413ebbca:
+  src/glim/util/time_keeper.cpp
+  src/glim/preprocess/cloud_preprocessor.cpp
+  src/glim/odometry/async_odometry_estimation.cpp
+  src/glim/odometry/odometry_estimation_imu.cpp
+  src/glim/odometry/odometry_estimation_cpu.cpp
+  src/glim/common/cloud_deskewing.cpp
+- Task 12D sanitized runtime evidence and private logs.
+
+Diagnosis
+- Task 12D verified active cloud/IMU inputs, compatible QoS, valid TF, GLIM subscriptions, and initial IMU-state estimation. It did not capture debug traces proving LiDAR callback/conversion/preprocessing/CPU frame insertion/state update.
+- PointCloud2 callback calls extract_raw_points(), TimeKeeper::process(), CloudPreprocessor::preprocess(), and asynchronous odometry insert_frame(). Failed extraction logs "failed to extract points from message"; preprocessing has TRACE input/output point counts.
+- TimeKeeper rejects rewinding cloud stamps. Explicit all-zero relative times are not rejected. Mode A global-shutter preprocessing keeps times at zero and scan_end_time equals the frame stamp. Empty point/time arrays remain a source-level hazard.
+- Preprocessing removes non-finite points and points outside configured 0.5–100 m range. It warns below 100 points; the LOOSE initializer skips a frame below 50 points and requires its configured 3-second initialization window and IMU data. The 5,760-point stream with a 10,000 target gets a sampling ratio above 0.99, so the random-grid sampler clones rather than downsamples.
+- The async worker waits until newest IMU stamp reaches scan_end_time; it reports debug waits and warns if more than 10 frames queue. CPU insert_frame trace shows scan arrival at odometry. `frames updated` follows a subsequent scan's smoother estimate update. `workload=` is only a queue count.
+- With mapping and extensions disabled, GLIM ROS polls estimator results but does not publish a default odometry topic or save an odometry trajectory. The normal shutdown "waiting for odometry estimation" line is not a failure signal.
+- Viewer extension was not selected: its TF broadcaster publishes GLIM map->odom and odom->base_frame, which risks conflicting with Clearpath odom->base_link. `publish_imu2lidar=false` suppresses only imu->lidar.
+
+Static diagnostic configuration
+- Private copy: /home/feras/glim_ws/configs/mode_a_diagnostic/
+- Baseline: /home/feras/glim_ws/configs/mode_a_zero_time/
+- Private log directory: /home/feras/glim_ws/runs/mode_a/run_20261117T122103Z_task12e_diagnostic/
+- Validation PASS: same 15 files; only config_logging.json differs, and only its logging.log_dir value differs. The diagnostic log_dir is the unique private run directory.
+- Existing /tmp/glim_odom.log was not modified. /tmp/glim_log.log was absent at inspection; debug:=true writes this hard-coded path, so check again before any authorized launch and preserve output without overwriting.
+
+Processing-stage status at end of static phase
+Stage                                      Status
+PointCloud2 publisher active              PASS (Task 12D)
+GLIM cloud callback executed              NOT VERIFIED
+PointCloud2 conversion succeeded           NOT VERIFIED
+Cloud preprocessing succeeded              NOT VERIFIED
+CPU odometry received scans                NOT VERIFIED
+IMU initialization succeeded               PASS (Task 12D)
+Odometry estimate produced                 NOT VERIFIED
+Trajectory or odometry observable          NO (disabled outputs by config)
+Conflicting TF publishers avoided          PASS (no extension loaded)
+Protected files preserved                  PASS (no protected runtime config changed)
+
+Proposed least-invasive observation
+After separate approvals, verify live simulation inputs first, then run one stationary, headless Mode A CPU test with debug:=true and config_path=/home/feras/glim_ws/configs/mode_a_diagnostic. Use callback timestamp traces, conversion warning absence plus preprocessing traces, CPU insert_frame traces, IMU queue messages, and subsequent "frames updated" traces to distinguish each stage. Do not start GLIM before a second explicit approval. Do not enable the viewer, mapping, RViz, Mode B, or robot motion. Stop on failure; no speculative retries.

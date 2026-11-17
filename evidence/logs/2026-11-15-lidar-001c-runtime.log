@@ -1,0 +1,23 @@
+LiDAR-001C — Sanitized runtime log excerpt
+Date: 2026-11-15
+
+Gazebo reported the generic GPU-LiDAR advertising:
+  /a300_00000/sensors/helios_16p
+  /a300_00000/sensors/helios_16p/points
+
+Observed startup/runtime warnings:
+  The warehouse SDF gravity element was not defined in the expected SDF
+  location; Gazebo copied it into the running simulation.
+  SDF conversion copied the non-standard gz_frame_id sensor child.
+  Controller update period 0.02 s was slower than the 0.003 s Gazebo period.
+  Controller remapping arguments are deprecated.
+  The configured /dev/input/ps4 joystick device could not be opened; keyboard
+  teleoperation was used successfully.
+  The controller emitted idle velocity-timeout/braking warnings.
+  The EKF reported missed update-rate errors under load, including one 0.408 s
+  update and several 0.027–0.039 s updates.
+
+These warnings were recorded without changing sensor, controller, EKF, or
+simulation settings. The Gazebo sensor, ROS bridge, IMU, TF, odometry, and
+user-confirmed RViz cloud display remained available. The SDF frame warning did
+not prevent the observed cloud header frame_id from being helios_16p_link.

@@ -1,0 +1,70 @@
+LiDAR-001B — project-owned LiDAR static validation
+Date: 2026-11-15
+Scope: static validation only; Gazebo and GLIM were not launched.
+
+Created package:
+  src/husky_a300_sensor_extensions/
+  package.xml
+  CMakeLists.txt
+  urdf/rs_helios_16p.urdf.xacro
+  config/rs_helios_16p_bridge.yaml
+  launch/rs_helios_16p_bridge.launch.py
+
+Isolated setup:
+  Test:   /home/feras/clearpath_lidar11b_test
+  Backup: /home/feras/clearpath_lidar11b_backup
+The test and backup directories are owner-only. Only test-copy robot.yaml was
+updated with the platform.extras.urdf package/path; generate_description was
+run only against the test copy and generated its robot.urdf.xacro. The copied
+platform-service, sensors-service, and imu_0 launch files had their stale
+absolute setup paths redirected to the new test copy; sensor and EKF settings
+were not changed.
+
+Static-test parameters (synthetic, not manufacturer specifications):
+  Parent frame: top_plate_default_mount
+  Child frame: helios_16p_link
+  Pose: xyz [0, 0, 0.10] m, RPY [0, 0, 0] rad (provisional)
+  Vertical samples: 16 (verified channel count)
+  Horizontal samples: 360
+  Horizontal angular limits: -pi to +pi rad
+  Vertical angular limits: -0.261799 to +0.261799 rad
+  Update rate: 10 Hz
+  Range: 0.1 to 20.0 m
+  Range resolution: 0.01 m
+
+Expected interface:
+  Gazebo base: /a300_00000/sensors/helios_16p
+  Gazebo cloud: /a300_00000/sensors/helios_16p/points
+    gz.msgs.PointCloudPacked
+  ROS cloud: /a300_00000/sensors/helios_16p/points
+    sensor_msgs/msg/PointCloud2
+  Bridge direction: GZ_TO_ROS; use_sim_time defaults true
+
+Commands executed:
+  colcon build --packages-select husky_a300_sensor_extensions
+  ros2 run clearpath_generator_common generate_description \
+    -s /home/feras/clearpath_lidar11b_test
+  xacro /home/feras/clearpath_lidar11b_test/robot.urdf.xacro
+  check_urdf <temporary-expanded-urdf>
+  ros2 launch husky_a300_sensor_extensions \
+    rs_helios_16p_bridge.launch.py --show-args
+
+Results:
+  PASS: only the new package was built.
+  PASS: Xacro expanded through the installed package extension hook.
+  PASS: check_urdf parsed one connected tree with top_plate_default_mount,
+        helios_16p_link, imu_0_base_link, and imu_0_link.
+  PASS: GPU-LiDAR tag, 16 vertical samples, and Gazebo base topic inspected.
+  PASS: bridge YAML parsed with requested types, endpoints, and GZ_TO_ROS.
+  PASS: bridge launch file parsed with --show-args; no process was launched.
+  PASS: copied platform/IMU launch files parse and no longer reference the old
+        IMU test directory.
+  PASS: active setup and validated IMU setup content digests unchanged.
+  PASS: backup relative-path content manifest matches the validated IMU setup.
+  NOT TESTED: Gazebo startup, runtime sensor output, ROS publication, frequency,
+              point-cloud fields at runtime, or GLIM input.
+
+The simulated LiDAR is a generic 16-channel Gazebo GPU-LiDAR model. Its scan
+characteristics have not yet been validated against the physical RoboSense
+RS-Helios-16P. The generated point cloud does not yet provide a verified
+per-point timestamp field compatible with GLIM.

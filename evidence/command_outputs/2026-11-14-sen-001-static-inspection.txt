@@ -1,0 +1,53 @@
+SEN-001 — static sensor configuration and generator inspection
+Date: 2026-11-14
+Scope: read-only; no simulator launch, generator execution, package install, or configuration edit
+
+Active configuration: /home/feras/clearpath/robot.yaml
+- Sensor arrays camera, gps, imu, lidar2d, and lidar3d are empty.
+- Platform attachments include front_bumper, rear_bumper, and top_plate.
+- Custom link and mount arrays are empty.
+- No other robot.yaml content is reproduced here.
+
+Generated sensor directory: /home/feras/clearpath/sensors
+- Only sensors/launch/sensors-service.launch.py and its Python cache were present.
+- The launch file returns an empty LaunchDescription.
+- No generated per-sensor parameter files were present.
+
+Version/mapping inspection:
+- Installed clearpath_gz: 2.9.4.
+- Installed clearpath_generator_gz: 2.9.4.
+- Workspace clearpath_common, clearpath_description, clearpath_generator_common, and clearpath_sensors_description sources: 2.9.19.
+- Workspace and installed clearpath_config: 2.9.8.
+- Workspace descriptions map Velodyne, Ouster, Seyond, and Hesai 3D LiDAR models; no RoboSense/RS-Helios-16P model was found.
+- Installed Gazebo SensorParam bridge map includes Velodyne, Ouster, and Seyond 3D LiDAR mappings to LaserScan and PointCloud2; Seyond is launch-disabled by default. The map does not include Hesai or RoboSense; Hesai is also launch-disabled by default.
+- Hesai configuration is URDF-only by default in the inspected source.
+- Installed Microstrain IMU parameter mapping bridges data and data_raw; the generic Microstrain Gazebo Xacro declares a sensor topic named data.
+- Intel RealSense has an RGB-D description and installed bridge paths for color/depth image, camera info, and point cloud.
+- OAK-D has a description, but is absent from the installed Gazebo RGB-D parameter map and depth image bridge list.
+- Installed ros_gz_bridge docs list sensor_msgs/Imu <-> gz.msgs.IMU and sensor_msgs/PointCloud2 <-> gz.msgs.PointCloudPacked.
+
+Mount inspection:
+- A300 Xacro defines default_mount at the chassis top; active config has a top_plate attachment.
+- Clearpath's A300 integration guide describes base_link at the bottom of the chassis (+X forward, +Y left) and a PACS M5x0.8 top-plate grid at 80 mm spacing.
+- No sensor mount coordinates or sensor TF frames are configured.
+- The provisional IMU coordinate (x=0.20, y=0, z=0.26 m) is not configured or validated; its parent frame is unconfirmed.
+
+Runtime status:
+- Simulation and RViz were not launched.
+- No sensor topic, update rate, frame, data quality, or movement response was tested.
+- No screenshots or runtime logs were produced for SEN-001.
+
+Sources inspected:
+- /home/feras/clearpath/robot.yaml (only the fields summarized above)
+- /home/feras/clearpath/sensors/launch/sensors-service.launch.py
+- /home/feras/clearpath_ws/src/clearpath_common/clearpath_platform_description/urdf/a300/a300.urdf.xacro
+- /home/feras/clearpath_ws/src/clearpath_common/clearpath_generator_common/clearpath_generator_common/description/sensors.py
+- /home/feras/clearpath_ws/src/clearpath_common/clearpath_config/clearpath_config/sensors/types/lidars_3d.py
+- /home/feras/clearpath_ws/src/clearpath_common/clearpath_sensors_description/urdf/
+- /opt/ros/jazzy/lib/python3.12/site-packages/clearpath_generator_gz/launch/sensors.py
+- /opt/ros/jazzy/lib/python3.12/site-packages/clearpath_generator_gz/param/sensors.py
+- /opt/ros/jazzy/lib/python3.12/site-packages/clearpath_generator_gz/launch/generator.py
+- https://gazebosim.org/docs/harmonic/sensors/
+- https://docs.clearpathrobotics.com/docs_robots/outdoor_robots/husky/a300/integration_husky
+- https://docs.ros.org/en/jazzy/p/ros_gz_bridge/
+- https://koide3.github.io/glim/

@@ -1,0 +1,114 @@
+SLAM-002A — GLIM installation and configuration preflight
+Date: 2026-11-15
+Scope: Read-only inspection and research. No GLIM/Gazebo launch, install, build,
+APT source change, workspace build, robot configuration change, or runtime test.
+
+Environment and dependency inventory
+- Ubuntu 24.04.5 on WSL2; ROS 2 Jazzy and the existing
+  /home/feras/clearpath_ws/install overlay resolve.
+- No GLIM/GTSAM package or source repository is present; no GLIM PPA is configured.
+- 16 logical CPUs; 7.3 GiB RAM (about 5.3 GiB available); about 948 GiB free disk.
+- RTX 4060 visible through WSL (/dev/dxg and libcuda.so.1), 8 GiB VRAM,
+  compute capability 8.9. nvcc and libcudart are absent.
+- Present: CMake 3.28.3, GCC 13.3, colcon, make, git, rosdep, Eigen 3.4,
+  PCL 1.14, OpenCV 4.6, Boost 1.83, TBB 2021.11, fmt 9.1, spdlog 1.12,
+  nanoflann 1.5.4, OpenMP, and relevant ROS Jazzy sensor/TF/rosbag packages.
+- Absent for source build: GTSAM, GTSAM Points, libmetis-dev. Optional viewer
+  development dependencies Iridescence, GLFW, and GLM are also absent.
+  Ninja is absent; make is available.
+
+Official compatibility, packages, and inspected source revisions
+- Official installation guide:
+  https://koide3.github.io/glim/installation.html
+- Official Ubuntu 24.04 package index:
+  https://koide3.github.io/ppa/ubuntu2404/Packages
+- Package index lists CPU ros-jazzy-glim-ros 1.2.2-0noble,
+  ros-jazzy-glim 1.2.2, libgtsam-points-dev 1.2.2, and
+  libgtsam-notbb-dev 4.3.0. The PPA is not configured, so APT has no candidate;
+  none of these packages is installed. Index values do not prove exact source
+  commit provenance for the PPA binaries.
+- Source references inspected:
+  GLIM core: koide3/glim 1a197c999e4865f5cab7c9cd25474128413ebbca
+  GLIM ROS 2: koide3/glim_ros2 4d4ec524ccf1b02aa09b0af2af767ecc54343798
+  GTSAM Points: koide3/gtsam_points 8e94654558dfbe7ddb0341de300daaf17e25ee02
+  GTSAM: borglab/gtsam 4.3.0, 71a25ca36c084cbad1f872e812d6d97fbadfdb05
+- CI/source inspection supports Ubuntu Noble and ROS Jazzy CPU builds.
+  CPU is recommended initially; CUDA compiler/toolkit are not installed.
+- CPU source fallback uses config_odometry_cpu.json,
+  config_sub_mapping_cpu.json, and config_global_mapping_cpu.json; upstream
+  config.json defaults select GPU variants. Source builds should disable CUDA,
+  viewer, OpenCV/CV bridge, and native-CPU tuning with the corresponding
+  core-versus-ROS 2 CMake options.
+- Recommended next-task route: review official PPA key/repository setup and
+  APT simulated transaction, then use CPU ros-jazzy-glim-ros if package
+  versions/dependencies match. This changes system ROS packages but not the
+  Clearpath source workspace. Source fallback should use a sibling workspace
+  and pinned commits, not clearpath_ws.
+
+Executable and configuration findings
+- ROS package: glim_ros. Main executable: glim_rosnode. Other inspected
+  executables include glim_rosbag and validator_node; no ROS launch file found.
+- Config files/keys:
+  config.json: CPU/GPU odometry, submapping, global-mapping modules and extensions.
+  config_ros.json: points_topic, imu_topic, imu_qos, points_qos,
+  imu_time_offset, points_time_offset, acc_scale, ang_scale, sensor/base/
+  map/odom frame IDs, publish_imu2lidar, enable_local_mapping,
+  enable_global_mapping and extension_modules.
+  config_sensors.json: T_lidar_imu, intensity_field, ring_field,
+  autoconf_perpoint_times, autoconf_prefer_frame_time,
+  perpoint_relative_time, perpoint_time_scale, global_shutter_lidar.
+- Set use_sim_time=true; config_path accepts an absolute project config path.
+  Keep copied configs/results outside clearpath_ws and upstream package files.
+- Inputs:
+  Mode A cloud /a300_00000/sensors/helios_16p/points_glim
+  Mode B cloud /a300_00000/sensors/helios_16p/points
+  IMU        /a300_00000/sensors/imu_0/data
+  Frames     helios_16p_link and imu_0_link
+- Default sensor-data QoS is BEST_EFFORT/volatile; BEST_EFFORT subscribers
+  accept both the observed RELIABLE bridge publisher and BEST_EFFORT adapter.
+  Viewer map output uses RELIABLE keep-last QoS, depth 1.
+- GLIM ROS viewer extension supplies private ~/map, ~/odom, ~/lidar_odom and
+  related outputs; resolved names depend on namespace/node name. Global map
+  publication is demand-driven and expensive. The extension also publishes TF;
+  its odom/base transforms may conflict with Clearpath/EKF, while default
+  imu-to-lidar publication can duplicate the existing sensor TF chain.
+  publish_imu2lidar=false avoids only the latter. Keep the viewer extension
+  and RViz disabled until TF ownership is resolved.
+
+Extrinsic derivation
+- Measured approximate translations: base_link -> imu_0_link = +0.295 m Z;
+  base_link -> helios_16p_link = +0.342 m Z; rotations identity.
+- T_imu_lidar = inverse(T_base_imu) * T_base_lidar is identity rotation,
+  approximately +0.047 m Z (direct reported sensor-to-sensor transform about
+  +0.048 m). This expresses the LiDAR frame/origin in IMU coordinates.
+- GLIM defines p_lidar = T_lidar_imu * p_imu; therefore GLIM needs the inverse:
+  identity rotation and approximately -0.048 m Z, quaternion [0,0,0,1].
+  Resolve the 0.001 m rounded-value difference from unrounded TF before runtime.
+  This is the provisional simulated mount, not physical calibration.
+
+IMU and timing modes
+- Inspected IMU callback consumes linear_acceleration, angular_velocity, and
+  message stamp; it ignores orientation and covariance. Keep SI units
+  (acc_scale=1, ang_scale=1), verify the live values/stamp monotonicity, and
+  keep the robot stationary through the CPU config's about-3-second
+  initialization. Observed stationary +Z acceleration near 9.8 m/s^2 is
+  consistent with SI specific force; simplified noise/zero covariance are not
+  a hardware-quality sensor model.
+- Mode A: points_glim, FLOAT32 "time" zero seconds; relative-time scale 1.0,
+  global_shutter_lidar=true. This is an instantaneous approximation and disables
+  deskewing.
+- Mode B: original points topic without a time field; global_shutter_lidar=false.
+  TimeKeeper estimates scan duration from cloud header intervals and assigns
+  pseudo-times by point order. At 10 Hz this is approximately 0.1 s, not actual
+  GPU-LiDAR firing timing; first scan has no prior interval. Test separately;
+  no accuracy comparison has been made.
+- Existing evidence: LiDAR about 10 Hz, IMU about 100 Hz, occasional multi-second
+  scheduling gaps, EKF missed-update warnings, and high Gazebo CPU/RSS use.
+  First runtime should use CPU modules, few threads, no RViz/viewer/map
+  subscription, then a stationary startup before user-controlled movement.
+
+Status
+- GLIM installed: NO.
+- GLIM runtime tested: NO.
+- Task 12B started: NO.
+- Private ROS domain value and full cloud payloads are not included here.

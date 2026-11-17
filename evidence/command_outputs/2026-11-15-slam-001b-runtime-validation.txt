@@ -1,0 +1,103 @@
+SLAM-001B - Live PointCloud2 Timing Adapter Validation
+Date: 2026-11-15
+Scope: Runtime-only validation in /home/feras/clearpath_lidar11b_test.
+Approval: User approved Gazebo startup before launch.
+Private configuration: ROS domain sourced from the combined test robot.yaml;
+  its value is intentionally omitted. Active and test configurations were not
+  regenerated or edited. No movement command was sent. GLIM was not launched.
+
+Environment per sourced shell:
+  source /opt/ros/jazzy/setup.bash
+  source /home/feras/clearpath_ws/install/setup.bash
+  export ROS_DOMAIN_ID="$(python3 -c 'import yaml; d=yaml.safe_load(open("/home/feras/clearpath_lidar11b_test/robot.yaml")); print(d["system"]["ros2"]["domain_id"])')"
+  export ROS2CLI_DISABLE_DAEMON=1
+
+Launches:
+  ros2 launch clearpath_gz simulation.launch.py \
+    setup_path:=/home/feras/clearpath_lidar11b_test generate:=false
+  ros2 launch husky_a300_sensor_extensions rs_helios_16p_bridge.launch.py
+  ros2 launch husky_a300_sensor_extensions \
+    pointcloud2_timing_adapter.launch.py
+Adapter defaults: input_topic and output_topic from the project launch file;
+  use_sim_time=true.
+
+Topics and endpoints:
+  Original: /a300_00000/sensors/helios_16p/points
+    sensor_msgs/msg/PointCloud2; bridge publisher RELIABLE.
+  Adapted:  /a300_00000/sensors/helios_16p/points_glim
+    sensor_msgs/msg/PointCloud2; adapter publisher BEST_EFFORT.
+  Adapter subscriber QoS: BEST_EFFORT (compatible with the RELIABLE bridge).
+  Both streams remained available simultaneously.
+
+Matched live cloud comparison:
+  Five original/adapted pairs matched by header timestamp and frame.
+  Both: frame helios_16p_link; dimensions 360 x 16; little-endian;
+    is_dense=false.
+  Original fields:
+    x FLOAT32@0, y FLOAT32@4, z FLOAT32@8,
+    intensity FLOAT32@16, ring UINT16@24.
+  Original point_step=32, row_step=11520, data length=184320 bytes.
+  Adapted adds time FLOAT32@32, count=1.
+  Adapted point_step=36, row_step=12960, data length=207360 bytes.
+  PASS: header stamp, frame, dimensions, original field descriptors and
+    original per-point bytes were preserved in all five pairs, including
+    coordinates (NaN/Inf behavior), intensity, ring and existing padding.
+  PASS: all 28,800 sampled time values were exactly zero (FLOAT32 seconds).
+  The first paired source cloud included 140 non-finite XYZ points; these were
+  retained byte-for-byte. No full cloud payload was saved.
+
+Rates and regression:
+  Original and adapted clouds: approximately 10.00 Hz simulation time and
+    9.99 Hz by wall-clock arrivals in the fixed-window sample.
+  /clock: 333.3 Hz (1,706 samples in the bounded probe).
+  IMU /a300_00000/sensors/imu_0/data: 501 samples / 5 s; 100.0 Hz;
+    frame imu_0_link.
+  Raw odometry /a300_00000/platform/odom: 239 samples; 47.6 Hz; frame odom.
+  Filtered odometry /a300_00000/platform/odom/filtered: 237 samples;
+    47.4 Hz; frame odom.
+  TF resolved base_link -> helios_16p_link at [0, 0, 0.342] m and
+    base_link -> imu_0_link at [0, 0, 0.295] m; identity rotations.
+  EKF runtime parameters: odom0=platform/odom; odom1 and imu0 unset.
+    Existing EKF remained wheel-odometry-only.
+  Message gaps were not independently counted. Processing latency was not
+    measured; preserved header timestamps were not used as a latency proxy.
+
+Resource sample:
+  Five seconds; CPU is percent of one logical CPU; RSS is resident memory.
+  Timing adapter: 11.8% CPU, 75.7 MiB RSS.
+  Existing Helios bridge: 4.0% CPU, 57.6 MiB RSS.
+  Gazebo server: 153.3% CPU, 1075.9 MiB RSS.
+  Gazebo GUI: 446.6% CPU, 1205.5 MiB RSS.
+  Single loaded WSL2 sample only; not a benchmark and does not isolate
+  incremental adapter cost.
+
+Logs and setup integrity:
+  No adapter data-processing errors or bridge warnings/errors were observed
+    while streaming.
+  On requested adapter SIGINT shutdown, rclpy.spin emitted a KeyboardInterrupt
+    traceback and the launch reported exit code -2. The adapter process exited;
+    no Task 11E process remained. Shutdown handling should be reviewed before
+    routine repeated use; no implementation change was made.
+  Gazebo/Clearpath logged controller initialization/update-period and remapping
+  warnings, an imu_0 hardware-info association warning, repeated
+  velocity-timeout braking notices while no command was sent, and an
+  unavailable joystick-device error. The hardware-info warning did not prevent
+  the separately bridged IMU stream from publishing at 100 Hz; the other
+  warnings did not prevent cloud, odometry or TF publication.
+  Active setup matched /home/feras/clearpath_imu001a_backup.
+  Combined sensors/config and platform/config matched
+  /home/feras/clearpath_lidar11b_backup.
+  Validated IMU setup sensors/config and platform/config matched the combined
+  baseline copy. No protected files were modified.
+  All Task 11E launch processes were stopped after capture and verified absent.
+
+GLIM readiness:
+  Candidate schema matches inspected XYZ FLOAT32 and time FLOAT32 seconds
+  expectations; stamps use simulation time and LiDAR/IMU TF is connected.
+  GLIM runtime compatibility is NOT TESTED. Before a controlled test, confirm
+  topic configuration, directed LiDAR-to-IMU extrinsic, IMU measurement
+  compatibility, BEST_EFFORT output QoS compatibility, and simulator load.
+  Enable global_shutter_lidar=true for the explicit zero-time approximation.
+  Preserve a separate test of GLIM TimeKeeper inference on the original
+  unadapted cloud. Zero offsets are instantaneous/global-shutter simulation
+  semantics, not physical firing timing or motion compensation.

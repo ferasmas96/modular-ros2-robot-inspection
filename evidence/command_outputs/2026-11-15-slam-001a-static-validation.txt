@@ -1,0 +1,45 @@
+SLAM-001A — PointCloud2 timing adapter static validation
+Date: 2026-11-15
+Scope: Static package/test validation only. Gazebo, GLIM, and the adapter node were not launched.
+
+GLIM source inspection
+- GLIM revision: 1a197c999e4865f5cab7c9cd25474128413ebbca.
+- Converter recognizes t, time, time_stamp, timestamp. UINT32 is read as nanoseconds; FLOAT32/FLOAT64 as seconds.
+- TimeKeeper treats a present all-zero time vector as relative; it passes its nonnegative/one-second checks and remains zero relative to the cloud stamp.
+- The ROS 2 callback at glim_ros2 revision 4d4ec524ccf1b02aa09b0af2af767ecc54343798 calls TimeKeeper::process before preprocessing. When the converter leaves times empty, TimeKeeper synthesizes pseudo-times from estimated frame interval and point order; this is not physical firing timing.
+- config_sensors.json documents global_shutter_lidar=true as zeroing times and disabling deskewing. For an explicit instantaneous approximation, use the adapter and enable this setting in a future GLIM test configuration.
+- Cloud preprocessing sorts by time and sets scan end from the last offset. All-zero offsets keep scan end at the cloud stamp; equal times do not encode physical point order. GTSAM Points revision 8e94654558dfbe7ddb0341de300daaf17e25ee02 preserves zero times through sampling/voxel averaging.
+- Limitations in the inspected path: PointCloud2 conversion indexes point_step * index rather than row_step; it does not byte-swap according to is_bigendian; TimeKeeper does not safely guard an empty cloud. The LiDAR-001C cloud is tightly packed and little-endian. Do not feed empty clouds to this GLIM revision without a separately validated guard.
+- This corrects the earlier LiDAR-001A/B/C static interpretation that a missing time field by itself blocked GLIM parsing. GLIM fallback timing is inferred and unverified at runtime.
+
+Observed LiDAR-001C input schema
+- Topic: /a300_00000/sensors/helios_16p/points
+- Dimensions: width=360, height=16; little-endian; point_step=32; row_step=11520; payload=184320 bytes.
+- Fields: x FLOAT32@0, y FLOAT32@4, z FLOAT32@8, intensity FLOAT32@16, ring UINT16@24.
+- No recognized point-time field was present.
+
+Adapter output for that input
+- Separate topic: /a300_00000/sensors/helios_16p/points_glim
+- Appended field: time FLOAT32, count=1, offset=32, all values zero seconds relative to the original header stamp.
+- Expected dimensions unchanged; point_step=36; tightly packed row_step=12960; payload=207360 bytes.
+- Original fields/data bytes, header, dimensions, is_bigendian, is_dense, and row padding are preserved. No XYZ/intensity/ring filtering or time synthesis is performed.
+
+Validation commands and results
+- source /opt/ros/jazzy/setup.bash && colcon build --packages-select husky_a300_sensor_extensions
+  PASS — 1 package built.
+- source install/setup.bash && colcon test --packages-select husky_a300_sensor_extensions
+  PASS — package test completed.
+- colcon test-result --verbose
+  PASS — 0 errors, 0 failures, 0 skipped. The pytest xUnit report contains 8 cases, all passed.
+- ros2 pkg executables husky_a300_sensor_extensions
+  PASS — listed pointcloud2_timing_adapter.py.
+- ros2 launch husky_a300_sensor_extensions pointcloud2_timing_adapter.launch.py --show-args
+  PASS — parsed input_topic, output_topic, use_sim_time; no node was launched.
+- git diff --check
+  PASS.
+- diff -qr /home/feras/clearpath /home/feras/clearpath_imu001a_backup
+  PASS — no differences.
+- diff -qr /home/feras/clearpath_imu001a_test /home/feras/clearpath_lidar11b_backup
+  PASS — no differences.
+
+NOT TESTED: live adapter publication, Gazebo integration, GLIM ingestion, or mapping. No package installation, sensor launch, GLIM configuration change, or robot setup change was performed.

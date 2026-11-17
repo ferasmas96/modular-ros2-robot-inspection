@@ -1,0 +1,5 @@
+- ros_topic_name: /a300_00000/sensors/helios_16p/points
+  gz_topic_name: /a300_00000/sensors/helios_16p/points
+  ros_type_name: sensor_msgs/msg/PointCloud2
+  gz_type_name: gz.msgs.PointCloudPacked
+  direction: GZ_TO_ROS

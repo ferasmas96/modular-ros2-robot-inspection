@@ -1,0 +1,82 @@
+SLAM-002D — Stationary GLIM CPU Runtime Validation (Mode A)
+Date: 2026-11-17
+Run directory: /home/feras/glim_ws/runs/mode_a/run_20261117T125100_stationary
+
+Setup:
+- ROS 2 Jazzy; GLIM ROS 2 / GLIM 1.2.2-0noble.
+- Simulation setup: /home/feras/clearpath_lidar11b_test, generate:=false.
+- GLIM config: /home/feras/glim_ws/configs/mode_a_zero_time.
+- CPU module log: load libodometry_estimation_cpu.so.
+- GLIM command:
+  ros2 run glim_ros glim_rosnode --ros-args
+    -r __ns:=/a300_00000 -r __node:=glim_mode_a
+    -p use_sim_time:=true
+    -p config_path:=/home/feras/glim_ws/configs/mode_a_zero_time
+    -p dump_path:=/home/feras/glim_ws/runs/mode_a/run_20261117T125100_stationary/glim_dump
+- Process start/end from GLIM log: 12:57:16.343 / 12:58:59.690; approximately 103.35 s wall.
+- Bounded observation: 25.002 s simulation-time progression in 25.27 s wall.
+- No private ROS domain value is recorded.
+
+Configuration and isolation:
+- Adapted cloud: /a300_00000/sensors/helios_16p/points_glim.
+- IMU: /a300_00000/sensors/imu_0/data.
+- CPU odometry selected; local/global mapping disabled; extension list empty;
+  publish_imu2lidar=false; use_sim_time=true.
+- T_lidar_imu: [0, 0, -0.0475, 0, 0, 0, 1].
+- No movement command, RViz, GLIM viewer, Mode B, or mapping evaluation.
+
+Live sensor validation:
+- Original and adapted clouds: 120 each in the 12.0 s capture; about 9.99 Hz.
+- Both layouts 360x16; original little-endian, point_step 32, row_step 11520,
+  payload 184320 bytes. Adapted point_step 36, row_step 12960, payload
+  207360 bytes.
+- Fields: x FLOAT32@0, y FLOAT32@4, z FLOAT32@8, intensity FLOAT32@16,
+  ring UINT16@24; adapted adds time FLOAT32@32.
+- 120 header-stamp-matched pairs: same header stamp, frame, dimensions, and
+  original field descriptors; all original field bytes identical. Every
+  adapted relative-time value was exactly 0.0. All matched clouds nonempty.
+- IMU: 1197 samples (~99.7 Hz), frame imu_0_link; mean linear_acceleration.z
+  9.800000 m/s^2 (min 9.79999999995, max 9.80000000005); maximum angular
+  speed 6.49e-13 rad/s. RELIABLE/VOLATILE publisher was compatible with
+  GLIM BEST_EFFORT/VOLATILE subscription.
+- Cloud, IMU and /clock timestamps advanced monotonically.
+- Runtime TF: base_link to imu_0_link +0.295 m Z; base_link to
+  helios_16p_link +0.342 m Z; identity rotations.
+
+GLIM observations:
+- Config path and CPU odometry library load were logged.
+- GLIM subscribed to the configured adapted cloud and IMU topics.
+- Log: "estimate initial IMU state" followed by "initial IMU state estimation
+  result" (93 values). IMU initialization PASS.
+- During 25.002 s simulation time, observer received 232 adapted clouds and
+  2459 IMU messages; timestamps were strictly increasing. Node remained alive.
+- Sampled GLIM process CPU: 22.9–23.1%; RSS: approximately 172–174 MiB.
+- No per-scan callback, preprocessing, odometry state, or trajectory output
+  was logged or otherwise verified. Shutdown log said "waiting for odometry
+  estimation". LiDAR processing/odometry result: PARTIAL / NOT CONFIRMED.
+- No glim_dump directory or trajectory/odometry artifact was created.
+- No GLIM warning, exception, or crash was observed.
+
+Shutdown and protected state:
+- GLIM exited after SIGINT; bridge exited cleanly.
+- Adapter SIGINT emitted its known KeyboardInterrupt traceback and exited.
+- Gazebo launch escalated after its 5 s timeout; the remaining wrapper/server/
+  GUI were identified as belonging to this launch and stopped with SIGINT.
+- All Task 12D GLIM, adapter, bridge, launch, and Gazebo processes were
+  subsequently absent.
+- Combined setup's IMU/EKF/control files matched its saved baseline.
+  Active and IMU-only setup localization/control files matched their
+  baselines; the active and IMU-only backup trees have no imu_0.yaml.
+  The IMU-only test imu_0.yaml matched the saved combined sensor baseline.
+- No robot, sensor, IMU, EKF, TF, adapter, or GLIM config was modified.
+- No full cloud payload, private ROS domain value, commit, or push.
+
+Warnings/resource context:
+- Before GLIM, available memory was 3.3 GiB and free disk 948 GiB.
+- Gazebo GUI/server process snapshots were approximately 441%/150% CPU;
+  not a benchmark. Controller command-timeout braking and missing joystick
+  device warnings/errors were observed.
+- Adapter shutdown traceback and Gazebo launch escalation are recorded above.
+
+Evidence file contains only bounded summary data. Raw launch logs and observer
+summary are retained in the private run directory, not copied into Git.

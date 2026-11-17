@@ -1,0 +1,76 @@
+LiDAR-001C — Combined LiDAR and IMU Runtime Validation
+Date: 2026-11-15
+Scope: Isolated /home/feras/clearpath_lidar11b_test only; no generators, builds, or configuration edits.
+ROS domain: sourced from the private test robot.yaml; value intentionally omitted.
+
+Reproduction:
+  source /opt/ros/jazzy/setup.bash
+  source /home/feras/clearpath_ws/install/setup.bash
+  export ROS_DOMAIN_ID="$(python3 -c 'import yaml; d=yaml.safe_load(open("/home/feras/clearpath_lidar11b_test/robot.yaml")); print(d["system"]["ros2"]["domain_id"])')"
+  export ROS2CLI_DISABLE_DAEMON=1
+  ros2 launch clearpath_gz simulation.launch.py \
+    setup_path:=/home/feras/clearpath_lidar11b_test generate:=false
+  ros2 launch husky_a300_sensor_extensions rs_helios_16p_bridge.launch.py
+  ros2 launch clearpath_viz view_robot.launch.py \
+    namespace:=a300_00000 use_sim_time:=true config:=robot.rviz
+
+Gazebo:
+  /a300_00000/sensors/helios_16p/points
+  Type: gz.msgs.PointCloudPacked; active publisher: 1
+  Frame metadata: helios_16p_link
+  Example simulation stamps: 165.801, 165.900, 166.002 s
+
+ROS bridge:
+  /a300_00000/sensors/helios_16p/points
+  Type: sensor_msgs/msg/PointCloud2
+  Bridge: rs_helios_16p_bridge; direction: GZ -> ROS
+  QoS: RELIABLE, VOLATILE; final endpoints: one publisher, one RViz subscriber
+
+PointCloud2 sample:
+  header.frame_id: helios_16p_link
+  header.stamp: advancing simulation time
+  width x height: 360 x 16
+  point_step / row_step: 32 / 11520
+  fields: x@0 FLOAT32, y@4 FLOAT32, z@8 FLOAT32,
+          intensity@16 FLOAT32, ring@24 UINT16
+  little endian; is_dense=false; data length=184320 bytes
+  row_step*height matches data length; all fields fit point_step
+  finite XYZ points: 5620 / 5760; all-zero finite vectors: 0
+  finite range min/median/max: 0.377 / 5.207 / 19.9998 m
+  per-point timing field (t/time/time_stamp/timestamp): absent
+
+Rates and timing:
+  Cloud simulation-time intervals during movement: 0.099-0.102 s
+  Cloud stamps: 287 samples over 28.599 simulation seconds (~10 Hz)
+  Cloud wall-rate rolling windows: typically ~9.4-10.0 Hz; one ~3.03 s
+    wall-clock gap temporarily reduced estimates to ~6.1-6.3 Hz
+  IMU standalone rate windows: ~99.2-100.1 Hz
+  IMU movement capture: 2848 angular samples / bounded 30 s window
+  One Gazebo world-statistics sample: real-time factor 0.672 (not a benchmark)
+
+TF:
+  base_link -> imu_0_link: [0, 0, 0.295] m, identity rotation
+  base_link -> helios_16p_link: [0, 0, 0.342] m, identity rotation
+  imu_0_link -> helios_16p_link: [0, 0, 0.048] m, identity rotation
+  odom -> base_link resolved after movement
+
+Manual movement / regression:
+  User-operated forward and turn; no automated commands.
+  IMU angular velocity z peak: ~0.692 rad/s
+  Filtered odometry peak linear x: ~1.052 m/s; angular z: ~0.510 rad/s
+  Final raw/filtered position: ~[1.934, 3.786, 0] m
+  Final yaw: ~30.5 degrees; final velocities near zero
+  Post-movement cloud payload differed from stationary sample.
+  /clock, wheel odometry, filtered odometry, and namespaced TF remained available.
+  EKF and IMU configuration files matched the Task 11B baseline.
+  Active and validated IMU setups matched their protected backups.
+  RViz user confirmed visible, plausible warehouse points; subscription verified.
+  Shutdown used SIGINT; a remaining Gazebo child was identified as part of this
+  isolated test, stopped, and all test processes were confirmed absent.
+
+Limitations:
+  Gazebo reported a transient wall-clock publication gap and EKF missed-update
+  errors under load. The cloud has no per-point timestamps; direct GLIM input is
+  BLOCKED. Scan values and mounting pose remain synthetic/provisional.
+  No screenshot or raw cloud payload was saved. Private domain value and network
+  addresses are intentionally excluded.

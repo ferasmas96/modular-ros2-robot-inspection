@@ -1,0 +1,80 @@
+Task IMU-001A — isolated simulated IMU static validation
+Date: 2026-11-14
+
+Scope
+-----
+Generated only in /home/feras/clearpath_imu001a_test.
+Private pre-generation backup: /home/feras/clearpath_imu001a_backup.
+Both directories are outside Git and restricted to the owner (directories 0700,
+files 0600). The active /home/feras/clearpath setup was not targeted.
+Host, address, and ROS domain values from robot.yaml are intentionally omitted.
+
+Selected configuration
+----------------------
+model: microstrain_imu
+urdf_enabled: true
+launch_enabled: true
+parent: top_plate_default_mount
+xyz: [0.0, 0.0, 0.05]
+rpy: [0.0, 0.0, 0.0]
+The pose is provisional and relative to the existing top-plate frame, not base_link.
+The model class default update rate is 100 Hz; the Xacro generated 100 Hz.
+
+Generator commands
+------------------
+source /opt/ros/jazzy/setup.bash
+source /home/feras/clearpath_ws/install/setup.bash
+ros2 run clearpath_generator_common generate_description -s /home/feras/clearpath_imu001a_test
+  Generated /home/feras/clearpath_imu001a_test/robot.urdf.xacro
+ros2 run clearpath_generator_common generate_semantic_description -s /home/feras/clearpath_imu001a_test
+  Generated /home/feras/clearpath_imu001a_test/robot.srdf.xacro
+  Non-fatal warning: imu_0_link has visual geometry but no collision geometry.
+ros2 run clearpath_generator_gz generate_launch -s /home/feras/clearpath_imu001a_test
+  Generated sensor, platform, and manipulator service launch files;
+  generated /home/feras/clearpath_imu001a_test/sensors/launch/imu_0.launch.py.
+ros2 run clearpath_generator_gz generate_param -s /home/feras/clearpath_imu001a_test
+  Generated /home/feras/clearpath_imu001a_test/sensors/config/imu_0.yaml
+All four generator commands completed successfully. No simulator was launched.
+
+Static description validation
+-----------------------------
+Command:
+xacro /home/feras/clearpath_imu001a_test/robot.urdf.xacro \
+  namespace:=a300_00000 is_sim:=true
+  Expanded XML parsed successfully with check_urdf.
+  Tree contains:
+    top_plate_default_mount
+      imu_0_base_link
+        imu_0_link
+  Gazebo sensor: name=imu_0, type=imu, always_on=true
+  update_rate=100
+  gz_frame_id=imu_0_link
+  Xacro topic text: a300_00000/sensors/imu_0/data
+
+Generated bridge mappings (GZ_TO_ROS)
+------------------------------------
+gz_topic_name: /a300_00000/sensors/imu_0/data
+gz_type_name: gz.msgs.IMU
+ros_topic_name: imu_0/data (namespace a300_00000/sensors)
+ros_type_name: sensor_msgs/msg/Imu
+
+gz_topic_name: /a300_00000/sensors/imu_0/data_raw
+gz_type_name: gz.msgs.IMU
+ros_topic_name: imu_0/data_raw (namespace a300_00000/sensors)
+ros_type_name: sensor_msgs/msg/Imu
+The Xacro declares only the data topic; no data_raw publisher is established.
+The generated sensor launch starts the parameter bridge with use_sim_time=true
+and a static transform publisher; it does not start a MicroStrain hardware driver.
+
+EKF and active setup protection
+-------------------------------
+The parameter generator added IMU entries to the test-copy localization.yaml.
+That file was restored from the private pre-generation backup to honor the
+no-EKF-change requirement. Backup, test, and active localization files match.
+The active setup compares byte-for-byte with the private backup.
+Nested Clearpath source repositories remained clean.
+
+Runtime
+-------
+Gazebo, RViz2, ROS topic publication, rate, timestamps, frame IDs, data_raw,
+and GX5-25 fidelity were NOT TESTED.

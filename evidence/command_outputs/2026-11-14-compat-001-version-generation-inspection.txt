@@ -1,0 +1,65 @@
+COMPAT-001 — Clearpath version resolution and generation inspection
+Date: 2026-11-14
+Scope: read-only; no generator execution, build, package change, or simulator launch
+ROS_DISTRO: jazzy
+
+APT installed versions and current candidates:
+- clearpath_common: 2.9.17 (installed=candidate)
+- clearpath_description: 2.9.17 (installed=candidate)
+- clearpath_config: 2.9.8 (installed=candidate)
+- clearpath_generator_common: 2.9.17 (installed=candidate)
+- clearpath_generator_gz: 2.9.4 (installed=candidate)
+- clearpath_gz: 2.9.4 (installed=candidate)
+- clearpath_simulator: 2.9.4 (installed=candidate)
+- clearpath_sensors_description: 2.9.17 (installed=candidate)
+
+Workspace source package manifest versions:
+- clearpath_common: 2.9.19
+- clearpath_description: 2.9.19
+- clearpath_config: 2.9.8
+- clearpath_generator_common: 2.9.19
+- clearpath_sensors_description: 2.9.19
+- No workspace source package was found for clearpath_generator_gz, clearpath_gz, or clearpath_simulator.
+
+Active resolution after sourcing /opt/ros/jazzy/setup.bash and /home/feras/clearpath_ws/install/setup.bash:
+- clearpath_common, clearpath_description, clearpath_config, clearpath_generator_common, clearpath_sensors_description resolve under /home/feras/clearpath_ws/install at the versions above.
+- clearpath_generator_gz, clearpath_gz, clearpath_simulator resolve under /opt/ros/jazzy at version 2.9.4.
+
+Python imports under the same environment:
+- clearpath_config: /home/feras/clearpath_ws/build/clearpath_config/clearpath_config/__init__.py (2.9.8 source manifest)
+- clearpath_generator_common: /home/feras/clearpath_ws/install/clearpath_generator_common/lib/python3.12/site-packages/clearpath_generator_common/__init__.py (2.9.19)
+- clearpath_generator_gz: /opt/ros/jazzy/lib/python3.12/site-packages/clearpath_generator_gz/__init__.py (2.9.4)
+- Imported mapping introspection succeeded. No generator was instantiated or run.
+
+Active generator mapping intersection:
+- Description model map: axis_camera, chrobotics_um6, fixposition, flir_blackfly, flir_ptu, hesai_lidar, hokuyo_ust, intel_realsense, luxonis_oakd, microstrain_imu, ouster_os1, redshift_um7, seyond_lidar, sick_lms1xx, stereolabs_zed, velodyne_lidar.
+- Gazebo bridge parameter map: base, chrobotics_um6, flir_blackfly, garmin_18x, hokuyo_ust, intel_realsense, microstrain_imu, novatel_smart6, novatel_smart7, ouster_os1, redshift_um7, seyond_lidar, sick_lms1xx, stereolabs_zed, swiftnav_duro, velodyne_lidar.
+- Shared model paths include microstrain_imu, intel_realsense, velodyne_lidar, ouster_os1, and seyond_lidar.
+- Seyond has description and parameter mappings but is launch-disabled/URDF-only by default.
+- Hesai and Luxonis OAK-D are in the active description map but lack matching complete mappings in installed clearpath_generator_gz 2.9.4.
+- No RoboSense/RS-Helios-16P model was found.
+
+Launch/generation code inspection:
+- clearpath_gz simulation.launch.py includes robot_spawn.launch.py.
+- simulation.launch.py also starts gz_sim.launch.py; generate:=true is not a generation-only action.
+- generate:=true sequences generate_description, generate_semantic_description, generate_launch, and generate_param, then includes generated launches and spawns the robot.
+- generate:=false skips all four generation executables and uses existing setup_path outputs.
+- Input is <setup_path>/robot.yaml; active setup_path is /home/feras/clearpath.
+- Description generation writes robot.urdf.xacro and semantic description outputs.
+- Launch generation removes/recreates sensors/launch, platform/launch, platform-extras/launch, and manipulators/launch under setup_path.
+- Parameter generation removes/recreates sensors/config, platform/config, and manipulators/config under setup_path.
+- The generators read robot.yaml; inspected code does not write that input.
+- Current active launch generator code does not add platform.extras.launch entries to the generated Gazebo launch service. Description generation does support platform.extras.urdf Xacro includes.
+
+Dependency declaration observations:
+- Installed clearpath_generator_gz declares clearpath_config and clearpath_generator_common dependencies without version constraints.
+- Workspace clearpath_generator_common declares clearpath_config version_gte 2.9.0; active clearpath_config 2.9.8 meets that minimum.
+- clearpath_gz depends on clearpath_common, clearpath_generator_gz, clearpath_viz, gz_ros2_control, and ros_gz.
+- clearpath_simulator depends on clearpath_generator_gz and clearpath_gz.
+
+Compatibility status:
+- Package version differences alone do not demonstrate incompatibility; active imports and declared minimum dependencies are satisfied.
+- Static mappings indicate supported native paths for the Microstrain generic Gazebo IMU macro, Intel RealSense, and Velodyne/Ouster GPU LiDAR models. Seyond is launch-disabled by default.
+- No generator execution or runtime topic verification was performed.
+
+Evidence commands were read-only: ros2 pkg prefix/xml, dpkg-query, apt-cache policy, Python importlib/model-map inspection, source/package manifest reads, and launch/generator source inspection.

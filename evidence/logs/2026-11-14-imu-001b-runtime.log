@@ -1,0 +1,17 @@
+2026-11-14 IMU-001B runtime log — sanitized summary
+
+[launch] clearpath_gz simulation.launch.py
+         setup_path:=/home/feras/clearpath_imu001a_test generate:=false
+[world] warehouse.sdf loaded
+[robot] user confirmed Husky visible in Gazebo
+[controllers] joint_state_broadcaster and platform_velocity_controller activated
+[imu] Gazebo advertised /a300_00000/sensors/imu_0/data
+[bridge] imu_0_gz_bridge active; ROS sensor_msgs/msg/Imu messages observed
+[warning] gz_frame_id is not a standard SDF element; resulting ROS frame_id was imu_0_link
+[warning] controller update period 0.02 s vs Gazebo period 0.003 s
+[warning] configured PS4 device unavailable; manual keyboard control worked
+[warning] controller logged timeout/braking while no command was held
+[shutdown] launch wrapper exited with status 143 and left children
+[cleanup] remaining test PIDs were individually stopped; no test/Gazebo processes remain
+
+No IP addresses, ROS domain value, host details, or raw motion capture are included.
