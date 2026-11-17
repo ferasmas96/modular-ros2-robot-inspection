@@ -1,10 +1,12 @@
 # 08. SLAM Integration
 
+**Current status (2026-11-17):** SLAM-002E verified Mode A cloud conversion, preprocessing, CPU odometry insertion and internal state updates. SLAM-003A has prepared and statically validated a separate CPU local/global mapping configuration. Mapping, native saved artifacts, trajectory accuracy and Mode B runtime remain **NOT TESTED**. Earlier milestone results below describe their status at the time.
+
 ### 1. Objective
 
 Prepare a project-owned PointCloud2 adapter for a later GLIM interface test. The adapter appends a recognized per-point time field containing zero seconds for every point. This is an instantaneous/global-shutter simulation approximation; it does not model a spinning LiDAR's acquisition timing or motion distortion.
 
-SLAM-001A statically prepared the adapter. Gazebo was launched for the bounded SLAM-001B runtime check; GLIM was not launched. Live adapter publication was verified, but GLIM runtime compatibility remains untested.
+SLAM-001A statically prepared the adapter. SLAM-001B verified live adapter publication without GLIM; SLAM-002E subsequently verified actual GLIM Mode A processing. SLAM-003A prepares mapping configuration only, as recorded in section 15.
 
 ### 2. System Configuration
 
@@ -299,7 +301,7 @@ The inspected v1.2.2 `TimeKeeper::process` accesses the first and last time entr
 
 The v1.2.2 ROS node itself loads ROS output/TF behavior through extension modules. `librviz_viewer.so` creates the `~/map`, `~/odom`, pose/cloud publishers and broadcasts `map -> odom -> base_frame`; it can conflict with Clearpath's existing `odom -> base_link`. Both prepared `extension_modules` arrays are empty, and `publish_imu2lidar` is false. Thus the prepared headless configs do not load that extension or create GLIM ROS TF publishers. Do not enable the extension until TF ownership is separately resolved.
 
-For a future run with these configs, expected work is GLIM CPU odometry internally and a GLIM save/dump under the chosen `dump_path` at shutdown. Because mapping and ROS viewer extensions are disabled, do **not** expect GLIM map or `~/odom` ROS output topics from these configs. No GLIM or ROS output was launched or observed in this task.
+Correction established by SLAM-002E: these odometry-only configs run GLIM internally but do not save an odometry dump merely because `dump_path` is supplied. Native saving needs a global-mapping instance or an extension save consumer. Because mapping and ROS viewer extensions are disabled, do **not** expect GLIM map or `~/odom` ROS output topics from these configs. No GLIM or ROS output was launched or observed during SLAM-002C.
 
 #### Future stationary headless commands (documented, not executed)
 
@@ -457,3 +459,126 @@ Across the captured run, 1,180 clouds spanned 117.900 simulation seconds (about 
 The run ended on SIGINT with exit status 0. The expected adapter `KeyboardInterrupt` occurred during SIGINT shutdown. The bridge stopped cleanly; after the Gazebo launch exited, its remaining server/GUI child processes were verified as belonging to this run and stopped. No task-owned simulation, bridge, adapter, or GLIM process remained. GLIM's hard-coded `/tmp/glim_log.log` was absent before launch and was moved into the private run directory afterward; the pre-existing `/tmp/glim_odom.log` remained 460 bytes with its original timestamp. No `glim_dump` was created, as expected with mapping/extensions disabled.
 
 **Conclusion:** The success criterion is met for actual scan receipt, conversion, preprocessing, CPU odometry insertion, and internal odometry-state updates. This does not establish trajectory accuracy or provide a ROS odometry output. Sanitized runtime measurements are in [SLAM-002E runtime evidence](../evidence/command_outputs/2026-11-17-slam-002e-runtime-diagnostic.txt); full logs remain in `/home/feras/glim_ws/runs/mode_a/run_20261117T122103Z_task12e_diagnostic/`. Static findings and config validation remain in [SLAM-002E static evidence](../evidence/command_outputs/2026-11-17-slam-002e-static-diagnosis.txt).
+
+### 15. SLAM-003A — Prepare GLIM Mode A CPU Mapping Configuration
+
+**Date:** 2026-11-17. **Result:** PASS for static preparation only. No Gazebo, GLIM, RViz, generator, build, installation or runtime validator was run. No movement command, commit or push was issued.
+
+#### Starting point and inspected saving mechanism
+
+SLAM-002E is the verified processing baseline: 1,180 cloud callbacks/conversions/preprocessing outputs/CPU insertions and 1,149 subsequent state updates. This task does not repeat that experiment or establish mapping success.
+
+Before configuration changes, inspected installed GLIM/core ROS package versions (both `1.2.2-0noble`), `/opt/ros/jazzy/share/glim/config/` CPU mapping defaults and their parameter descriptions, installed mapping/ROS headers, and installed library symbols/embedded export filenames. Cross-checked behavior against upstream **v1.2.2**, rather than the earlier floating-source revisions. This corroborates API availability, not exact source provenance of the PPA binaries.
+
+The standalone `glim_rosnode` handles shutdown by waiting for estimator/mapping queues, then calling `save(dump_path)`. `GlimROS::save` invokes the global mapper's save method without requiring a viewer extension. Local mapping passes marginalized odometry frames into submaps; global mapping consumes those submaps. End-of-sequence processing can flush an incomplete submap at shutdown, so a stationary run need not reach 15 distinct keyframes before saving. This remains a source-supported expectation, not a runtime result.
+
+Native save references:
+
+- [Standalone shutdown and dump_path](https://github.com/koide3/glim_ros2/blob/v1.2.2/src/glim_rosnode.cpp)
+- [ROS module selection, result forwarding, wait and save](https://github.com/koide3/glim_ros2/blob/v1.2.2/src/glim_ros/glim_ros.cpp)
+- [Submap end-of-sequence flush](https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/sub_mapping.cpp), [asynchronous queue drain](https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/async_sub_mapping.cpp)
+- [Native graph and trajectory saving](https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/global_mapping.cpp), [submap saving](https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/sub_map.cpp)
+
+#### Isolated files and exact changes
+
+Operational configuration: `/home/feras/glim_ws/configs/mode_a_cpu_mapping/`, copied from `mode_a_zero_time` (15 files, directory 0700/files 0600). A portable snapshot is in [`configs/glim/mode_a_cpu_mapping/`](../configs/glim/mode_a_cpu_mapping). Following the portability review, its only difference from the operational copy is `logging.log_dir="logs/glim"`, resolved relative to the process working directory. The original byte-identical snapshot was preserved outside Git at `/home/feras/glim_ws/evidence/slam003a_initial_repository_snapshot`. Retained inactive GPU/viewer example files are inherited copies; active references select CPU configs and no extensions.
+
+Only these three values differ from the validated Mode A baseline:
+
+| File / key | Baseline | Mapping configuration |
+|---|---|---|
+| `config_ros.json`: `glim_ros.enable_local_mapping` | false | true |
+| `config_ros.json`: `glim_ros.enable_global_mapping` | false | true |
+| `config_logging.json`: `logging.log_dir` | `/tmp` | `/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/logs/glim` |
+
+The other 13 files are byte-identical to Mode A. Both CPU mapping files also match the installed defaults byte-for-byte:
+
+| Component | Selected library / principal options |
+|---|---|
+| Odometry | `libodometry_estimation_cpu.so`; existing LOOSE/3 s initialization and two threads |
+| Local/submapping | `libsub_mapping.so`; CPU `VGICP`, IMU enabled, local optimization **false**, OVERLAP strategy, at most 15 keyframes, minimum 500 points, overlap threshold 0.6, downsample resolution 0.3 m |
+| Global mapping | `libglobal_mapping.so`; CPU `VGICP`, IMU and global optimization **true**, GICP between factors enabled, sampling rate 0.2, voxel resolution 0.5 m |
+
+`sub_mapping.enable_optimization=false` is the installed CPU default: submaps are still created from odometry. It does not disable the local mapping module. No mapping tuning was introduced.
+
+Preserved settings include adapted cloud `/a300_00000/sensors/helios_16p/points_glim`, IMU `/a300_00000/sensors/imu_0/data`, sensor-data QoS, frame names, zero timestamp offsets, `acc_scale=1`, and exact `T_lidar_imu=[0,0,-0.0475,0,0,0,1]`. Sensors/preprocessing/odometry files are unchanged. Mode A retains explicit zero relative seconds and `global_shutter_lidar=true`; this is not physical LiDAR timing.
+
+`extension_modules=[]` and `publish_imu2lidar=false` remain unchanged. Mapping alone does not enable the viewer's ROS publishers/TF broadcaster. No live ROS map/odometry topic is expected. Clearpath/EKF retains its existing TF ownership.
+
+#### Reserved outputs and expected native artifacts
+
+Prepared a new owner-only run directory `/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/` containing:
+
+- `run_manifest.json`: prepared/not-run status, package versions, config hashes, exact ROS parameters, output paths, simulation identity and expected artifacts.
+- Empty `logs/glim/` and `logs/ros/` directories. Proposed console log: `logs/glim-console.log`, currently absent.
+- Reserved native output path `glim_dump/`, deliberately **not created**. GLIM must create it during native save; an empty directory is not success evidence.
+
+`config_logging.json` controls module log files. `ROS_LOG_DIR` and `dump_path` are separate runtime settings recorded in the manifest; they are not invented GLIM JSON keys. The proposed standalone run uses `debug=false` to avoid the hard-coded `/tmp/glim_log.log`, and `dump_on_unload=false` to avoid the destructor's separate `/tmp/dump` fallback. Standalone shutdown still calls native save.
+
+If mapping succeeds, expect `graph.bin`, `values.bin`, `graph.txt`, `config/`, numbered submap directories such as `000000/` (metadata `data.txt`, `imu_rate.txt`, and compact point-cloud data), plus:
+
+- `odom_lidar.txt`, `odom_imu.txt`: odometry-frame poses.
+- `traj_lidar.txt`, `traj_imu.txt`: mapping-adjusted poses.
+
+Trajectory rows use `timestamp x y z qx qy qz qw` (seconds/metres/quaternion). Native saving does not promise a merged PCD/PLY file or ROS map publication. Sensor trajectories are not automatically `base_link` trajectories or ground truth; their GLIM world/odometry origins must be aligned before later accuracy evaluation. `imu_rate.txt` content is conditional on saved frame data.
+
+Never reuse this run once logs/artifacts exist. For a later run, create a fresh configuration copy with a new log destination, a new manifest and a new dump path; retain this configuration/snapshot as the prepared first-run record. ROS/simulator raw logs stay private; do not copy robot.yaml, domain/network values, full sensor payloads or bulk map data into Git.
+
+#### Static validation results
+
+- **PASS:** 15 JSON-with-comments files parsed per configuration tree, rejecting duplicate keys and non-finite constants; active references resolve.
+- **PASS:** Exact change set is the two mapping booleans and logging directory; topic/time/QoS/extrinsic/TF safeguards are preserved.
+- **PASS:** CPU libraries exist, export module factories and have no unresolved `ldd` dependencies in the sourced Jazzy/workspace environment. No `dlopen`, GLIM executable or validator was run.
+- **PASS:** CPU mapping options match installed defaults; no active GPU factor type or viewer/output extension is selected.
+- **PASS:** Before portability review the snapshot was byte-identical; the current portable snapshot differs from the operational copy only in `logging.log_dir`. All 15 operational manifest SHA256 values match; output log directories are empty and `glim_dump` is absent.
+- **PASS:** Original Mode A/B/diagnostic trees, all five protected Clearpath setups, installed defaults and project sensor package match pre-task file-content hashes. Nested repositories remain clean; `main` and HEAD are unchanged.
+- **NOT TESTED:** Startup/module loading, mapping/submap generation, native save, trajectory content, runtime TF isolation, mapping quality and performance. JSON/linkage checks do not establish runtime compatibility.
+
+Evidence: [SLAM-003A static validation](../evidence/command_outputs/2026-11-17-slam-003a-static-validation.txt), superseded for repository logging-path equality by the [portable snapshot review](../evidence/command_outputs/2026-11-17-slam-003a-portable-review.txt).
+
+#### Proposed SLAM-003B procedure — not executed; requires authorization
+
+1. Recheck `codex-work`, protected hashes, installed versions, operational configuration/manifest hash agreement and the documented logging-only difference from the portable snapshot, empty reserved logs, absent dump/console output and available resources. Stop on any drift or occupied output path. No second GLIM, adapter or competing TF instance should be running.
+2. In each runtime terminal, source Jazzy and the existing workspace; load the private test domain without printing its value. Set `ROS_LOG_DIR` to the reserved `logs/ros` path. Start only the existing combined setup with `setup_path:=/home/feras/clearpath_lidar11b_test generate:=false`, then its existing project LiDAR bridge and timing adapter. Do not launch RViz or a viewer, and do not regenerate files.
+3. Before GLIM, inspect live cloud/IMU type, frame, nonempty tightly packed little-endian layout, zero point times, monotonic simulation stamps, QoS and rates (approximately 10/100 Hz), fixed sensor TF and existing EKF inputs. Verify no extra TF authority. Use bounded sequential probes to limit scheduling load; record simulation-time and wall-clock behavior separately.
+4. Start one stationary headless GLIM instance using the command below. Require all three CPU module-load messages and IMU initialization. Observe up to 30 simulation seconds after initialization, with a 120-second wall-clock ceiling from GLIM startup. No motion is part of this smoke test. Stop on errors, non-finite states, unexpected TF, sustained input gaps/backlog or resource exhaustion; do not tune/retry automatically.
+5. Send SIGINT to GLIM first while inputs remain available. Allow normal odometry/local/global queue draining and native save; monitor shutdown for up to 60 seconds. If it stalls, preserve logs and report the incomplete result before any forceful cleanup decision. Then stop the adapter, bridge and simulation; inspect task-owned leftovers individually.
+6. Require exit status 0, loaded CPU modules, no processing/save exceptions, `graph.txt` reporting at least one submap and positive frame count, nonempty graph/value binaries, submap metadata and compact point data, saved configuration and all four nonempty trajectory files. Check eight numeric columns, finite values, increasing timestamps within each sensor trajectory, near-unit quaternions and plausible stationary poses. Record counts/ranges/resource samples and protected hashes. File existence alone does not pass validation.
+
+Common terminal preparation (future only):
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source /home/feras/clearpath_ws/install/setup.bash
+export ROS_DOMAIN_ID="$(python3 -c 'import yaml; d=yaml.safe_load(open("/home/feras/clearpath_lidar11b_test/robot.yaml")); print(d["system"]["ros2"]["domain_id"])')"
+export ROS2CLI_DISABLE_DAEMON=1
+export ROS_LOG_DIR=/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/logs/ros
+```
+
+Existing inputs, each in its own prepared terminal after authorization:
+
+```bash
+ros2 launch clearpath_gz simulation.launch.py \
+  setup_path:=/home/feras/clearpath_lidar11b_test generate:=false
+ros2 launch husky_a300_sensor_extensions rs_helios_16p_bridge.launch.py
+ros2 launch husky_a300_sensor_extensions pointcloud2_timing_adapter.launch.py
+```
+
+GLIM command in another prepared terminal, only after input checks:
+
+```bash
+mapping_run=/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001
+test ! -e "$mapping_run/glim_dump" || exit 1
+test ! -e "$mapping_run/logs/glim-console.log" || exit 1
+set -o noclobber
+ros2 run glim_ros glim_rosnode --ros-args \
+  -r __ns:=/a300_00000 -r __node:=glim_mode_a_mapping \
+  -p use_sim_time:=true -p debug:=false -p dump_on_unload:=false \
+  -p config_path:=/home/feras/glim_ws/configs/mode_a_cpu_mapping \
+  -p dump_path:="$mapping_run/glim_dump" \
+  > "$mapping_run/logs/glim-console.log" 2>&1
+mapping_exit=$?
+printf 'GLIM exit status: %s\n' "$mapping_exit"
+```
+
+The observation/shutdown bounds above are operator/agent monitoring limits, not an automatic kill timer that could interrupt native saving. With OVERLAP keyframes a stationary submap may appear only on shutdown; this is a persistence smoke test, not multi-submap mapping, loop-closure or accuracy evaluation. No SLAM-003B action has been authorized or performed in SLAM-003A.

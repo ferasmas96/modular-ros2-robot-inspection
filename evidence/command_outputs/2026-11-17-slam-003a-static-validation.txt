@@ -1,0 +1,164 @@
+SLAM-003A — Prepare GLIM Mode A CPU Mapping Configuration
+Date: 2026-11-17
+Result: PASS — STATIC PREPARATION ONLY. Runtime status: NOT TESTED.
+
+Git before changes
+- Repository: /home/feras/clearpath_ws
+- Branch: codex-work; clean (no staged, unstaged or untracked work).
+- HEAD and main: ca1140ef760bd6e28c32229347e75d896bfb38b4.
+- Four nested Clearpath repositories clean on jazzy.
+
+Inspection completed before configuration modification
+- Installed ros-jazzy-glim and ros-jazzy-glim-ros: 1.2.2-0noble (dpkg-query).
+- Read installed CPU local/global mapping configs and GPU-file parameter descriptions.
+- Read installed GlimROS, submapping, global mapping, async wrappers and submap headers.
+- Read v1.2.2 sources (not floating master) for selection, queue forwarding/draining,
+  submap end-of-sequence flush, native shutdown/save and artifact formats:
+  https://github.com/koide3/glim_ros2/blob/v1.2.2/src/glim_rosnode.cpp
+  https://github.com/koide3/glim_ros2/blob/v1.2.2/src/glim_ros/glim_ros.cpp
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/sub_mapping.cpp
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/async_sub_mapping.cpp
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/global_mapping.cpp
+  https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/sub_map.cpp
+- nm -D -C confirms installed GlimROS::wait/save, GlobalMapping::save,
+  AsyncGlobalMapping::save, SubMap::save and SubMapping::submit_end_of_sequence.
+- strings on libglim.so corroborates graph.bin, values.bin and four trajectory names.
+- Source cross-check plus installed symbols does not establish exact PPA build provenance.
+
+Created paths
+- Private operational config: /home/feras/glim_ws/configs/mode_a_cpu_mapping/
+  15 JSON-with-comments files; directory 0700, files 0600.
+- Byte-identical versionable snapshot: configs/glim/mode_a_cpu_mapping/
+- Reserved run: /home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/
+  run_manifest.json (0600); empty logs/glim and logs/ros (0700).
+  logs/glim-console.log and native glim_dump do NOT exist.
+- Destinations were checked absent before creation. No existing run/config was overwritten.
+
+Exact parsed changes from validated mode_a_zero_time
+- config_ros.json: glim_ros.enable_local_mapping false -> true.
+- config_ros.json: glim_ros.enable_global_mapping false -> true.
+- config_logging.json: logging.log_dir /tmp ->
+  /home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/logs/glim.
+- These are also the only two byte-different files. Other 13 files are byte-identical.
+
+Preserved sensor/odometry interface
+- PointCloud2 /a300_00000/sensors/helios_16p/points_glim; frame helios_16p_link.
+- IMU /a300_00000/sensors/imu_0/data; frame imu_0_link.
+- base_frame_id=base_link; map/odom names unchanged.
+- acc_scale=1; imu_time_offset=points_time_offset=0.
+- T_lidar_imu=[0,0,-0.0475,0,0,0,1].
+- autoconf_perpoint_times=false; perpoint_relative_time=true;
+  perpoint_time_scale=1; global_shutter_lidar=true.
+- Sensor-data QoS unchanged, points BEST_EFFORT/VOLATILE/KEEP_LAST depth 5;
+  IMU sensor_data depth 1000.
+- extension_modules=[]; publish_imu2lidar=false; no viewer/output extension.
+- config_sensors.json, config_preprocess.json, config_odometry_cpu.json unchanged.
+
+Mapping choices
+- config_odometry_cpu.json -> libodometry_estimation_cpu.so.
+- config_sub_mapping_cpu.json -> libsub_mapping.so; VGICP CPU factors,
+  enable_imu=true, enable_optimization=false (installed default).
+- config_global_mapping_cpu.json -> libglobal_mapping.so; VGICP CPU factors,
+  enable_imu=true, enable_optimization=true, create_between_factors=true.
+- Both mapping files match installed CPU defaults byte-for-byte. Local optimization
+  false does not disable submapping; no parameter tuning or GPU factors selected.
+- Installed unused GPU/viewer example files retained, with no active references.
+
+Executed static checks (all PASS)
+- Parsed all 15 files in each of six trees: baseline A, B, diagnostic, new mapping,
+  repository snapshot and installed defaults. Comment-aware JSON parser rejects
+  duplicate keys and non-finite constants. All active config references resolve.
+- Checked exact semantic/byte delta, preserved fields and active CPU selections.
+- Checked module existence and exact factories via nm -D --defined-only:
+  create_odometry_estimation_module, create_sub_mapping_module,
+  create_global_mapping_module.
+- ldd on each selected module, with Jazzy + existing workspace sourced:
+  no unresolved dependencies. This is linkage inspection, not module execution.
+- No dlopen, runtime/static GLIM validator, build or unit-test rerun.
+- Compared repository snapshot and operational config byte-for-byte.
+- Checked all manifest SHA256 values, modes, empty log directories, absent dump.
+- Compared pre-task and post-task file path/hash sets: all 172 files under
+  ten protected roots unchanged. Git branches/HEAD and nested clean state unchanged.
+- git diff --check passed.
+
+Native output expectations (NOT PRODUCED / NOT VERIFIED)
+- Standalone node calls wait() then save(dump_path) after shutdown.
+- Global mapper saves graph.bin, values.bin, graph.txt, config/ and numbered submaps.
+- Submaps contain data.txt, conditional imu_rate.txt content and compact cloud data.
+- odom_lidar.txt / odom_imu.txt: odometry poses;
+  traj_lidar.txt / traj_imu.txt: mapping-adjusted poses.
+- Eight columns: timestamp x y z qx qy qz qw.
+- No merged PCD/PLY or ROS map/odom topic promised by this configuration.
+- End-of-sequence can flush a stationary partial submap; actual success is untested.
+- No custom exporter, TF publisher, algorithm or installed-package change.
+
+Proposed runtime settings (NOT EXECUTED; SLAM-003B requires authorization)
+- Namespace /a300_00000; node glim_mode_a_mapping.
+- use_sim_time=true; debug=false; dump_on_unload=false.
+- config_path=/home/feras/glim_ws/configs/mode_a_cpu_mapping.
+- dump_path=/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/glim_dump.
+- ROS_LOG_DIR=/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/logs/ros.
+- debug=false avoids hard-coded /tmp/glim_log.log; module logging is private.
+- Standalone native save remains enabled without dump_on_unload's /tmp/dump fallback.
+- Recheck untouched/empty reservation and manifest before use; never reuse a used run.
+- Existing combined simulation only, setup_path=/home/feras/clearpath_lidar11b_test,
+  generate:=false; existing bridge and one timing adapter; no viewer/RViz/motion.
+- Input checks before GLIM; stationary observation up to 30 simulation seconds
+  after initialization, 120-second wall ceiling; graceful SIGINT and monitored
+  native save before stopping inputs. Detailed procedure is in docs/08_slam_integration.md.
+- Require actual positive submap/frame counts, nonempty compact clouds and four
+  finite timestamped trajectories; existence of a directory/file alone is insufficient.
+
+Protected-root manifest digests
+Algorithm: SHA256 of UTF-8 json.dumps(relative_path_to_file_sha256,
+sort_keys=True, separators=(',', ':')); only file contents/path sets, not atime.
+- /home/feras/clearpath
+  19 files; 1bec9d856b9f426f6b793c2b9dc680ad21c7fadce4dda5f63ede8af85df85961
+- /home/feras/clearpath_imu001a_backup
+  19 files; 1bec9d856b9f426f6b793c2b9dc680ad21c7fadce4dda5f63ede8af85df85961
+- /home/feras/clearpath_imu001a_test
+  22 files; ecc61a66e07ffad542ea7c1a9fbd36836aaef7eaffc21e798ca2afb235f3e112
+- /home/feras/clearpath_lidar11b_backup
+  22 files; ecc61a66e07ffad542ea7c1a9fbd36836aaef7eaffc21e798ca2afb235f3e112
+- /home/feras/clearpath_lidar11b_test
+  22 files; ddf43b20d7276cc791d966e8d18e0758acbe1739fdcf35db1fc79722fc77ef9a
+- /home/feras/glim_ws/configs/mode_a_zero_time
+  15 files; 015d38b94d78fcf730ad9eaa62af56c32c11e684d77d57272cc4173ebe95a9c3
+- /home/feras/glim_ws/configs/mode_a_diagnostic
+  15 files; cdf4e351d2746d4e6c784ef5fd0dac28d16079ec3f9324ac83b039d3278775da
+- /home/feras/glim_ws/configs/mode_b_timekeeper
+  15 files; 3cb10ddd81cb490086af1438b1ed826457ee6eca3391d6f55cff5cdb376f6acc
+- /opt/ros/jazzy/share/glim/config
+  15 files; 50848a9fcea8021be1149293c952dc84b783a8b63c42c83e87f36f6a7be83520
+- /home/feras/clearpath_ws/src/husky_a300_sensor_extensions
+  8 files; a831f591b7244edc0733e35ef395951b349162313d6c5294b1d9d39e6ad88750
+
+Prepared mapping file SHA256 (same operational/snapshot/manifest values)
+6a3bfdfbac445d3a61615835589678fe6aa8aba98296ffb9ef0a7153904affcd  config.json
+1c01083275bd75b131ce3b856bd4e1dde2a18c35276c61352ad4956d06f90c06  config_global_mapping_cpu.json
+1496d97fcd47d3671845c045e0da3cc505ef016b07d57d08a6cb82a15522c80d  config_global_mapping_gpu.json
+ceb2a6e2e88ddbc79125f899e9397381b657e93e084a32900231c40a7b8b8765  config_global_mapping_pose_graph.json
+95add6b30e941bd320da6d0e29245bd31eedcc90d3428c5924419f1a21bca9af  config_logging.json
+66442397f48f3f4ae33543949ec61d2c94571c612d8a38f4f37f89eacc1a9a68  config_odometry_cpu.json
+6070c9b20e11acb551f78d293d8358c34359e0b464e09979b3b19225de123570  config_odometry_ct.json
+62f58079053f940a014844045e2f985a82c2af2b6e47a214b7e19c2f8a8de0c5  config_odometry_gpu.json
+68d2996d4cdab4c4daace3647e6eed934092cc6529aefd0dc71d4409226eb31d  config_preprocess.json
+e1c5d5ee4fc38fe5fb67c0489e6345ad1dedbb72f420f97171432c68d0412697  config_ros.json
+65a6ce737a54a00b169c7075d3e074d108b4beee5fa8f600ad676f90cdd87564  config_sensors.json
+5aa34e56c91c5dfbbc627b2b60375a91a6c8b092adfa2b82bbd09d86aec15dec  config_sub_mapping_cpu.json
+bdc934a120fc457837190714eb888526e5a5c007762c3af6f72f4ea72f3dc380  config_sub_mapping_gpu.json
+78807724166f5096ced9fb3a19fc9cb9fcb0994209c9486f573337da99c0e6b8  config_sub_mapping_passthrough.json
+fe56516a660923cec871d8c15041d4f7fcf6ff08cb4146054b2146e14c03d6c5  config_viewer.json
+
+Git after task
+- codex-work; HEAD and main unchanged at ca1140ef760bd6e28c32229347e75d896bfb38b4.
+- Unstaged: docs/08_slam_integration.md, docs/development_log.md.
+- Untracked: 15 configs/glim/mode_a_cpu_mapping/*.json files and this evidence file.
+- No staged changes; no nested modifications; no commit or push.
+
+Limits
+GLIM startup/module loading, live TF isolation, mapping, artifact validity,
+trajectory accuracy and performance are NOT TESTED. Mode B remains untested.
+No Gazebo/GLIM/RViz/sensor launch, movement, generator, install/upgrade or build.
+Private domain/network values and sensor payloads are omitted.
+

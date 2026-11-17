@@ -1,0 +1,73 @@
+SLAM-003A portable snapshot review — 2026-11-17
+Branch checked before any file creation: codex-work.
+HEAD and main unchanged: ca1140ef760bd6e28c32229347e75d896bfb38b4.
+Existing file contents were not overwritten.
+
+Preserved initial repository snapshot (15 original files, unchanged hashes):
+/home/feras/glim_ws/evidence/slam003a_initial_repository_snapshot
+Current sanitized repository snapshot:
+/home/feras/clearpath_ws/configs/glim/mode_a_cpu_mapping
+Unchanged private operational configuration:
+/home/feras/glim_ws/configs/mode_a_cpu_mapping
+
+Exact differences from validated Mode A:
+{
+  "config_logging.json": [
+    [
+      ".logging.log_dir",
+      "/tmp",
+      "logs/glim"
+    ]
+  ],
+  "config_ros.json": [
+    [
+      ".glim_ros.enable_global_mapping",
+      false,
+      true
+    ],
+    [
+      ".glim_ros.enable_local_mapping",
+      false,
+      true
+    ]
+  ]
+}
+
+Exact differences from unchanged operational mapping configuration:
+{
+  "config_logging.json": [
+    [
+      ".logging.log_dir",
+      "/home/feras/glim_ws/runs/mode_a_mapping/slam003b_001/logs/glim",
+      "logs/glim"
+    ]
+  ]
+}
+
+PASS: 15 JSON-with-comments files parse; active references resolve.
+PASS: Only config_ros.json and config_logging.json differ from Mode A;
+      the other 13 files are byte-identical.
+PASS: Snapshot has no absolute filesystem paths and contains only JSON files;
+      no runtime logs, manifest or output data are included.
+PASS: All three validated baselines, operational mapping config, five protected
+      Clearpath setups, existing run files and existing docs retain their hashes.
+PASS: Initial snapshot archived byte-for-byte; no existing destination overwritten.
+NOT TESTED: startup, mapping, saved trajectories, runtime TF and accuracy.
+No staging, commit, push or runtime test. SLAM-003B awaits user review/authorization.
+
+Current portable file hashes:
+6a3bfdfbac445d3a61615835589678fe6aa8aba98296ffb9ef0a7153904affcd  config.json
+1c01083275bd75b131ce3b856bd4e1dde2a18c35276c61352ad4956d06f90c06  config_global_mapping_cpu.json
+1496d97fcd47d3671845c045e0da3cc505ef016b07d57d08a6cb82a15522c80d  config_global_mapping_gpu.json
+ceb2a6e2e88ddbc79125f899e9397381b657e93e084a32900231c40a7b8b8765  config_global_mapping_pose_graph.json
+c1a7a28ba940b0b158e6fcf1a12a447517bb1f5e09eb5f6e0b88ecab72dc71f9  config_logging.json
+66442397f48f3f4ae33543949ec61d2c94571c612d8a38f4f37f89eacc1a9a68  config_odometry_cpu.json
+6070c9b20e11acb551f78d293d8358c34359e0b464e09979b3b19225de123570  config_odometry_ct.json
+62f58079053f940a014844045e2f985a82c2af2b6e47a214b7e19c2f8a8de0c5  config_odometry_gpu.json
+68d2996d4cdab4c4daace3647e6eed934092cc6529aefd0dc71d4409226eb31d  config_preprocess.json
+e1c5d5ee4fc38fe5fb67c0489e6345ad1dedbb72f420f97171432c68d0412697  config_ros.json
+65a6ce737a54a00b169c7075d3e074d108b4beee5fa8f600ad676f90cdd87564  config_sensors.json
+5aa34e56c91c5dfbbc627b2b60375a91a6c8b092adfa2b82bbd09d86aec15dec  config_sub_mapping_cpu.json
+bdc934a120fc457837190714eb888526e5a5c007762c3af6f72f4ea72f3dc380  config_sub_mapping_gpu.json
+78807724166f5096ced9fb3a19fc9cb9fcb0994209c9486f573337da99c0e6b8  config_sub_mapping_passthrough.json
+fe56516a660923cec871d8c15041d4f7fcf6ff08cb4146054b2146e14c03d6c5  config_viewer.json
