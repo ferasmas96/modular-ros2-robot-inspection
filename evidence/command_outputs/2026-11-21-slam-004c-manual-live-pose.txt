@@ -1,0 +1,163 @@
+SLAM-004C — Live GLIM localization during user-operated movement
+Date: 2026-11-21, Europe/Berlin
+Outcome: ABORTED_REGION_LIMIT_PARTIAL_VALIDATION
+
+The moving output and numerical comparison are validated for the captured
+pre-abort interval. The reviewed center-region guard ended the experiment;
+the planned final stationary hold/full sequence completion is NOT verified.
+No second GLIM run or automatic movement sequence occurred.
+
+Private run:
+  /home/feras/glim_ws/runs/mode_a_mapping/slam004c_manual_001
+  bag/                         native MCAP recording
+  glim_dump/                   native saved map/trajectories
+  observation_002/              continuous calibration/motion observer
+  validation/final_report.json  combined private result
+  validation/trajectory_eval/   native-bag evaluation, full derived CSVs
+Operational config:
+  /home/feras/glim_ws/configs/mode_a_cpu_mapping_pose_output_slam004c_001
+  Only logging.log_dir differs from SLAM-004B; all 16 experiment config hashes
+  are unchanged by runtime. CPU algorithms, pose extension, exact LiDAR/IMU
+  extrinsic, topics, input QoS, timing and TF settings were preserved.
+
+Authorization/control
+  User separately approved simulation/disarmed setup, the W/A calibration,
+  stationary GLIM launch, and manual driving after recording readiness.
+  Existing clear warehouse spawn: x=-4,y=3,z=0.3,yaw=0; generate=false, rviz=false.
+  Stopped only task-owned unbounded command bridge, joystick-command and
+  marker-command nodes; existing mux/controller/EKF/TF retained.
+  Gazebo keyboard -> isolated native raw bridge -> project-owned clamp/gate
+    -> /a300_00000/cmd_vel -> existing mux -> platform/cmd_vel.
+  Disarmed calibration: 103 actual raw messages, peaks 1.0 m/s and 0.5 rad/s;
+  preview peaks 0.10/0.10; robot mux/controller commands zero; wheels/reference
+  stationary. Final raw/preview returned zero. Calibration PASS.
+  Initial observer expired with no recorded W/A inputs; original data retained.
+  Repeated calibration used a continuous observer through cleanup.
+  Setup-only process-name/endpoint-property errors corrected before arming;
+  failed logs retained. Sixteen guard/API/serialization tests subsequently PASS.
+  Four analytic trajectory-math tests PASS. No nonzero ROS test input generated.
+
+Startup/data
+  CPU odometry, local/global mapping and pose extension loaded; IMU initialized.
+  CLI direct verbose inspection succeeded: one PoseStamped publisher,
+    /a300_00000/glim_manual_pose_004c, best_effort/volatile.
+  Typed echo succeeded; viewer/GLIM TF output disabled.
+  Twelve explicit small measurement topics, no LiDAR/IMU payloads in the bag.
+  Recorder: native MCAP, use_sim_time, 8 MiB cache per buffer, all topics subscribed.
+  Verified initial recorded stationary hold: 12.006 simulation seconds.
+  Only after readiness was the user-authorized gate armed; fresh operator events
+  were required. Actual manual control included multiple forward/left bursts
+  and combined linear/yaw inputs, not an automatic scripted route.
+
+Bag (closed, recorder exit 0)
+  bag_0.mcap:   25174123 bytes
+  metadata.yaml:  11534 bytes
+  Native metadata count=deserialized count=100353 messages:
+    /a300_00000/slam/glim/pose              1554
+    /a300_00000/reference/gazebo_pose       7449
+    /clock                               51793
+    /a300_00000/manual/raw_cmd_vel         1157
+    /a300_00000/manual/limited_preview     5051
+    /a300_00000/manual/guard_status         477
+    /a300_00000/cmd_vel                    5052
+    /a300_00000/platform/cmd_vel           3107
+    /a300_00000/platform/odom              7449
+    /a300_00000/platform/odom/filtered     7398
+    /a300_00000/tf                        9864
+    /a300_00000/tf_static                    2
+
+Live-pose checks on recorded data
+  1554 finite unit-quaternion poses, glim_odom reference, base_link body.
+  Stamps 3585.501–3740.802 s, strictly increasing, about 9.999936 Hz by sensor time.
+  Maximum stamp gap 0.102 s; quaternion norms[0.9999999999999999,1.0000000000000002].
+  Maximum adjacent displacement 0.0132665 m; rotation 0.00977292 rad; zero jumps beyond
+    predeclared 0.10*dt+0.05 m / 0.10*dt+0.05 rad criteria.
+  54 live poses after the last turn command. Final stationary bookend unavailable.
+  Actual mux/controller/preview commands: max|linear_x|0.10 m/s,
+    max|angular_z|0.10 rad/s, all other components zero. No cap violations.
+  Wheel-speed peaks 0.103242 m/s and 0.101488 rad/s (physical response, not commands).
+
+Safety abort
+  Reason: reference center left reviewed 1.25 m region.
+  First crossing at 3740.877 s: radius 1.2501397 m; observer disarmed and sent SIGINT
+    to task-owned simulation; GLIM wrapper then stopped/saved gracefully.
+  Final simulator reference radius 1.3402648 m; total path 1.3702443 m.
+  Shutdown reference tail after request:1.029 simseconds /0.0924052m.
+  Last reference 3741.906 s; last GLIM pose 3740.802 s. The final 1.104 s of reference
+    motion has no matching GLIM estimate and is excluded from accuracy statistics.
+  Initial static projected disk bound 2.261005 m (16 parts/49 world collisions,
+    0.541257 m body radius,1.25 m center region, illustrative 0.15 m allowance).
+  The 0.5 m obstacle requirement was not relaxed. Region exit is not evidence of
+    a collision; full 3D/dynamic collision freedom was not certified.
+  No automatic restart, rearm, alternative route or movement followed.
+
+Synchronization/alignment/comparison
+  Reference: same-stamp warehouse->robot->base composition; model/base identity
+    verified in every recorded reference. Live pose already represents base_link;
+    no double sensor conversion. Wheel odometry is not ground truth.
+  Linear translation + quaternion SLERP at estimator HEADER stamps, no
+    extrapolation; all 1554 estimates paired; max reference bracket 0.021 s.
+  One fixed metric SE(3) alignment from 101 stationary pairs,
+    3585.501–3595.500 s; no scale or whole-route best fit and no TF publication.
+  Actual nonzero controller-command interval 3723.012–3740.829 s.
+  Primary captured-motion statistics:
+    Translation ATE RMSE 0.016293294 m (178 poses)
+    Translation ATE max  0.032274293 m
+    Orientation RMSE    0.2935299 deg
+    One-second RPE translation RMSE 0.006614682 m (168 pairs)
+    One-second RPE rotation RMSE   0.1167850 deg
+    RPE time-pair tolerance 0.03 s.
+  Whole paired window ATE RMSE 0.005514527 m includes a long stationary prefix;
+    it must not replace the moving-interval result or imply completed trial accuracy.
+  Numerical results apply to the captured synthetic Mode A interval only.
+
+TF/resources/warnings
+  Namespaced dynamic TF publisher set remained 4, static set 2; root TF sets empty.
+  Native MessageInfo publisher-GID matching: all 11295 observed odom->base_link
+    transforms originated exclusively from /a300_00000/ekf_node.
+  No GLIM/reference/control TF broadcaster or new competing authority detected.
+  Sensor transforms remained base->IMU Z 0.294759 m /base->LiDAR Z 0.342259 m,
+    identity rotations; T_lidar_imu=[0,0,-0.0475,0,0,0,1] unchanged.
+  238 GLIM resource samples:11.98–33.93% of one core, mean 22.95%; RSS 46.2–213.5 MiB
+    including startup; available RAM 1717.1–1920.9 MiB; swap 0. Not a benchmark.
+  One IMU-prediction warning block, undiagnosed; optional mapping-default and
+    extension/license/missing optional glim_ext notices. No GLIM errors/exceptions.
+  No recorder transport/cache loss notices logged; this is not proof of zero DDS
+    loss. Pose/ref gaps bounded as above; raw wheel has 48 duplicate stamps and 0
+    decreases. Filtered wheel/reference/GLIM stamps strictly increase.
+  Raw GUI headers are zero; raw command plots use bag receipt simulation time.
+  Clock froze on simulator shutdown; later zero guard messages retain that stamp.
+    After shutdown the guard graph check reflects disappearing mux endpoints,
+    not a newly introduced command publisher.
+
+Native save/cleanup
+  GLIM SIGINT at 237.713425 wallseconds; exit 0 at 238.314190 s, queues drained/saved.
+  23 native files /4245666 bytes; graph.bin,values.bin,graph.txt,ten config files,
+    one submap /2323 frames /2699 finite compact points and matching finite
+    compact normals/covariances/intensities.
+  Four valid ordered/unit native trajectories,2323 rows each,3508.5–3740.7 s:
+    odom_lidar.txt187784B; odom_imu.txt189957B;
+    traj_lidar.txt187784B; traj_imu.txt189957B.
+  Native sensor trajectories differ from the live base-pose stream; no binary
+    graph/value deserialization was repeated for this task.
+  GLIM, recorder, simulation, corrected guard and bridge/input wrappers exited 0.
+  Task observers stopped; final host process inspection found no runtime leftovers.
+  All 561 original private/protected hashes unchanged. Existing GLIM source,
+    validated configs, previous native maps and checkpoints preserved.
+  codex-work /HEAD f2d9d5b /main unchanged; no staging, commit, push or installation.
+
+Documentation/figures
+  Structured measurements, artifact hashes and transform matrix:
+    2026-11-21-slam-004 c-manual-live-pose.json
+  Figure gallery: evidence/figures/SLAM-004C/README.md
+    Three PNG/SVG plots, processed CSVs, editable plotting source and SHA 256.
+  Offline native bag evaluator: tools/slam_trajectory_eval/
+  Manual relay/test source: tools/manual_drive_guard/
+
+Stop after this single aborted moving run. Review the region guard, observed
+shutdown tail and IMU warning before any separately authorized shorter trial.
+No RTAB-Map, Nav 2, automatic switching or subsequent experiment started.
+
+Final Git verification: codex-work, HEAD f2d9d5b, main/checkpoints unchanged;
+4 modified tracked files and 58 untracked files, including prior pending work.
+Index empty. Old documentation prefixes and all 561 private/protected hashes match.

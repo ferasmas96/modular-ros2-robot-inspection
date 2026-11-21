@@ -1,0 +1,154 @@
+SLAM-004B — Stationary live GLIM pose-output validation
+Date: 2026-11-21 (Europe/Berlin)
+Result: functional stationary runtime PASS; verbose CLI publisher listing INCONCLUSIVE
+
+Private run (fresh; name retained to match SLAM-004A operational logging):
+  /home/feras/glim_ws/runs/mode_a_mapping/slam004a_pose_001
+  manifest task: SLAM-004B
+  native output: glim_dump/
+  detailed analysis: validation/runtime_report.json
+Build/test:
+  /home/feras/glim_ws/validation/slam004b_001
+  isolated build PASS; ten GTest cases PASS
+  colcon aggregate: 11 tests including CTest wrapper, no failures/errors/skips
+  config/module/factory/TF-symbol audit PASS; extension discoverable by bare name
+  runtime library SHA256:
+    9b8a76795ead85a0643e10ed3645417427b917f127bc7fa5bce33037337f4d4f
+
+Authorizations and scope
+  User separately authorized Gazebo/sensor inputs and ONE stationary GLIM run.
+  Gazebo: existing combined setup, warehouse, generate=false, rviz=false,
+          x=-4, y=3, z=0.3, yaw=0.
+  No command publisher, driving, viewer, Nav2, RTAB-Map or switching.
+  Initial sandbox simulation/sensor attempt failed networking: getifaddrs denied;
+  sandbox bridge child aborted. All attempted processes were cleaned, then
+  approved host transport used with distinct logs. No GLIM retry occurred.
+
+Actual single GLIM command (existing environment plus isolated build overlay):
+  ros2 run glim_ros glim_rosnode --ros-args \
+    -r __ns:=/a300_00000 -r __node:=glim_pose_output_test \
+    -p use_sim_time:=true -p debug:=false -p dump_on_unload:=false \
+    -p config_path:=/home/feras/glim_ws/configs/mode_a_cpu_mapping_pose_output \
+    -p dump_path:=/home/feras/glim_ws/runs/mode_a_mapping/slam004a_pose_001/glim_dump
+  Process-group guard: 60 s wall ceiling, 60 s graceful-save allowance.
+  Actual stop: SIGINT after 30 simulation seconds of initialized output.
+
+Live loading and stability
+  libodometry_estimation_cpu.so: PASS
+  libsub_mapping.so: PASS
+  libglobal_mapping.so: PASS
+  libglim_pose_output.so: PASS; TF-free startup message observed
+  IMU initialization: PASS, initial IMU state result logged
+  Viewer absent, publish_imu2lidar=false, no estimation/config changes
+  GLIM processing errors/rejected poses: 0
+  IMU prediction warning blocks: 0
+
+Pose topic
+  /a300_00000/slam/glim/pose : geometry_msgs/msg/PoseStamped
+  Body convention: base_link; header.frame_id=glim_odom for every sample
+  Sole live publisher in direct graph snapshots: /a300_00000/glim_pose_output_test
+  Endpoint QoS: best effort, volatile (configured depth 10)
+  Observed messages: 301
+  Sensor timestamp range: 926.502–956.502 s, span 30.000 s
+  Sensor-time frequency: 10.000000 Hz
+  Wall reception frequency: 9.734554 Hz
+  Stamp intervals: 0.099–0.102 s; strictly increasing; no interval >0.15 s
+  Matched adapted-cloud stamps: 301/301
+  Finite positions/quaternions: 301/301
+  Quaternion norm range: 0.9999999999999999–1.0000000000000002
+  Maximum displacement from first pose: 0.001757937519 m
+  Maximum relative rotation: 0.00008147340123 rad
+  Predeclared stationary limits: 0.10 m / 0.10 rad; PASS
+  Clock reception lag: 0.096–0.414 s; max pose wall gap 0.412086 s
+  Not a global pose, Gazebo alignment or localization-accuracy measurement.
+
+Position ranges (metres in glim_odom):
+  X: [-0.001308126271, -0.001081710802]
+  Y: [-0.000506951805, -0.000379762483]
+  Z: [-0.297760111646, -0.296002198193]
+Quaternion ranges (xyzw):
+  X: [-2.248753729e-5, -6.318426719e-7]
+  Y: [-9.639560601e-7,  3.327810909e-5]
+  Z: [ 7.116097141e-7,  4.758278795e-6]
+  W: [ 0.9999999991864, 0.9999999999991]
+Negative Z follows GLIM-local IMU origin and exact base offset, not world height.
+
+Independent stationarity/input observation
+  Wheel odometry: 2169 messages
+  Max displacement: 2.410765e-17 m
+  Max linear speed: 3.087160e-18 m/s
+  Max angular speed: 2.386331e-18 rad/s
+  Command messages/nonzero commands observed: 0/0
+  No absolute-coordinate comparison across unrelated frames.
+  During monitor: adapted clouds 10.000 Hz, IMU 100.000 Hz, clock 333.333 Hz
+  Sensor preflight cloud/IMU: 9.999/97.954 Hz
+  Best-effort observer counts are not exact DDS dropped-message counters.
+
+TF comparison
+  Namespaced dynamic before=during:
+    /a300_00000/ekf_node
+    /a300_00000/robot_state_publisher
+    /a300_00000/odom_base_tf_bridge
+    /a300_00000/platform_velocity_controller
+  Namespaced static before=during:
+    /a300_00000/robot_state_publisher
+    /a300_00000/imu_0_static_tf
+  Root /tf and /tf_static: no publishers before or during.
+  New GLIM TF publishers / competing parent edges: none.
+  Native read-only rclcpp::MessageInfo publisher GID matched to endpoint GIDs:
+    all 4337 sampled odom->base_link transforms came only from EKF.
+  Live EKF publish_tf=true; controller enable_odom_tf=false.
+  Gazebo TF bridge upstream /model/a300_00000/robot/tf: no publisher.
+  Sensor TF: base->IMU Z=0.294759, base->LiDAR Z=0.342259, identity rotations.
+  Original reused Python probe remapped root TF queries; its root entries are
+  not used. Separate unremapped before/during snapshots provide the comparison.
+
+Resource observations
+  48 monitor snapshots; process values present only while GLIM alive
+  CPU: 21.9445–31.9892% of one core, mean 24.3547%
+  GLIM RSS including startup: 59.3867–178.2500 MiB
+  Available RAM: 2028.5–2257.2 MiB
+  Swap used: 0
+  No safety-stop/resource/stall trigger; sampled figures are not benchmarks.
+
+Warnings and CLI limitation
+  Four absent optional mapping settings used installed defaults:
+    submap_target_num_points=-1; voxel_resolution_max=0.5,
+    voxel_resolution_dmin=5; voxel_resolution_dmax=20.
+  Generic extension/license and missing optional glim_ext package notices.
+  Expected simulation velocity-timeout/braking notices while no command sent.
+  Initial sandbox transport failure/bridge abort retained in separate logs.
+  Requested CLI verbose topic query returned Unknown topic; daemon-free repeat
+  near shutdown also did not capture a live publisher listing. INCONCLUSIVE.
+  Best-effort typed topic echo succeeded at stamp 938.502; actual typed receipt
+  and direct graph/QoS snapshots establish publication. No extra GLIM run.
+
+Shutdown/native save
+  SIGINT at 34.643025 wall seconds; GLIM exit 0 at 34.943543 s.
+  Log: waiting for odometry/local/global mapping; serializing; saved.
+  23 native files, 676332 bytes; all inventoried with SHA256 in structured report.
+  1 submap, 301 retained frames, 2699 finite compact points.
+  graph.bin 1463 B; values.bin 573 B; graph.txt 64 B.
+  Saved configuration: ten JSON files, including config_pose_output.json.
+  Numbered submap: 000000/ (six data/compact-array files).
+  odom_lidar.txt 24080 B / 301 valid rows
+  odom_imu.txt   24381 B / 301 valid rows
+  traj_lidar.txt 24080 B / 301 valid rows
+  traj_imu.txt   24381 B / 301 valid rows
+  All four trajectories finite, unit quaternions, increasing stamps 926.4–956.4.
+  Saved/live boundary windows differ by approximately one scan; not identical.
+  Binary graph/value deserialization was not repeated in this task.
+
+Cleanup/integrity
+  Simulation, bridge, adapter launch wrappers: exit 0 after SIGINT.
+  Adapter child: known KeyboardInterrupt during rclpy destruction / exit -2.
+  Python/native observers stopped; task-created CLI discovery daemon stopped.
+  Host /proc final check: no task-owned/runtime processes remain.
+  All 413 snapshotted private/protected hashes unchanged.
+  All 221 existing project hashes unchanged before documentation updates.
+  Only integration doc/development log appended; two sanitized evidence files added.
+  Branch codex-work; HEAD f2d9d5b and main/checkpoints preserved; index empty.
+  Final Git: 3 modified tracked files, 29 untracked files (includes prior work).
+  No commit, push, reset, stash, clean, generator, package installation or drive.
+
+Stop: one authorized stationary GLIM test completed. No automatic next experiment.

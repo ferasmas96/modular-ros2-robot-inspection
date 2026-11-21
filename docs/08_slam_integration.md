@@ -875,3 +875,299 @@ Evidence: [SLAM-003E sanitized validation](../evidence/command_outputs/2026-11-2
 
 
 **Reusable figure archive (2026-11-21):** The user-supplied ChatGPT top-down map, pose-derived motion-speed plot and interactive HTML map have been copied from Downloads into the [SLAM-003E figure gallery](../evidence/figures/SLAM-003E/README.md). Original downloads and native experiment output remain unchanged; SHA256 provenance is recorded. The gallery includes captions and the experiment's limitations; the external plotting method/alignment has not been independently reproduced. New figures from later tasks follow the [task figure archive workflow](../evidence/figures/README.md).
+
+### 22. SLAM-004A — TF-safe live local base-pose output (2026-11-21)
+
+**Implementation/static validation PASS; live publication and TF checks NOT TESTED.**
+Added the separate project-owned [glim_pose_output package](../src/glim_pose_output/README.md),
+without editing installed GLIM or the validated Mode A mapping configuration.
+The existing RViz publisher was unsuitable because its pose-output path also
+enables TF broadcasts without an independent disable switch. Inspection of the
+installed 1.2.2 headers/libraries and matching upstream implementations is recorded
+with source links in the [SLAM-004A procedure](experiments/slam004a_pose_output.md).
+
+The extension publishes `/a300_00000/slam/glim/pose` as
+`geometry_msgs/msg/PoseStamped` using
+`OdometryEstimationCallbacks::on_update_new_frame`. It reads the newest state
+after point-cloud correction, copies it inside the callback, and uses its sensor
+timestamp rounded to nanoseconds. Expected cadence follows processed clouds,
+approximately 10 Hz after IMU initialization, rather than IMU rate. Output QoS is
+best effort/volatile, keep last 10; consumers must request compatible QoS.
+
+The pose body is **base_link** in a **GLIM-specific local `glim_odom` reference**:
+`T_glim_odom_base = T_world_imu * inverse(T_base_imu)`, with verified
+`T_base_imu = [0,0,0.294759,0,0,0,1]`. GLIM's `T_world_imu` variable here is its
+local odometry estimate. This is not a globally corrected mapping pose, not an
+alignment to Gazebo world/Clearpath odom/map, and not a confidence/covariance
+estimate. No TF connects this reference to existing frames. A future switching
+manager will need separate alignment and health handling; none is implemented.
+
+No TF broadcaster/listener, new node, timer or subscription is created; the
+publisher uses the existing GLIM host node. It links no TF or RViz library.
+Clearpath/EKF retains `odom → base_link`. Exact LiDAR/IMU extrinsic, sensor topics,
+QoS, timing and CPU estimation/local/global mapping settings are unchanged.
+Invalid inputs are rejected without publication; output exceptions are contained.
+Weak callback ownership handles host teardown without changing GLIM's
+unsynchronized callback list while its worker can still be active.
+
+Created isolated portable [configuration and exact differences](../configs/glim/mode_a_cpu_mapping_pose_output/README.md)
+and private operational `/home/feras/glim_ws/configs/mode_a_cpu_mapping_pose_output`.
+Each has 16 JSON files; 12 original files remain byte-identical. Changes are the
+new config reference, extension list, log destination and added base-extrinsic
+file. Existing baseline configurations were preserved byte-for-byte. Only the
+new package was built under `/home/feras/glim_ws/validation/slam004a_001`.
+Ten deterministic GTest cases passed, actual operational Config API loading
+passed, and JSON/module/factory/dependency/TF-symbol checks passed for both copies.
+These tests did not start ROS nodes or exercise live host loading/publication.
+
+All 262 snapshotted private/protected files were unchanged, including baseline
+configurations, Clearpath files and previous native maps/archive. Starting worktree
+was clean on `codex-work`, HEAD `f2d9d5b`; checkpoint commits and `main` are preserved.
+The [proposed stationary runtime commands](experiments/slam004a_pose_output.md#proposed-stationary-runtime-test--authorization-required)
+use the operational config, isolated library overlay, unique unused outputs,
+simulation time and no viewer. Runtime requires separate authorization. No Gazebo,
+live GLIM, movement, package change, generator, commit or push occurred.
+
+Evidence: [sanitized SLAM-004A static validation](../evidence/command_outputs/2026-11-21-slam-004a-pose-output-static.txt).
+
+### 23. SLAM-004B — Stationary runtime validation of live pose output (2026-11-21)
+
+**Functional stationary runtime PASS; verbose CLI publisher listing INCONCLUSIVE.**
+One separately authorized GLIM run loaded the CPU odometry, CPU local/global
+mapping modules and project-owned pose extension from the isolated SLAM-004B
+build. IMU initialization completed successfully. The robot was not driven;
+the standard viewer remained disabled. The unchanged operational configuration
+was `/home/feras/glim_ws/configs/mode_a_cpu_mapping_pose_output`.
+
+The fresh private run used the directory prepared by SLAM-004A,
+`/home/feras/glim_ws/runs/mode_a_mapping/slam004a_pose_001`, matching its absolute
+logging path. The manifest identifies this experiment as **SLAM-004B**. Native
+output is in its `glim_dump/`; raw logs, observers and detailed samples remain
+private. No earlier experiment or configuration was overwritten.
+
+#### Observed live output
+
+Received **301** `geometry_msgs/msg/PoseStamped` messages on
+`/a300_00000/slam/glim/pose`, all with reference `glim_odom` and the documented
+`base_link` body convention. Stamps **926.502–956.502 s** span exactly **30.000
+simulation seconds**: **10.000 Hz** by sensor time, **9.735 Hz** by wall reception.
+Every stamp matches an observed adapted-cloud stamp; all are strictly increasing,
+with intervals **0.099–0.102 s**, no interval above 0.15 s and no nonfinite poses.
+Reception lag against the observer clock was **0.096–0.414 s**; maximum wall
+reception gap was **0.412 s**, without a sustained stall.
+
+| Quantity | Minimum | Maximum |
+|---|---:|---:|
+| Position X (m) | −0.0013081263 | −0.0010817108 |
+| Position Y (m) | −0.0005069518 | −0.0003797625 |
+| Position Z (m) | −0.2977601116 | −0.2960021982 |
+| Quaternion X | −2.2487537e−5 | −6.3184267e−7 |
+| Quaternion Y | −9.6395606e−7 | 3.3278109e−5 |
+| Quaternion Z | 7.1160971e−7 | 4.7582788e−6 |
+| Quaternion W | 0.9999999991864 | 0.9999999999991 |
+
+Quaternion norms were **0.9999999999999999–1.0000000000000002**. Maximum position
+change from the first live pose was **0.001758 m**; maximum relative rotation was
+**8.14734e−5 rad**. Both pass the predeclared stationary tolerances of 0.10 m and
+0.10 rad. Negative Z is expressed in GLIM's local reference after the verified
+IMU-to-base conversion, not Gazebo world or the existing Clearpath odom frame.
+
+The independent lack-of-movement check observed **2,169 filtered wheel-odometry
+messages**, maximum displacement **2.41e−17 m**, linear speed **3.09e−18 m/s** and
+angular speed **2.39e−18 rad/s**. No command messages or nonzero commands were
+observed during the monitor window. Absolute coordinates were not compared
+between wheel odometry and GLIM. During this window, adapted clouds measured
+**10.000 Hz**, IMU **100.000 Hz** and clock **333.333 Hz** by simulation stamps.
+The earlier sensor preflight measured 9.999/97.954 Hz for cloud/IMU reception;
+best-effort observation counts are not exact middleware loss counters.
+
+#### TF isolation
+
+Before/during publisher sets were identical: namespaced dynamic TF had
+`robot_state_publisher`, `ekf_node`, `odom_base_tf_bridge` and
+`platform_velocity_controller`; static TF had `robot_state_publisher` and
+`imu_0_static_tf`, all under `/a300_00000`. Root `/tf` and `/tf_static` had no
+publishers. No GLIM TF publisher or conflicting parent appeared.
+
+A private read-only native C++ probe matched each received TF message's
+`rclcpp::MessageInfo` DDS publisher GID to graph endpoint GIDs. Across the baseline
+and runtime windows, all **4,337** observed `odom → base_link` transforms resolved
+exclusively to **`/a300_00000/ekf_node`**. This avoids relying only on node names
+or the Python MessageInfo API, which lacks that GID here. EKF `publish_tf=true`
+and controller `enable_odom_tf=false` were confirmed by live parameter queries.
+The registered Gazebo TF bridge had no publisher on its upstream Gazebo topic.
+Exact sensor TF remained Z=0.294759/0.342259 m, identity rotations.
+
+The initial reused sensor probe globally remapped TF topics, so its root endpoint
+queries also resolved to the namespaced topics. A separate unremapped baseline
+and unremapped runtime observers supplied the authoritative comparison above;
+the original probe output was retained with this limitation documented.
+
+#### Stability, save and cleanup
+
+GLIM used **21.94–31.99% of one CPU core**, mean **24.35%**, and **59.39–178.25
+MiB RSS**, including startup. Available memory stayed at **2028.5–2257.2 MiB**,
+with zero swap use. These are sampled observations, not a benchmark. No GLIM
+error, rejected pose, IMU-prediction warning block or safety abort occurred.
+
+After 30 simulation seconds of live output, the guard sent SIGINT at **34.643 s
+wall time**. GLIM drained odometry/local/global queues, logged `saved`, and exited
+**0** after **34.944 s**. It saved **23 files / 676,332 bytes**, including
+`graph.bin` (1,463 B), `values.bin` (573 B), `graph.txt` (64 B), ten config files,
+one numbered submap with **301 retained frames / 2,699 finite compact points**,
+and four valid finite, ordered trajectory files of 301 rows each. Live output
+stamps were 926.502–956.502; saved trajectories were 926.4–956.4, so their boundary
+windows differ by approximately one scan. No new binary-deserialization test or
+mapping-accuracy/loop-closure claim is made.
+
+Simulation, bridge and adapter launch wrappers exited **0** after SIGINT. The
+adapter child emitted its known `KeyboardInterrupt`/−2 during rclpy destruction.
+Both observers and the CLI-created discovery daemon were stopped; host `/proc`
+inspection confirmed no task-owned runtime processes remained.
+
+#### Tooling limitations and preservation
+
+The first Gazebo/sensor attempt was blocked by sandbox networking (`getifaddrs:
+Operation not permitted`; the sandboxed bridge child aborted). All those
+processes were cleaned up before launching with the approved host transport;
+separate logs preserve both attempts. **GLIM ran exactly once**, with no retry or
+configuration change. The successful simulation emitted expected stationary
+velocity-timeout/braking messages. GLIM warned about four missing optional
+mapping settings and their installed defaults, plus generic extension/license
+and missing optional `glim_ext` notices. None prevented extension loading.
+
+The requested `ros2 topic info ... --verbose` query returned `Unknown topic`;
+the daemon-free repeat near shutdown also did not capture a live listing. This
+CLI check is **INCONCLUSIVE**. The best-effort typed `topic echo --once` succeeded
+(stamp 938.502); direct observer graph snapshots identify the sole live publisher
+`/a300_00000/glim_pose_output_test` with best-effort/volatile QoS, and the 301 typed
+messages establish actual publication. No extra run was made to repair CLI
+evidence. Future CLI inspection should use direct discovery with enough discovery
+time early in an authorized run.
+
+All **413** snapshotted private/protected file hashes matched after cleanup,
+including original maps/archive, Clearpath files and all operational/baseline
+configs. All **221** existing project files matched before documentation changes;
+this task only appends to this integration document and the development log and
+adds two sanitized evidence files. Prior pending work, `codex-work`, HEAD
+`f2d9d5b`, original `main` and checkpoints are preserved; the index remains empty.
+No commit, push, movement, viewer, generator, installation, RTAB-Map, Nav2 or
+switching implementation occurred. No subsequent experiment was started.
+
+Evidence: [runtime report](../evidence/command_outputs/2026-11-21-slam-004b-live-pose-runtime.txt)
+and [structured measurements/artifact inventory](../evidence/command_outputs/2026-11-21-slam-004b-live-pose-runtime.json).
+
+### 24. SLAM-004C — Manual live localization, partial validation after region abort
+
+**Outcome: ABORTED_REGION_LIMIT_PARTIAL_VALIDATION (2026-11-21).** One separately
+authorized user-operated moving run verified live base-pose tracking and hard
+command caps, then the observer stopped the simulator at the reviewed center
+region. The planned final stationary bookend/full sequence completion is not
+verified. No retry or subsequent experiment was started.
+
+Private run: `/home/feras/glim_ws/runs/mode_a_mapping/slam004c_manual_001`.
+The separate operational GLIM copy changed only its log destination; the
+successful SLAM-004B CPU settings, pose extension, sensor extrinsic/topics/QoS,
+timestamps and TF isolation were unchanged. Sixteen new manual-control/API tests
+and four analytic evaluation tests passed. The [procedure](experiments/slam004c_manual_pose_procedure.md)
+records authorization gates and consumed paths; it must not be re-executed into
+those existing outputs.
+
+#### Control and recorded movement
+
+The earlier GUI speed problem was addressed with a hard-capped, default-disarmed
+[manual relay](../tools/manual_drive_guard/README.md). Only task-owned unbounded
+command bridge, joystick-command and marker-command processes were stopped;
+the existing mux/controller/EKF and protected files remained intact. Native
+replacement input bridging fed an isolated raw topic. The actual disconnected
+W/A check measured 1.0 m/s and 0.5 rad/s raw peaks,0.10/0.10 preview peaks, zero robot
+commands and stationary wheels/reference. The first finite observation window
+expired before recording key inputs; its files were preserved and a continuous
+capture verified the repeated exercise. Initial setup/API errors were corrected
+before arming and covered by additional installed-endpoint tests.
+
+After separate GLIM/manual approvals, the native recorder subscribed to all
+twelve explicit small measurement topics and captured a verified 12.006 s initial
+stationary hold. The user alone supplied nonzero input after the explicit armed
+message. Actual input included multiple forward/left bursts and combined
+linear/yaw commands. All recorded guard/mux and controller commands respected
+**0.10 m/s /0.10rad/s**, with other components zero. Physical wheel-response peaks
+were 0.103242 m/s and 0.101488 rad/s, separate from commanded limits. No automatic
+movement sequence or unsupported SLAM algorithm was introduced.
+
+At simulation stamp **3740.877 s**, reference center radius reached **1.2501397 m**,
+crossing the reviewed 1.25 m region. The observer disarmed and signalled task-owned
+simulation shutdown; GLIM then drained/saved. Reference motion continued for
+**1.029 s /0.092405m** during shutdown, ending at radius 1.340265 m and total path
+1.370244 m. This is an observed stopping tail to review before further driving.
+The region guard's abort is not evidence of a collision or a relaxed clearance
+threshold. The nominal full-body projected region bound was 2.261005 m above the
+unchanged 0.5 m criterion, with documented 3D/dynamic/illustrative-allowance limits.
+
+#### Live output and synchronized metrics
+
+The closed 25.17 MB MCAP contains **100,353 messages across twelve topics**, including
+**1,554 live poses** and 7,449 native Gazebo reference messages. Live pose stamps
+**3585.501–3740.802 s** increase strictly at about **10.000 Hz**; all positions and
+quaternions are finite, with norms effectively one. Maximum adjacent displacement
+was 13.27 mm and rotation 0.009773 rad; no jump exceeded the predeclared criteria.
+There were 54 poses after the last turn command. Final stationary validation is
+unavailable because the safety abort occurred while moving.
+
+The [offline evaluator](../tools/slam_trajectory_eval/README.md) composes native
+same-stamp `warehouse → model → base_link` reference poses. The published GLIM
+pose already describes base_link; no second sensor conversion is applied.
+Every live pose matches a reference interpolation bracket≤0.021 s, with linear
+translation/SLERP and no extrapolation. One fixed metric SE(3), based on 101
+initial stationary pairs, aligns local GLIM to world for analysis only; no scale,
+whole-route fit or operational TF transform was used. Wheel odometry is not
+ground truth.
+
+| Captured motion, actual commands 3723.012–3740.829 s | Result |
+|---|---:|
+| Translation ATE RMSE /maximum | **16.293 mm /32.274mm** (178 poses) |
+| Orientation error RMSE |0.29353° |
+| One-second RPE translation RMSE | **6.615 mm** (168 pairs) |
+| One-second RPE rotation RMSE | **0.11679°** |
+| RPE interval tolerance |±0.03 s |
+
+Whole-window ATE is 5.515 mm because it includes a long stationary prefix; the
+moving-interval result above is the primary diagnostic. Native reference extends
+to 3741.906 s, leaving **1.104 s without a GLIM estimate** after the last recorded
+pose; that tail is not evaluated. These are captured-interval measurements in a
+short synthetic Mode A trial, not a completed-sequence or general accuracy claim.
+
+#### TF, resources, saving and preservation
+
+Before/during TF publisher sets remained four dynamic/two static under
+`/a300_00000`, with no root TF or GLIM/reference TF publisher. Native per-message
+GID matching resolved all **11,295** sampled `odom → base_link` transforms solely
+to EKF. Sensor transforms and exact `T_lidar_imu` remained unchanged. After
+simulator shutdown the guard's graph check reflects disappearing mux endpoints;
+no unexpected active input publisher was observed.
+
+Over 238 GLIM resource samples, CPU was 11.98–33.93% of one core, mean 22.95%; RSS
+46.2–213.5 MiB including startup; available RAM stayed above 1717.1 MiB with zero
+swap. One undiagnosed IMU-prediction warning block and normal optional/default
+extension notices appeared; no GLIM error/exception occurred. Recorder logged
+no transport/cache loss notices, which does not prove zero DDS loss. Raw wheel
+odom had 48 duplicate stamps and zero decreases; the filtered wheel, pose and
+reference streams used for checks increase strictly. GUI raw headers remain
+zero; raw-input timing uses bag receipt simulation time. Clock freeze on shutdown
+also produces repeated zero guard-command stamps in the retained tail.
+
+GLIM exited 0 after 238.314 wallseconds, saved 23 files /4,245,666 bytes, one submap,
+2,323 frames and 2,699 finite compact points. Graph/values/config were saved;
+four finite ordered 2323-row trajectories were validated. Binary graph/value
+reload was not repeated. Recorder flushed/closed and exited 0. All task-owned
+simulation, mapping, control, bridge and observer processes stopped; host process
+inspection found no runtime leftovers. All 561 original private/protected hashes,
+earlier experiments, validated configurations, GLIM source and checkpoints remain
+unchanged. `codex-work`/HEAD `f2d9d5b` and original `main` are preserved; no staging,
+commit/push, installation, generator, Nav 2, RTAB-Map or switching implementation.
+
+Three [diagnostic figures with PNG/SVG, CSV data and editable source](../evidence/figures/SLAM-004C/README.md)
+are archived for documentation. Full [sanitized report](../evidence/command_outputs/2026-11-21-slam-004c-manual-live-pose.txt)
+and [structured measurements/hashes](../evidence/command_outputs/2026-11-21-slam-004c-manual-live-pose.json)
+are available. Review the region exit, stopping tail and IMU warning before any
+separately authorized shorter manual trial. Stop after SLAM-004C; no next run.

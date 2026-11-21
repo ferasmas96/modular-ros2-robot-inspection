@@ -1,0 +1,64 @@
+{
+  "task": "SLAM-004C",
+  "version": "v01",
+  "date": "2026-11-21",
+  "outcome": "ABORTED_REGION_LIMIT_PARTIAL_VALIDATION",
+  "source_run": "slam004c_manual_001",
+  "source_bag_sha256": {
+    "bag_0.mcap": "1a113c4e2ea77683a79477678133fa0128fb47d34089c487b80b4042306e35da",
+    "metadata.yaml": "4b30735a4bbdfe9686958b95fbea2c5ec22c07d46d7702e96f5ea6fdfce08467"
+  },
+  "alignment": "one initial stationary metric SE(3), no scale or TF publication",
+  "renderer": "Matplotlib/Agg; PNG and SVG",
+  "visual_review": "all three PNG exports inspected",
+  "files": {
+    "2026-11-21_SLAM-004C_actual-command-limits_v01.png": {
+      "bytes": 152325,
+      "sha256": "ca67003c8a5a0bd66b92479776e2324606529c1aa45acaac1cb54c90958ec244"
+    },
+    "2026-11-21_SLAM-004C_actual-command-limits_v01.svg": {
+      "bytes": 71587,
+      "sha256": "7ccdc5dec5e0dd5fa65fa558687da6fda1bb41d88a967e19c0ba2495192d7d54"
+    },
+    "2026-11-21_SLAM-004C_aligned-base-trajectories_v01.png": {
+      "bytes": 125299,
+      "sha256": "d5c4c475616b593f3f77c4cec248538551c5e6c63be69d8588001762f0d1750a"
+    },
+    "2026-11-21_SLAM-004C_aligned-base-trajectories_v01.svg": {
+      "bytes": 19157,
+      "sha256": "a68402573087d60fdfa46416b5a6f6d5b14cc0ab2f1d2cea2c130afa68296ead"
+    },
+    "2026-11-21_SLAM-004C_synchronized-pose-errors_v01.png": {
+      "bytes": 133916,
+      "sha256": "ec1af003ce1d0e80cb5a9ad01e041aaccdb075fef4719f30d9ed5e9c36aeca87"
+    },
+    "2026-11-21_SLAM-004C_synchronized-pose-errors_v01.svg": {
+      "bytes": 32791,
+      "sha256": "482f7b5d1bfb081591d96bdbba3095fb58be3ba6ca91fb589f455bb0cb297f8f"
+    },
+    "README.md": {
+      "bytes": 4916,
+      "sha256": "593114b0d864d532085509b631122d209389b1676c856189b140ca4547f586bc"
+    },
+    "data/aligned_poses.csv": {
+      "bytes": 226429,
+      "sha256": "3b978945e546a39447ebb6c600b1c495b4241d17104ca5aa58580e53d359651c"
+    },
+    "data/commands_motion_window.csv": {
+      "bytes": 331014,
+      "sha256": "8b89ea04ea263ff9676bcae35ee51778914aa96c7f6c0a2184bd3df1dcee8a4f"
+    },
+    "data/reference_for_plot.csv": {
+      "bytes": 170373,
+      "sha256": "de7e05b547b94071bf3b6bff6585a2f2b670d261a9c9d43c391318be8bb1c415"
+    },
+    "data/summary.json": {
+      "bytes": 1540,
+      "sha256": "465551010a18989d2f9ba142f48fd75ea4d05c52a6aeab6512974d2228abab6f"
+    },
+    "source/plot_results.py": {
+      "bytes": 5397,
+      "sha256": "ced9f223d7476cb080f3f26c496a5c1e792ade28244d92250c5128b3f3dbd84f"
+    }
+  }
+}

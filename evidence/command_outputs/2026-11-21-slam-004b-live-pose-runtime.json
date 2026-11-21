@@ -1,0 +1,441 @@
+{
+  "task": "SLAM-004B",
+  "result": "PASS",
+  "checks": {
+    "extension_load": "PASS",
+    "cpu_odometry": "PASS",
+    "local_mapping": "PASS",
+    "global_mapping": "PASS",
+    "pose_values": "PASS",
+    "sensor_timestamps": "PASS",
+    "publication_rate": "PASS",
+    "stationary_pose": "PASS",
+    "stationary_wheel": "PASS",
+    "tf_isolation": "PASS",
+    "healthy_glim": "PASS",
+    "native_save": "PASS"
+  },
+  "pose": {
+    "messages": 301,
+    "sensor_time_hz": 10.0,
+    "wall_reception_hz": 9.734553900707564,
+    "timestamp_range": [
+      926.502,
+      956.502
+    ],
+    "interval_bounds_s": [
+      0.099,
+      0.102
+    ],
+    "median_interval_s": 0.099,
+    "intervals_over_0_15s": 0,
+    "strictly_increasing": true,
+    "frames": [
+      "glim_odom"
+    ],
+    "xyz_min": [
+      -0.001308126271384344,
+      -0.0005069518048265263,
+      -0.2977601116455892
+    ],
+    "xyz_max": [
+      -0.0010817108024407933,
+      -0.0003797624828635881,
+      -0.2960021981927544
+    ],
+    "quaternion_xyzw_min": [
+      -2.2487537292912652e-05,
+      -9.639560601186232e-07,
+      7.116097141258292e-07,
+      0.9999999991863728
+    ],
+    "quaternion_xyzw_max": [
+      -6.318426718832721e-07,
+      3.327810908907391e-05,
+      4.75827879510284e-06,
+      0.9999999999990825
+    ],
+    "quaternion_norm_bounds": [
+      0.9999999999999999,
+      1.0000000000000002
+    ],
+    "max_displacement_m": 0.001757937518897188,
+    "max_relative_rotation_rad": 8.14734012263178e-05,
+    "all_finite": true,
+    "matching_adapted_cloud_stamps": 301,
+    "clock_lag_bounds_s": [
+      0.09600000000000364,
+      0.41399999999998727
+    ]
+  },
+  "wheel": {
+    "messages": 2169,
+    "max_displacement_m": 2.410764724701882e-17,
+    "max_relative_rotation_rad": 0.0,
+    "max_linear_speed_m_s": 3.0871604439658734e-18,
+    "max_angular_speed_rad_s": 2.3863311674790984e-18,
+    "nonzero_commands_observed": 0,
+    "command_messages": 0
+  },
+  "streams": {
+    "cloud": {
+      "messages": 457,
+      "sensor_time_hz": 9.999999999999995,
+      "non_increasing": 0,
+      "max_wall_gap_s": 0.40896349400100007
+    },
+    "wheel": {
+      "messages": 2169,
+      "sensor_time_hz": 47.53447784428508,
+      "non_increasing": 0,
+      "max_wall_gap_s": 0.05715218400109734
+    },
+    "clock": {
+      "messages": 15204,
+      "sensor_time_hz": 333.3333333333331,
+      "non_increasing": 0,
+      "max_wall_gap_s": 0.02397711399862601
+    },
+    "imu": {
+      "messages": 4561,
+      "sensor_time_hz": 100.0000000000002,
+      "non_increasing": 0,
+      "max_wall_gap_s": 0.029830528999809758
+    },
+    "pose": {
+      "messages": 301,
+      "sensor_time_hz": 10.0,
+      "non_increasing": 0,
+      "max_wall_gap_s": 0.4120856730005471
+    }
+  },
+  "tf_comparison": {
+    "/a300_00000/tf": {
+      "before": [
+        "/a300_00000/ekf_node",
+        "/a300_00000/odom_base_tf_bridge",
+        "/a300_00000/platform_velocity_controller",
+        "/a300_00000/robot_state_publisher"
+      ],
+      "during_union": [
+        "/a300_00000/ekf_node",
+        "/a300_00000/odom_base_tf_bridge",
+        "/a300_00000/platform_velocity_controller",
+        "/a300_00000/robot_state_publisher"
+      ],
+      "same_publishers": true
+    },
+    "/a300_00000/tf_static": {
+      "before": [
+        "/a300_00000/imu_0_static_tf",
+        "/a300_00000/robot_state_publisher"
+      ],
+      "during_union": [
+        "/a300_00000/imu_0_static_tf",
+        "/a300_00000/robot_state_publisher"
+      ],
+      "same_publishers": true
+    },
+    "/tf": {
+      "before": [],
+      "during_union": [],
+      "same_publishers": true
+    },
+    "/tf_static": {
+      "before": [],
+      "during_union": [],
+      "same_publishers": true
+    }
+  },
+  "odom_base_authorities": [
+    "/a300_00000/ekf_node"
+  ],
+  "odom_base_tf_message_counts": {
+    "/a300_00000/ekf_node": 4337
+  },
+  "sensor_tf": {
+    "imu_0_link": {
+      "translation": [
+        0.0,
+        0.0,
+        0.294759
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "helios_16p_link": {
+      "translation": [
+        0.0,
+        0.0,
+        0.34225900000000004
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "base_link": {
+      "translation": [
+        -7.252593800577065e-17,
+        7.561070616063746e-33,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "tf_message_gid_method": "native rclcpp::MessageInfo.rmw.publisher_gid matched to topic endpoint_gid; Python MessageInfo may omit publisher GID",
+  "resources": {
+    "samples": 48,
+    "cpu_percent_one_core_bounds": [
+      21.94454689805739,
+      31.98921742649637
+    ],
+    "mean_cpu_percent_one_core": 24.354749555242147,
+    "glim_rss_mib_bounds": [
+      59.38671875,
+      178.25
+    ],
+    "available_memory_mib_bounds": [
+      2028.5,
+      2257.16796875
+    ],
+    "max_swap_used_mib": 0.0
+  },
+  "warnings": {
+    "param sub_mapping/submap_target_num_points not found": 1,
+    "use default_value=-1": 1,
+    "param global_mapping/submap_voxel_resolution_max not found": 1,
+    "use default_value=0.5": 1,
+    "param global_mapping/submap_voxel_resolution_dmin not found": 1,
+    "use default_value=5": 1,
+    "param global_mapping/submap_voxel_resolution_dmax not found": 1,
+    "use default_value=20": 1,
+    "Extension modules are enabled!!": 1,
+    "You must carefully check and follow the licenses of ext modules": 1,
+    "glim_ext package path was not found!!": 1
+  },
+  "errors": [],
+  "graph_summary": {
+    "num_submaps": 1,
+    "num_all_frames": 301,
+    "num_matching_cost_factors": 0
+  },
+  "trajectories": {
+    "odom_lidar.txt": {
+      "rows": 301,
+      "bytes": 24080,
+      "valid_finite_ordered_unit_poses": true,
+      "timestamp_range": [
+        926.4,
+        956.4
+      ]
+    },
+    "odom_imu.txt": {
+      "rows": 301,
+      "bytes": 24381,
+      "valid_finite_ordered_unit_poses": true,
+      "timestamp_range": [
+        926.4,
+        956.4
+      ]
+    },
+    "traj_lidar.txt": {
+      "rows": 301,
+      "bytes": 24080,
+      "valid_finite_ordered_unit_poses": true,
+      "timestamp_range": [
+        926.4,
+        956.4
+      ]
+    },
+    "traj_imu.txt": {
+      "rows": 301,
+      "bytes": 24381,
+      "valid_finite_ordered_unit_poses": true,
+      "timestamp_range": [
+        926.4,
+        956.4
+      ]
+    }
+  },
+  "artifacts": {
+    "000000/covs_compact.bin": {
+      "bytes": 64776,
+      "sha256": "8194133e3b7ebd3f24a2ff34b8805f39c740cf77dd7b9fcd0bd29ef5695ed43f"
+    },
+    "000000/data.txt": {
+      "bytes": 162445,
+      "sha256": "d43467dff72fd159fe90788460a9c68cb5b2d9ac8665440c5e4b9aa22f5f0cae"
+    },
+    "000000/imu_rate.txt": {
+      "bytes": 268195,
+      "sha256": "52e29534cdfc4f32ad18fedff8c82cc1ef3db0f8d55a9730cf91fae548ac3934"
+    },
+    "000000/intensities_compact.bin": {
+      "bytes": 10796,
+      "sha256": "f9cb780db401840573b67eb20321813bd751f669fd5eb5b270c2eebc3d0570ff"
+    },
+    "000000/normals_compact.bin": {
+      "bytes": 32388,
+      "sha256": "c1d57363a398720f6fa556565fca31c37822949be98820cc3f7bf23a90267605"
+    },
+    "000000/points_compact.bin": {
+      "bytes": 32388,
+      "sha256": "12bb13140aff813d4506d75153a9233f3ef97eaf8c94887b96889a3ad6c6e70a"
+    },
+    "config/config.json": {
+      "bytes": 638,
+      "sha256": "66d559c9ad6d3af9811d07740bb0ea7a60fa5c9f082ede3f3e8e79419d936cae"
+    },
+    "config/config_global_mapping_cpu.json": {
+      "bytes": 619,
+      "sha256": "43161f70ef8c9f4c420cc055aa9014a0b8b09e8341805ff1a81d92afe285ab89"
+    },
+    "config/config_logging.json": {
+      "bytes": 207,
+      "sha256": "063de46008a323f217d7a0bfed3954373b237d075ae7e25aae5525bd10ec49d0"
+    },
+    "config/config_odometry_cpu.json": {
+      "bytes": 744,
+      "sha256": "33005791035a4e6184ba0c11ff7de10b6483751efd3d89c67901d6e13590d3df"
+    },
+    "config/config_pose_output.json": {
+      "bytes": 122,
+      "sha256": "889c930620d7982f6eee502ddfc36e88d19fe6effd78ec31947c0aaa14804487"
+    },
+    "config/config_preprocess.json": {
+      "bytes": 589,
+      "sha256": "4f642f41da2892f6c78b678a58ae4af590bc63f20540b9fd24df18a49605428b"
+    },
+    "config/config_ros.json": {
+      "bytes": 947,
+      "sha256": "f7921b51b4d840bbc0f364a3aa884194f2bcb31b818e2d3b3ca610b18477f700"
+    },
+    "config/config_sensors.json": {
+      "bytes": 1039,
+      "sha256": "15f9836f204b596641634a31e6205079184e8930718eabf550a45b595d9c2bb8"
+    },
+    "config/config_sub_mapping_cpu.json": {
+      "bytes": 711,
+      "sha256": "0acdae7c7abac984aa73c3e3c8cc77d2446e91740dde80f09858142497c592ef"
+    },
+    "config/config_viewer.json": {
+      "bytes": 706,
+      "sha256": "74954e3d93af21ce7ce93ddf223b3a1033288e4d86dd759cc6b793a6cc7086d8"
+    },
+    "graph.bin": {
+      "bytes": 1463,
+      "sha256": "1e54fb337b9f492b4c221c6bc93fdd333259d3d86e8c825cae75ca626a406247"
+    },
+    "graph.txt": {
+      "bytes": 64,
+      "sha256": "d9d99b2e805bc86e9ae27fab7e6587539578512f7f62c8cd343cb97ff266e3ab"
+    },
+    "odom_imu.txt": {
+      "bytes": 24381,
+      "sha256": "9427bed432e448cb0a4de23a6c8d17c05147a758afbbf5a17d0d2c374234bdc5"
+    },
+    "odom_lidar.txt": {
+      "bytes": 24080,
+      "sha256": "daae5dbb2ca7d5dfef260e54c5650b6138270ca3556a8ba9014f51d4e1fe32dd"
+    },
+    "traj_imu.txt": {
+      "bytes": 24381,
+      "sha256": "9427bed432e448cb0a4de23a6c8d17c05147a758afbbf5a17d0d2c374234bdc5"
+    },
+    "traj_lidar.txt": {
+      "bytes": 24080,
+      "sha256": "daae5dbb2ca7d5dfef260e54c5650b6138270ca3556a8ba9014f51d4e1fe32dd"
+    },
+    "values.bin": {
+      "bytes": 573,
+      "sha256": "1f8ac78a822a51896ec8216ff8391f0ef027bee1a436abdc0d50e13a6f477686"
+    }
+  },
+  "stop_reason": "30 simulation seconds of initialized pose output complete",
+  "glim_exit": {
+    "exit_code": 0,
+    "elapsed_wall_s": 34.94354319800004,
+    "reason": "30 simulation seconds of initialized pose output complete"
+  },
+  "limitations": [
+    "Stationary publication smoke test only; no mapping/localization accuracy, global alignment or switching claim.",
+    "Counts are subscriber observations; best-effort transport-loss counts are not directly available. Sensor stamp gaps are reported.",
+    "Native graph archives inventoried/nonempty; this task does not repeat native binary deserialization validation.",
+    "One initial Gazebo/sensor sandbox attempt failed due denied networking, was cleaned up; successful host transport launch preserved in separate logs. No GLIM retry.",
+    "Verbose CLI inspection did not capture a live publisher listing; actual typed echo/reception and direct observer endpoint snapshots provide the live publication evidence."
+  ],
+  "run_directory": "/home/feras/glim_ws/runs/mode_a_mapping/slam004a_pose_001",
+  "operational_configuration": "/home/feras/glim_ws/configs/mode_a_cpu_mapping_pose_output",
+  "initialization_succeeded": true,
+  "imu_prediction_warning_blocks": 0,
+  "cleanup": {
+    "result": "PASS",
+    "remaining_task_or_runtime_processes": [],
+    "check": "Host /proc, not sandbox PID namespace; exited zombies excluded"
+  },
+  "integrity": {
+    "result": "PASS",
+    "private_protected_files_unchanged": 413,
+    "project_files_unchanged_before_documentation": 221,
+    "head": "f2d9d5b7d9c520ab27649fb6d1726f99321a0772",
+    "main": "ca1140ef760bd6e28c32229347e75d896bfb38b4",
+    "git_status_matches_preflight_before_documentation": true
+  },
+  "cli_checks": {
+    "best_effort_echo_sample": "PASS (stamp 938.502, glim_odom)",
+    "initial_verbose_info": "Unknown topic during initial CLI discovery",
+    "daemon_free_verbose_info": "Unknown topic; attempted at end of bounded run, did not obtain live publisher listing",
+    "live_publisher_evidence": "48 observer graph snapshots, one /a300_00000/glim_pose_output_test publisher while active; actual typed PoseStamped reception; best_effort/volatile endpoint QoS",
+    "glim_retried": false
+  },
+  "runtime_library_sha256": "9b8a76795ead85a0643e10ed3645417427b917f127bc7fa5bce33037337f4d4f",
+  "native_save": {
+    "files": 23,
+    "total_bytes": 676332,
+    "submaps": 1,
+    "retained_frames": 301,
+    "finite_compact_points": 2699,
+    "binary_deserialization_repeated": false,
+    "live_and_saved_window_note": "Live poses 926.502\u2013956.502; saved trajectories 926.4\u2013956.4; boundary windows differ by about one scan."
+  },
+  "shutdown": {
+    "glim": {
+      "exit_code": 0,
+      "elapsed_wall_s": 34.94354319800004,
+      "reason": "30 simulation seconds of initialized pose output complete"
+    },
+    "sigint": {
+      "signal": "SIGINT",
+      "reason": "30 simulation seconds of initialized pose output complete",
+      "elapsed_wall_s": 34.64302504400075
+    },
+    "simulation": {
+      "exit_code": 0,
+      "elapsed_wall_s": 1031.3258723039999,
+      "reason": null
+    },
+    "helios": {
+      "exit_code": 0,
+      "elapsed_wall_s": 1005.9454134560001,
+      "reason": null
+    },
+    "adapter": {
+      "exit_code": 0,
+      "elapsed_wall_s": 1004.3126918899998,
+      "reason": null
+    },
+    "adapter_child_note": "Known SIGINT KeyboardInterrupt during rclpy node destruction, child -2, launch wrapper 0."
+  }
+}

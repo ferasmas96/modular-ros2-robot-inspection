@@ -1,0 +1,135 @@
+SLAM-004A — TF-safe live GLIM pose output — static validation
+Date: 2026-11-21
+Result: PASS (implementation/build/static tests); runtime NOT TESTED
+
+Git before
+  branch: codex-work
+  HEAD: f2d9d5b7d9c520ab27649fb6d1726f99321a0772
+  main: ca1140ef760bd6e28c32229347e75d896bfb38b4
+  worktree: clean; index empty
+  prior checkpoints: 136ca1d (SLAM-003A), 60c39e3 (SLAM-003B/C)
+  No commit, push, stash, reset, clean, merge or staging performed.
+
+Installed interfaces inspected
+  ros-jazzy-glim: 1.2.2-0noble
+  ros-jazzy-glim-ros: 1.2.2-0noble
+  GLIM headers: extension_module_ros2.hpp, extension_module.hpp,
+    odometry/callbacks.hpp, estimation_frame.hpp, odometry_estimation_cpu.hpp,
+    config.hpp, callback_slot.hpp, load_module.hpp
+  Installed rviz_viewer.hpp and shared libraries; matching v1.2.2 upstream
+    rviz_viewer.cpp, glim_ros.cpp, odometry_estimation_imu.cpp,
+    extension_module.cpp, load_module.cpp and config.cpp.
+  Source links and exact reproducible commands:
+    docs/experiments/slam004a_pose_output.md
+
+Choice
+  Existing RViz pose publisher is coupled to TF broadcasting; no independent
+  disable option found in inspected implementation. publish_imu2lidar=false
+  disables only the sensor-pair broadcast. It remains disabled and not loaded.
+  Project-owned ExtensionModuleROS2 creates one PoseStamped publisher on host
+  Node; create_subscriptions returns empty. No TF, extra node, subscriber,
+  timer, executor, viewer or covariance request is introduced.
+  Native factory: create_extension_module
+  Callback: OdometryEstimationCallbacks::on_update_new_frame
+  Reads frame->stamp and frame->T_world_imu after point-cloud correction.
+  Local odometry only; no global-mapping trajectory correction applied.
+
+Output contract
+  /a300_00000/slam/glim/pose : geometry_msgs/msg/PoseStamped
+  header.frame_id = glim_odom (GLIM-local reference; no established TF link)
+  pose body = base_link (PoseStamped has no child_frame_id)
+  T_glim_odom_base = T_world_imu * inverse(T_base_imu)
+  T_base_imu = [0,0,0.294759,0,0,0,1] (verified static mounting)
+  unchanged T_lidar_imu = [0,0,-0.0475,0,0,0,1]
+  stamp = estimator sensor seconds, rounded to integer nanoseconds
+  QoS = best effort, volatile, keep last 10
+  expected rate = processed corrected clouds, nominal 10 Hz after initialization
+  not an IMU-rate heartbeat; first initialized frame does not invoke this hook
+  No covariance/confidence/global accuracy or Clearpath odom/map alignment claim.
+  Invalid/nonfinite/nonrigid values are rejected; publication exceptions contained.
+  Weak callback state avoids dangling host/frame references; callback-vector
+  mutation is avoided at teardown. Native loader retains library handles.
+
+Configuration changes compared with operational mode_a_cpu_mapping
+  config.json: add global.config_pose_output = config_pose_output.json
+  config_ros.json: extension_modules [] -> [libglim_pose_output.so]
+  config_logging.json: unique new log directory (portable copy: logs/glim)
+  add config_pose_output.json: pose_output.T_base_imu as above
+  12 remaining baseline files byte-identical; 16 JSON files per new copy.
+  New copies differ only in config_logging.json.
+  CPU local/global mapping true; all original CPU estimation/mapping options,
+  topics, QoS, offsets, time handling and sensor extrinsic unchanged.
+  publish_imu2lidar=false; viewer and all other output extensions absent.
+  Portable config JSON excludes private paths and runtime logs.
+
+Locations
+  project package: src/glim_pose_output
+  portable config: configs/glim/mode_a_cpu_mapping_pose_output
+  operational config: /home/feras/glim_ws/configs/mode_a_cpu_mapping_pose_output
+  private checks/build/logs: /home/feras/glim_ws/validation/slam004a_001
+  proposed future run: /home/feras/glim_ws/runs/mode_a_mapping/slam004a_pose_001
+  Future run/dump/log directories not created; parent exists and is writable.
+  Operational logging points to that future run's logs/glim.
+  Portable relative logging resolves from process cwd; do not use it at runtime.
+
+Build/test results
+  Built only new package in isolated private build/install/log directories.
+  find_package(glim 1.2.2 EXACT), glim_DIR=/opt/ros/jazzy/share/glim
+  links: glim::glim, rclcpp, geometry_msgs; no glim_ros/rviz_viewer/TF linkage
+  Initial configure errors (CMake signature and placeholder email) corrected.
+  Final build PASS, no compiler warning or unresolved build error.
+  Ten GTest cases PASS; colcon aggregate: 11 tests, 0 errors/failures/skips
+    (includes CTest wrapper, not eleven distinct unit cases):
+    VerifiedBaseOffsetAndSensorStamp
+    NoncommutingRotationsAndTranslationUseCorrectInverse
+    NanosecondRoundingCarriesIntoNextSecond
+    RejectsInvalidAndOutOfRangeTimestamps
+    AcceptsZeroTimestampWithoutUsingWallTime
+    RejectsNullNonfiniteAndNonrigidPoses
+    RejectsInvalidExtrinsicAndEmptySink
+    WeakCallbackDoesNotRetainStateOrFrames
+    LoadsActualSnapshotUsingInstalledGlimConfigApi
+    NativeConfigRejectsMissingMalformedOrNonunitExtrinsic
+  Additional installed Config API read of actual operational config: PASS
+  Static check_configuration.py on both copies: PASS
+    16 JSON files parse, global file references resolve, expected differences only
+    libodometry_estimation_cpu.so / libsub_mapping.so / libglobal_mapping.so
+      load with RTLD_NOW; no estimator constructed
+    new extension library loads with RTLD_NOW and factory symbol resolves
+    factory NOT executed; no ROS node initialized, no live host instantiated
+    nm -D: no TransformBroadcaster/sendTransform/tf2_ros/tf2_msgs symbols
+    ldd: no missing libraries, no libtf2 or librviz_viewer dependencies
+  Library SHA256:
+    316587784bcf61de6438305ca129737fad52ce00da892fc403ca4589c9c3f0a0
+  Portable paths, byte differences and new Markdown links: PASS
+  Git whitespace check: PASS
+
+Preservation
+  before.json captured 194 tracked files and 262 private/protected contents.
+  All 262 private/protected SHA256 hashes match at completion.
+  Includes Clearpath and baseline configs, previous stationary/moving native
+  maps and moving-map archive. No original figure/diagram changed.
+  Only 3 original tracked files changed, each append-only:
+    configs/glim/README.md
+    docs/08_slam_integration.md
+    docs/development_log.md
+  All other original tracked contents unchanged.
+  HEAD/main/checkpoints preserved; index empty.
+
+Git after
+  codex-work; HEAD unchanged
+  3 modified tracked files; 27 new untracked files:
+    configs/glim/mode_a_cpu_mapping_pose_output/ (16 JSON + README)
+    src/glim_pose_output/ (8 files)
+    docs/experiments/slam004a_pose_output.md
+    evidence/command_outputs/2026-11-21-slam-004a-pose-output-static.txt
+
+Limits/stop
+  No Gazebo, live GLIM, ROS publisher, movement, RViz, Nav2 or switching run.
+  No generator, installed-source change, system package installation/upgrade,
+  commit or push. No SLAM-004A runtime result is claimed.
+  Future procedure uses the operational config plus isolated library overlay,
+  unique output paths, use_sim_time=true, debug=false, dump_on_unload=false,
+  bounded stationary observation and separate authorization gates.
+  Live host loading, topic rate/stamp observations, processing cost and live
+  TF authority checks require that separately authorized test.

@@ -44,3 +44,10 @@ explorer.exe .
 ```
 
 Double-click the HTML map to open your exported interactive visualization in a browser. It was archived without running its JavaScript during import. No commit or push is implied by saving figures here.
+
+**SLAM-004C — partial manual localization validation (2026-11-21):**
+[Figure gallery and provenance](SLAM-004C/README.md) contains three diagnostic
+plots in PNG/SVG with CSV data and editable source: aligned base trajectories,
+synchronized pose errors and actual command limits. The trial was aborted at
+the reviewed region boundary; the gallery records that limitation and the
+unestimated shutdown tail.

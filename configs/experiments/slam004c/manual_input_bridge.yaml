@@ -1,0 +1,7 @@
+# Existing Gazebo keyboard events enter an isolated ROS topic, never the mux directly.
+- ros_topic_name: /a300_00000/manual/raw_cmd_vel
+  gz_topic_name: /a300_00000/cmd_vel
+  ros_type_name: geometry_msgs/msg/TwistStamped
+  gz_type_name: gz.msgs.Twist
+  direction: GZ_TO_ROS
+  lazy: false

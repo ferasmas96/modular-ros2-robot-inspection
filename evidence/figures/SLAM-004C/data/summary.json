@@ -1,0 +1,51 @@
+{
+  "task": "SLAM-004C",
+  "outcome": "ABORTED_REGION_LIMIT_PARTIAL_VALIDATION",
+  "source_run": "slam004c_manual_001",
+  "motion_start_s": 3723.012,
+  "motion_end_s": 3740.829,
+  "abort_clock_s": 3740.877,
+  "region_radius_m": 1.25,
+  "spawn_xy_m": [
+    -4,
+    3
+  ],
+  "ate_motion_rmse_m": 0.016293293831115958,
+  "rpe_1s_motion_translation_rmse_m": 0.006614682222807086,
+  "rpe_1s_motion_rotation_rmse_deg": 0.11678500971202817,
+  "alignment_T_world_glim": [
+    [
+      0.9999999998529955,
+      9.514906207295336e-06,
+      -1.4264501086416488e-05,
+      -3.998883256309929
+    ],
+    [
+      -9.515146338465357e-06,
+      0.999999999813036,
+      -1.683420602947064e-05,
+      3.000390155396988
+    ],
+    [
+      1.4264340907858093e-05,
+      1.6834341755811213e-05,
+      0.999999999756567,
+      0.43359945877172246
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "reference_plot_decimation": "Every fifth native reference plus start/end and first region crossing; all records used in metrics",
+  "commands_plot_selection": "Actual-command interval plus 2 seconds each side; no value downsampling",
+  "raw_keyboard_time_basis": "simulation-time bag receipt; raw GUI message headers are zero",
+  "other_commands_time_basis": "header simulation stamp",
+  "unestimated_reference_tail_s": 1.1039999999998145,
+  "first_region_crossing_s": 3740.877,
+  "first_region_crossing_distance_m": 1.2501397315775316,
+  "shutdown_reference_tail_s": 1.0289999999999964,
+  "shutdown_reference_travel_m": 0.09240515646300232
+}

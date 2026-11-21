@@ -21,3 +21,11 @@ No existing file contents were overwritten. No SLAM-003B action was performed; r
 ## SLAM-003D-A separate moving-experiment snapshot
 
 `mode_a_cpu_mapping_moving/` is a separate portable 15-file copy for the prepared moving experiment; its contents match the committed portable CPU mapping baseline. The new private operational configuration changes only the absolute module logging path to a fresh reserved run. See [experiment preparation](../experiments/slam003d/README.md) and [proposed runtime procedure](../../docs/experiments/slam003d_b_procedure.md). The earlier SLAM-003A review status above is historical; SLAM-003B/C-B results are checkpointed, while SLAM-003D-A remains static preparation. Do not execute either portable snapshot directly.
+
+## SLAM-004A separate TF-free pose-output snapshot
+
+[`mode_a_cpu_mapping_pose_output/`](mode_a_cpu_mapping_pose_output/README.md)
+adds only the project-owned pose extension and its base-extrinsic configuration,
+with portable logging. Existing baseline and moving snapshots are unchanged.
+See the [build/static results and proposed stationary test](../../docs/experiments/slam004a_pose_output.md).
+No runtime test has been authorized or run for this extension.
