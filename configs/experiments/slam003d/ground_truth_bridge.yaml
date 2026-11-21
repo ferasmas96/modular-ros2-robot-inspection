@@ -1,0 +1,7 @@
+# Recording only: this topic is deliberately separate from /tf and /tf_static.
+- ros_topic_name: /a300_00000/reference/gazebo_pose
+  gz_topic_name: /model/a300_00000/robot/pose
+  ros_type_name: tf2_msgs/msg/TFMessage
+  gz_type_name: gz.msgs.Pose_V
+  direction: GZ_TO_ROS
+  lazy: false

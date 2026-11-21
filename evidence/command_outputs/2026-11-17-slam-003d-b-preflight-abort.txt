@@ -1,0 +1,175 @@
+SLAM-003D-B — Controlled Moving-Robot Mapping Attempt
+Date: 2026-11-17
+Outcome: STOPPED AT CLEARANCE PREFLIGHT. Moving mapping NOT RUN.
+
+Git and authorization
+- Branch codex-work; checkpoint 60c39e30bf50b72b62d2e9c51988482790685c3f preserved.
+- main unchanged at ca1140ef760bd6e28c32229347e75d896bfb38b4.
+- User separately approved simulation, existing inputs and recording/reference capture.
+- No GLIM or movement approval requested/received; neither was started.
+- No commit/push/reset/stash/clean/merge; all runtime documentation remains unstaged.
+- All 24 SLAM-003D-A project files matched preflight hashes before doc updates.
+  Reviewed route/configuration/procedure and previous evidence were not rewritten.
+
+Experiment identity
+- Private run: /home/feras/glim_ws/runs/mode_a_mapping/slam003d_001.
+- Operational config: /home/feras/glim_ws/configs/mode_a_cpu_mapping_slam003d_001.
+- Existing clearpath_lidar11b_test combined setup; generate=false.
+- World warehouse; unchanged launch defaults x=0,y=0,yaw=0,z=0.3.
+- Live settled model z about 0.135969836 m, world x/y/yaw approximately zero.
+- clearpath_gz 2.9.4; ros_gz_bridge 1.0.24; Gazebo library 8.15.0.
+- GLIM/core ROS installed 1.2.2 but not launched.
+- Full world hash, 15 configuration hashes, commands/PIDs and launch/exit times
+  captured privately in experiment_identity.json; private domain value excluded.
+
+Actual approved launch commands (separate sessions, exclusive private logs)
+  ros2 launch clearpath_gz simulation.launch.py \
+    setup_path:=/home/feras/clearpath_lidar11b_test generate:=false
+  ros2 launch husky_a300_sensor_extensions rs_helios_16p_bridge.launch.py
+  ros2 launch husky_a300_sensor_extensions pointcloud2_timing_adapter.launch.py
+  timeout 5s gz topic -i -t /model/a300_00000/robot/pose
+  timeout 5s gz topic -e -t /model/a300_00000/robot/pose -n 1
+  ros2 run ros_gz_bridge parameter_bridge --ros-args \
+    -r __node:=slam003d_reference_bridge -p use_sim_time:=true \
+    -p config_file:=/home/feras/clearpath_ws/configs/experiments/slam003d/ground_truth_bridge.yaml
+- Jazzy/overlay sourced, existing private ROS domain loaded without printing it,
+  PYTHONDONTWRITEBYTECODE=1, ROS2CLI_DISABLE_DAEMON=1, unique private ROS_LOG_DIR.
+
+Live inputs
+- Existing bounded input probe: original/adapted clouds 10.001/10.002 Hz;
+  IMU 99.991 Hz, clock 333.333 Hz; advancing monotonic simulation stamps.
+- Five matched original/adapted pairs preserve point bytes and zero time values.
+- Nonempty 360x16 little-endian, tightly packed adapted clouds, point_step=36,
+  row_step=12960, payload=207360 bytes; source payload=184320 bytes.
+- Exact base->IMU Z=0.294759 m, base->LiDAR Z=0.342259 m, identity rotations.
+- Correct namespaced TF and observed odom->base_link; no conflicting parents.
+- Sensor publisher/subscriber QoS compatible; no pipeline/configuration changes.
+
+Clearance blocker
+- Scene SDF places MaleVisitorOnPhone / 'Person 1 - Standing' at (1,-1,0) m.
+- Live points near this obstacle location enter the planned turn safety envelope.
+- Reviewed nominal turn center (1.2,0) m, yaw sweep [0,1.6] rad.
+- Projected footprint from installed A300 chassis_collision.stl vertices;
+  finite live points in chassis-height band (0.01,0.229559) m above base.
+- Minimum projected point-to-chassis footprint distance:
+  0.486875005 m at nominal yaw 1.104 rad.
+- Example observed point: (1.137039,-0.975007,0.211216) m in stationary base frame.
+- Reviewed required margin: 0.500 m. This conservative projected check cannot
+  certify that margin; other robot parts and motion uncertainty do not improve
+  the guarantee. It is not a complete 3D collision prediction or point segmentation.
+- Stop before GLIM and any command. No route/spawn/margin change, forward segment,
+  turn, zero-command publisher, repeated attempt or workaround was executed.
+- Actual velocity-command behavior therefore not exercised; historical endpoint
+  and unchanged setup remain the reviewed reference.
+
+Independent reference and bag
+- Live Gazebo type confirmed gz.msgs.Pose_V.
+- Prepared native one-way bridge worked on /a300_00000/reference/gazebo_pose;
+  no remapping to /tf or /tf_static.
+- Offline rosbag2/CDR deserialization verified all 4,586 reference messages:
+  warehouse -> a300_00000/robot -> a300_00000/robot/base_link,
+  same per-transform simulation stamp, finite near-unit quaternion poses.
+- Model/base identity throughout capture; stamps strictly increasing,
+  171.108 to 267.603 s; maximum reference gap 0.231 s.
+- This is independent simulator pose, not wheel odometry substituted as truth.
+- Native recorder used unchanged reviewed 11-topic explicit list, MCAP,
+  use_sim_time, cache size 8388608 and recording_qos.yaml.
+- Recorder command:
+  ros2 bag record --use-sim-time --disable-keyboard-controls \
+    --node-name slam003d_recorder -s mcap --max-cache-size 8388608 \
+    -o /home/feras/glim_ws/runs/mode_a_mapping/slam003d_001/bag \
+    --qos-profile-overrides-path /home/feras/clearpath_ws/configs/experiments/slam003d/recording_qos.yaml \
+    --topics /a300_00000/sensors/helios_16p/points \
+    /a300_00000/sensors/helios_16p/points_glim /a300_00000/sensors/imu_0/data \
+    /a300_00000/platform/odom /a300_00000/platform/odom/filtered /clock \
+    /a300_00000/cmd_vel /a300_00000/platform/cmd_vel \
+    /a300_00000/reference/gazebo_pose /a300_00000/tf /a300_00000/tf_static
+- All requested topics subscribed. 63,613 recorded messages; bag receipt simulation
+  times 171.102--267.618 s, duration 96.516 s. Wrapper lifetime 110.094 wall s,
+  including startup/flush. This is a stationary preflight capture, not the planned
+  moving sequence; GLIM observation bounds were never entered.
+- Three recorder transport-layer losses reported, per-topic attribution unavailable.
+  Dataset is not claimed lossless. Discovery boundaries also affect topic counts.
+
+Bag topic counts
+/a300_00000/cmd_vel: 0
+/a300_00000/platform/cmd_vel: 0
+/a300_00000/platform/odom: 4581
+/a300_00000/platform/odom/filtered: 4587
+/a300_00000/reference/gazebo_pose: 4586
+/a300_00000/sensors/helios_16p/points: 963
+/a300_00000/sensors/helios_16p/points_glim: 957
+/a300_00000/sensors/imu_0/data: 9652
+/a300_00000/tf: 6115
+/a300_00000/tf_static: 2
+/clock: 32170
+
+Offline validation
+- ros2 bag info and rosbag2_py.SequentialReader/native CDR deserialization completed.
+- All 63,613 readable messages match metadata counts. No read/corruption exception.
+- Recorded clouds 9.990/9.979 Hz; IMU 100.000 Hz; cloud max header gaps 0.198/0.300 s,
+  IMU 0.012 s. No decreasing cloud/IMU/reference stamps.
+- Every recorded cloud layout validated; adapted times all zero.
+  Five additional matched pairs preserve original bytes/header.
+- Reference max displacement from first pose and yaw change exactly 0 in the
+  recorded data. Raw/filtered odometry also effectively stationary; tiny numerical
+  drift/speeds below 1.2e-18 m/s are not robot motion.
+- Both command topics contain zero messages. No movement publisher was created.
+- Namespaced recorded TF has no conflicting parents. Mixed TF/static receipt
+  stamps may repeat; they are not GLIM pose trajectories.
+- No GLIM TF publisher could be added because GLIM never ran. Reference stays on
+  its dedicated data topic. A complete post-bridge per-authority endpoint audit was
+  not obtained; no claim of exhaustive upstream duplicate-authority diagnosis.
+
+Failures/limitations
+- Supplemental 7-second read-only reference/parameter probe retained 292 valid
+  reference rows but failed before summary on an incomplete twist_mux parameter
+  service future; it had requested before verifying service discovery. The failed
+  summary is not used as evidence. Actual runtime mux parameters remain unverified.
+- Reference was verified from the already-recorded bag; no simulator/input/recorder
+  restart and no second route. Failed helper source/logs preserved privately.
+- CPU/RSS samples accumulated by that failed probe were not saved. No trustworthy
+  continuous CPU/RAM series and no GLIM CPU/RAM data exist for this attempt.
+- Available-memory snapshots only: 5324.6 MiB prelaunch,
+  2838.8 MiB before recorder stop; swap used 0.
+- No observed memory-pressure abort; clearance was the stop reason.
+- Gazebo known warnings: joystick device missing, IMU hardware_info association,
+  controller 20ms/physics 3ms mismatch, SDF gz_frame_id/gravity, controller-remap
+  deprecations, Collada rendering and stationary velocity-timeout braking.
+- No EKF missed-update line found in captured simulation log.
+
+New GLIM mapping results
+- GLIM initialization: NOT RUN.
+- Robot controlled route: NOT RUN.
+- Mapping frames/submaps/map points/new trajectories: N/A.
+- graph.bin/values.bin/graph.txt/saved GLIM config/numbered submaps/four GLIM
+  trajectory files: not produced; glim_dump directory absent.
+- Native reload of new dump: NOT RUN because no new map exists.
+- Original stationary dump and native reload utility/results preserved unchanged.
+- No matching factor, map correction or loop-closure evidence claimed.
+
+Private artifact inventory
+bag/bag_0.mcap: 394399741 bytes, SHA256 ee8167fd55ce207c23d9029899f8a7b545a62b01c7cdd1479998791eb01ffe00
+bag/metadata.yaml: 10764 bytes, SHA256 5712d1b98356913e0eff588f09b8255aafeef241601dbef4bf2c0eef3227677d
+- Raw logs, one cloud snapshot, reference rows, helper sources and before/after
+  validation/clearance/identity JSON remain private in the experiment directory.
+- No bulk data, private ROS domain value, network setting or sensitive config in Git.
+
+Cleanup and preservation
+- Recorder SIGINT, flushed cached messages/metadata, exited 0.
+- Reference bridge, adapter, Helios bridge and simulation SIGINT; all five launch
+  wrappers exited 0. Adapter child had known KeyboardInterrupt/exit -2; distinguish
+  child diagnostics from wrapper status. No SIGTERM/SIGKILL required.
+- Host process/group check: no task-owned or conflicting robotics processes remain.
+- 187 protected file contents, 22 original stationary dump files, 41 native reload
+  build/result files and new operational mapping configuration all unchanged.
+- Existing preparation files/configs/evidence untouched; documentation intro/status
+  and appended runtime records updated as requested. No runtime-result commit/push.
+- Final Git branch codex-work and HEAD/main unchanged; index empty.
+
+Stop and next action
+- Stop condition enforced on clearance issue before moving or starting GLIM.
+- Requested moving-mapping objective remains unfulfilled, not a GLIM failure.
+- Review clearance/route in a separate preparation task; retain >=0.5m margin.
+  A future approved attempt needs a fresh run/config reservation; slam003d_001 is
+  consumed. Do not automatically reuse, retry, move, run Mode B/Nav2 or switch SLAM.

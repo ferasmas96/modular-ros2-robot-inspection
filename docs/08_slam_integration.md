@@ -1,6 +1,6 @@
 # 08. SLAM Integration
 
-**Current status (2026-11-17):** SLAM-002E verified Mode A internal odometry processing. SLAM-003B subsequently passed one stationary CPU local/global mapping smoke test: one submap retained 300 frames and 2,648 finite points, and native graph/configuration/trajectory artifacts were saved. All four main trajectories have valid finite, ordered pose rows. Full native graph reload, moving-robot mapping, loop closure, trajectory accuracy and Mode B runtime remain **NOT TESTED**. Earlier milestone results below describe their status at the time.
+**Current status (2026-11-21):** SLAM-003E completed user-driven GLIM Mode A CPU mapping, graceful native saving and read-only native reload: 9,579 frames, one submap and 7,203 finite points. Four valid trajectories show approximately 4.58 m net estimated displacement. This is a functional moving-map result with deviations: actual Teleop commands reached 1.0 m/s and 0.5 rad/s instead of the intended 0.10 limits, and three IMU-prediction warning blocks occurred. A verified upload archive is ready and task-owned processes are stopped. Low-speed control, mapping accuracy, loop closure and Mode B remain unverified. Earlier milestones retain their historical status.
 
 ### 1. Objective
 
@@ -731,3 +731,147 @@ Three optional global-mapping settings emitted missing-option/default pairs (six
 The four trajectory text files are not consumed by the native map loader. Their hashes are unchanged, so the previous SLAM-003B text-trajectory validation remains applicable; this task does not claim a separate trajectory import or accuracy result. The 187 protected configuration/source contents, original SLAM-003B evidence, `main` and checkpoint remain unchanged.
 
 Evidence: [SLAM-003C-B native reload result](../evidence/command_outputs/2026-11-17-slam-003c-b-native-reload.txt). Only appended documentation and the new utility/evidence are pending review; no commit, stash, reset, clean, push, simulation, live mapping, GUI, movement or next experiment was performed.
+
+### 18. SLAM-003D-A — Controlled Moving Experiment Preparation
+
+**Result:** PASS for static preparation only; no Gazebo, GLIM, recorder, reference bridge or velocity publisher was launched. No robot movement or new native reload execution. Three separate new authorizations are required for the proposed runtime.
+
+Reviewed exactly seven pending project-owned SLAM-003B/C-B files (two documents, two sanitized evidence files, standalone validator source/CMake/README); no unrelated or private runtime files. Created the single authorized local checkpoint `60c39e30bf50b72b62d2e9c51988482790685c3f`, `SLAM-003B-C: Validate GLIM mapping and native dump reload`. Working tree was clean immediately afterward. The SLAM-003A commit remains its parent; `main` is unchanged. No push/merge. Historical statements about pending review above describe the earlier milestones.
+
+Prepared [route/recording plan and configuration](../configs/experiments/slam003d/README.md), a separate [portable moving configuration](../configs/glim/mode_a_cpu_mapping_moving/), and the [SLAM-003D-B procedure with exact commands](experiments/slam003d_b_procedure.md). Operational configuration is `/home/feras/glim_ws/configs/mode_a_cpu_mapping_slam003d_001`; reserved run is `/home/feras/glim_ws/runs/mode_a_mapping/slam003d_001`. Its dump and bag paths do not yet exist. Only `logging.log_dir` differs from the stationary operational mapping config; 14 of 15 files remain byte-identical. All 15 portable files equal the committed portable CPU mapping baseline; runtime explicitly selects the new operational copy.
+
+The working stamped mux interface is `/a300_00000/cmd_vel` (`geometry_msgs/msg/TwistStamped`), not a new controller. Proposed route: at least 10 simulation seconds stationary for initialization, forward 8 s at 0.15 m/s, zero 2 s, left turn 8 s at 0.20 rad/s, zero 2 s, forward 8 s at 0.15 m/s, final zero/stationary 8 s. Commands run at 20 Hz with refreshed simulation stamps. Nominal duration 46 s before discovery/approval delays; nominal commanded travel 2.4 m and yaw 1.6 rad. Actual motion remains untested. Route clearance must be established live before authorization/execution.
+
+Historical Gazebo evidence verifies `gz.msgs.Pose_V` on `/model/a300_00000/robot/pose`, including the world-to-model pose and model-relative base pose. Installed PosePublisher and source semantics support an independent simulator reference; current-run availability must be rechecked after authorization. A prepared one-way native bridge records individual stamped transforms on `/a300_00000/reference/gazebo_pose`, never the live TF topics. Filtered and raw wheel odometry are recorded as dependent wheel-based estimates, not ground truth. The procedure defines sensor-to-base conversion and origin/time alignment explicitly.
+
+One rosbag2 recorder is planned for 11 explicit topics: both clouds, IMU, raw/filtered odometry, clock, mux command input/output, reference poses and namespaced dynamic/static TF. BEST_EFFORT sensor subscriptions preserve publisher settings; static TF uses transient-local durability. An 8 MiB cache per buffer bounds recorder memory. No all-topic recording or extra cloud-rate processes.
+
+Safety procedure specifies three separate approval gates; zero commands and measured-stop verification between stages; per-command, route, observation and saving bounds; sensor/clock gaps, resource, recording, processing and TF abort criteria; graceful native saving and recorder flush; actual artifact/trajectory/retained-frame validation and one bounded native reload of the new dump. There is no prescribed submap or loop-closure count. All task-owned processes must stop and protected hashes must match afterward.
+
+Static checks passed: 30 JSON-with-comments files, native rosbag2 parsing of 11 QoS overrides, bridge schema and exported converter, CPU module references and RTLD_NOW dependency resolution with Jazzy sourced, preserved mapping/extrinsic/TF settings, logging-only semantic delta, route arithmetic and `bash -n` for all command blocks. Protected comparisons preserve 187 files, all 22 stationary dump files and 41 native reload build/result files. New preparation remains uncommitted.
+
+Evidence: [SLAM-003D-A static preparation](../evidence/command_outputs/2026-11-17-slam-003d-a-preparation.txt). Stop here; SLAM-003D-B requires review and new authorizations.
+
+### 19. SLAM-003D-B — Controlled Motion Attempt Stopped at Clearance Preflight
+
+**Result: STOPPED BEFORE GLIM OR MOVEMENT.** The requested moving-mapping experiment was not completed. Only the separately authorized simulation, existing sensor pipeline, dedicated reference bridge and stationary recording ran. No GLIM or movement approval was requested, no velocity publisher was created, and no alternate route, spawn or configuration was substituted.
+
+Started on `codex-work` at preserved checkpoint `60c39e30bf50b72b62d2e9c51988482790685c3f`; protected `main` remained unchanged. Preflight verified the prepared configuration, unused outputs, 187 protected files, 22 original stationary dump artifacts and 41 native-reload build/result files. No conflicting host runtime processes. Initial available RAM 5,324.6 MiB and free disk 945.9 GiB. The reviewed [procedure](experiments/slam003d_b_procedure.md), route, portable files and operational configuration were preserved.
+
+#### Clearance blocker and decision
+
+The actual warehouse scene includes `Person 1 - Standing` / `MaleVisitorOnPhone` at `(1, -1, 0)` m. Finite live LiDAR points near that location enter the required clearance envelope during the proposed in-place turn centered nominally at `(1.2, 0)` m. A point at approximately `(1.13704, -0.97501, 0.21122)` m in the stationary base frame lies about **0.486875 m** from the projected installed chassis collision footprint at nominal turn yaw **1.104 rad**. This is below the reviewed **0.5 m** margin.
+
+The check used the convex footprint of installed `chassis_collision.stl`, finite points in the chassis-height band and the reviewed nominal turn sweep; it did not move the robot. This is a conservative projected clearance check, not a full 3D collision prediction or semantic identification of every point. It cannot certify the required margin, especially with motion/slip uncertainty and other robot parts. The correct outcome is to stop for route review, not reduce the margin or silently change the route. No turn or forward segment was attempted.
+
+#### Authorized stationary inputs, reference and recording
+
+Used the exact existing combined setup with `generate:=false`, Helios bridge and timing adapter. Input preflight measured original/adapted clouds about **10.001/10.002 Hz**, IMU **99.991 Hz** and clock **333.333 Hz**. Five header-matched cloud pairs preserved all original point bytes and zero times. Adapted clouds remained nonempty, little-endian and tightly packed. Fixed sensor TF exactly matched base-to-IMU Z=0.294759 m and base-to-LiDAR Z=0.342259 m, identity rotations; no conflicting TF parents were observed.
+
+Live Gazebo inspection confirmed `gz.msgs.Pose_V` on the prepared reference topic. The prepared native one-way bridge worked on `/a300_00000/reference/gazebo_pose`, separate from TF. Offline native rosbag2/CDR reading verified **4,586** messages with same-stamp `warehouse → a300_00000/robot → a300_00000/robot/base_link` poses, finite transforms and strictly increasing simulation timestamps. The model/base transform was identity throughout this stationary capture. This confirms independent reference availability; wheel odometry was not substituted as ground truth.
+
+The unchanged 11-topic MCAP recorder subscribed to all requested topics, flushed on SIGINT and exited **0**. The bag contains **63,613 messages over 96.516 simulation seconds**, from receipt simulation time 171.102 to 267.618 s. Recorder wrapper lifetime was approximately 110.094 wall seconds including startup/flush; the 90-second GLIM observation cap was never applicable because GLIM was not started. This stationary preflight capture is not the planned 46-second moving dataset. It contains zero input/output command messages, as expected without a command publisher.
+
+| Topic suffix under `/a300_00000` unless absolute | Messages |
+|---|---:|
+| `sensors/helios_16p/points` | 963 |
+| `sensors/helios_16p/points_glim` | 957 |
+| `sensors/imu_0/data` | 9,652 |
+| `platform/odom` | 4,581 |
+| `platform/odom/filtered` | 4,587 |
+| `reference/gazebo_pose` | 4,586 |
+| `/clock` | 32,170 |
+| `tf` / `tf_static` | 6,115 / 2 |
+| `cmd_vel` / `platform/cmd_vel` | 0 / 0 |
+
+Offline validation read all messages and matched metadata counts. All recorded clouds passed layout and zero-time checks; five additional matched pairs preserved original bytes. Recorded cloud rates were about 9.990/9.979 Hz and IMU 100.000 Hz. Maximum cloud stamp gaps were 0.198/0.300 s; IMU 0.012 s. Reference stamps span 171.108–267.603 s with maximum gap 0.231 s. No decreasing sensor/reference stamps. Mixed TF/static messages can repeat receipt stamps and are not sensor trajectories.
+
+The recorder reported **three transport-layer message losses**, without per-topic attribution. Discovery/recording boundaries and gaps mean this is not a lossless evaluation dataset. A supplemental seven-second read-only probe collected 292 valid reference rows, but failed before its summary because a parameter-service future for `twist_mux` had not completed. Its code issued the request before confirming service discovery. No motion endpoint was exercised; live parameter verification remains incomplete. The failed probe was not used as successful evidence; the already-recorded bag supplied the completed reference validation. No simulator, input or recorder restart was made.
+
+#### Results, resources and cleanup
+
+Recorded reference displacement and yaw change are both **0** over the stationary interval. Raw/filtered odometry speeds remained effectively zero (below 1.2×10⁻¹⁸ m/s); tiny wheel-integration values are numerical noise, not movement. GLIM initialization, moving scans, map/submap/frame/point counts, four GLIM trajectories, native saving and new-map reload are **NOT RUN**, rather than mapping failures. `glim_dump` is absent; the old native validator was not executed or modified.
+
+RAM observations are snapshots only: 5,324.6 MiB available before launch and 2,838.8 MiB before recorder stop; swap used zero. Continuous CPU/RSS samples were not preserved because the supplemental probe exited before writing its summary. No GLIM CPU/RSS measurement exists. No resource-pressure abort was observed; clearance was the stop reason.
+
+All five task-owned launch wrappers exited 0 after SIGINT: recorder, reference bridge, adapter, Helios bridge and simulation. The adapter child retained its known `KeyboardInterrupt` / exit -2 shutdown diagnostic; wrapper 0 does not erase that child status. No forced termination was needed. Host process/group inspection found no remaining task-owned or conflicting robotics processes. Existing Gazebo warnings included unavailable joystick, IMU hardware-info association, controller-period mismatch, SDF/remapping and Collada notices; no EKF missed-update message was found.
+
+Post-run checks preserve all **187 protected files, 22 SLAM-003B dump artifacts, 41 native-reload build/result files and the prepared operational configuration**. All 24 preexisting SLAM-003D-A project files matched their preflight hashes before these explicitly requested documentation updates. The prepared procedure/configurations/evidence remain unchanged; only current status and appended runtime records are added to the documentation. No commit, push, stash, reset, clean, generator, package change, Mode B, Nav2 or switching experiment.
+
+Private dataset: `/home/feras/glim_ws/runs/mode_a_mapping/slam003d_001/bag/`:
+
+- `bag_0.mcap`: **394,399,741 bytes**.
+- `metadata.yaml`: **10,764 bytes**.
+
+Full commands/launch timing, world/software identity, configuration hashes, reference rows, clearance data, failed-probe diagnostics, bag validation, raw logs and cleanup/preservation results remain in that private run. Sanitized [SLAM-003D-B preflight-abort evidence](../evidence/command_outputs/2026-11-17-slam-003d-b-preflight-abort.txt) contains the report without bulk data or private domain values.
+
+**Next action:** review the clearance evidence and prepare a separately reviewed route with the required margin. Do not reuse this consumed bag/log reservation; a future authorized experiment needs fresh run/configuration paths. No route/spawn/margin change or second attempt was made here. Moving-robot GLIM mapping remains untested.
+
+### 20. SLAM-003D-R — Static Safe-Route Redesign
+
+**Decision: no route verified; no new experiment reservation or runtime.** The 0.5 m clearance requirement is retained. The earlier 0.486875 m chassis/LiDAR turn result remains unchanged; this review extends the inspection to all robot collision parts and installed world collision geometry.
+
+Reviewed the original stationary bag, clearance evidence and prepared route, preserving all existing pending work. Native offline reading inspected all 957 adapted clouds: one unique XYZ geometry / 5,620 finite returns, not new viewpoints. Existing xacro was evaluated in memory without a Clearpath generator, resolving all 16 robot collision parts. Parsed 25 cached world models / 49 collision geometries, applying model/link/collision poses and scales. Full robot footprint is about 0.9954×0.6801 m, including wheels and bumpers; the point-robot and chassis-only approximations are insufficient.
+
+The standing-person collision OBJ at `(1,-1,0)` m extends closer than the visible point surface. Full-height projected geometry gives an initial whole-robot margin of 0.493693 m. Checked the entire A/B/C sweeps, with exact convex translation-sweep cross-checks and a bound on sampled rotation gaps:
+
+| Candidate | Proposed motion | Total nominal simulation time including 10 s initial / 8 s final holds | Minimum projected world clearance | Result |
+|---|---|---:|---:|---|
+| A | Forward 0.10 m/s × 3 s | 21 s | 0.327963 m | FAIL to certify 0.5 m |
+| B | A; zero 2 s; left yaw 0.10 rad/s × 2 s | 25 s | 0.327963 m | FAIL to certify 0.5 m |
+| C | Reverse 0.10 m/s × 3 s | 21 s | 0.493693 m at the initial pose | FAIL to certify 0.5 m |
+
+These conservative projected bounds do not prove a 3D collision. Full-height projection includes upper-body overhang; a separate person-only 3D convex separation diagnostic gives approximately 0.449747 m for A/B and 0.583320 m for C at sampled poses. It is not a complete full-world continuous 3D certificate and is not used to override the failed retained projected margin. Cloud-only minima (about 0.618 m for A/B and 0.763 m for C) would miss the more restrictive collision-envelope evidence. Explicit position/yaw/geometry/tilt and discretization allowances further reduce conservative bounds; no unmeasured controller guarantee or reduced safety margin is assumed.
+
+No candidate is selected. `slam003d_002` and a new operational configuration were **not created**. The existing run/configuration and historical runtime procedure remain unchanged. A justified continuous 3D envelope and tracking-error analysis would be needed to resolve whether reverse motion can be certified with the same 0.5 m physical requirement; there is no authorization for a changed metric, person relocation, new spawn or runtime test.
+
+The independent reference bridge and explicit recording approach are retained as the reference design. The three earlier recorder losses remain a data-quality limitation. Any later approved recording must report loss totals/unknown attribution, native read counts versus metadata, per-topic stamp coverage/gaps and matched cloud headers over a common interval; discovery boundaries must be separated from proven transport loss. No QoS/recording architecture was silently changed.
+
+See [full route review, candidate commands and uncertainty](experiments/slam003d_r_route_review.md), [geometry comparison figure](../evidence/figures/2026-11-17-slam-003d-r-route-comparison.png), [offline inspection utility](../tools/slam_route_clearance/README.md) and [sanitized evidence](../evidence/command_outputs/2026-11-17-slam-003d-r-static-route-review.txt). Detailed arrays/hashes remain private under `/home/feras/glim_ws/planning/slam003d_r_001`. Six analytic geometry checks and exact translation-sweep cross-checks passed; this does not certify runtime motion. Existing data, protected configurations and checkpoints are preserved; no commit, push, runtime, generator, installation or movement.
+
+### 21. SLAM-003E — User-Driven Husky Mapping, Native Save and Upload Package
+
+**Date:** 2026-11-21. **Result:** native moving-map creation/save/reload PASS **with deviations**; intended low-speed limits were not achieved. No autonomous route or assistant motion publisher was created.
+
+The user selected spawn `x=-4,y=3,z=0.3,yaw=0`, explicitly authorized the existing warehouse simulation with `generate:=false rviz:=false`, and confirmed the GUI looked correct. The live model settled at `(-4,3,0.135969836)` m with identity orientation; both controllers were active and clock advanced. Existing LiDAR bridge and timing adapter then passed live verification: both clouds about 10.002 Hz, IMU 100.018 Hz, monotonic stamps, five matching byte-preserved zero-time pairs, compatible QoS and exact sensor TF. The combined Clearpath setup and installed files were unchanged.
+
+After separate user approval, started node `glim_manual_mapping_001` using `/home/feras/glim_ws/configs/mode_a_cpu_mapping_manual_001`. This is a new private 15-file copy of validated `mode_a_cpu_mapping`; 14 files are byte-identical and only absolute `logging.log_dir` changed. CPU odometry/local/global mapping, sensor topics/QoS/timing, exact `T_lidar_imu=[0,0,-0.0475,0,0,0,1]`, `use_sim_time=true`, extensions `[]` and `publish_imu2lidar=false` were preserved. Runtime used `debug=false`, `dump_on_unload=false` and unique native output `/home/feras/glim_ws/runs/mode_a_mapping/slam003e_manual_001/glim_dump`.
+
+All three CPU modules loaded and IMU initialization succeeded. The user confirmed configuring the existing Teleop panel and clear space, then separately approved manual driving. The assistant sent no nonzero or zero velocity commands. W/A/S/D were operated by the user through the existing bridge/mux; a read-only observer recorded sensor stamps, wheel odometry, commands, TF endpoint names and resources. After the user confirmed completion and authorized saving, observed velocities were near zero for at least two seconds, then SIGINT was sent to the identified GLIM node while sensor inputs remained active. All queues drained, native `saved` was logged and the process exited **0**.
+
+#### Saved result and validation
+
+- **9579 frames / 1 submap / 7203 finite points**. Compact points/normals/intensities/covariances have matching dimensions and finite values; nine saved JSON files parse successfully. Native output is 22 files totaling **17,286,200 bytes**.
+- All four trajectory files contain 9,579 finite eight-column pose rows with strictly increasing simulation stamps **617.901–1575.702 s**, span **957.801 s**, intervals **0.099–0.102 s**, and near-unit quaternions. The long stationary setup/interaction prefix is part of this run.
+- Main wheel-observed motion spans **1504.692–1547.826 s**, elapsed **43.134 simulation seconds** including stops. **432 saved trajectory rows** lie in that interval; output covers its boundaries. LiDAR trajectory net displacement is **4.583 m**, net yaw **−1.023727 rad** (about −58.65 degrees), numeric polyline length **19.789 m**. These are numerical pose observations, not ground-truth accuracy metrics.
+- Filtered wheel odometry estimates **20.147 m** path length, **4.298 m** net displacement and **−1.072008 rad** net yaw. It is not independent ground truth. Only endpoint Gazebo poses were sampled; no complete reference trajectory or ROS bag was recorded. GLIM sensor poses must not be treated as `base_link` or automatically aligned to Gazebo world.
+- One bounded execution of the unchanged native reload validator used actual arguments **`1 9579 7203`**. It returned PASS/exit 0 in **0.0824 s**, with 4 factors/4 values, all expected submaps/frames/points and zero errors/recovery. Landlock read-only protection remained active; every original native file hash was unchanged.
+- `num_matching_cost_factors=0`. One submap is acceptable for this first moving experiment; no loop closure or map-accuracy result is claimed.
+
+#### Deviations and limitations
+
+**Speed limits were not enforced at the message level.** Although the user confirmed intended GUI values of 0.10 m/s and 0.10 rad/s, observed input/mux commands were ±1.0 m/s and ±0.5 rad/s. Wheel peaks were 1.047 m/s and 0.507 rad/s. The read-only monitor recorded the mismatch but did not stop it; the assistant did not catch it during the drive. This was not a validated conservative-speed experiment. Before any further driving, verify actual command messages with a separately approved brief user-operated check; do not assume displayed settings have taken effect. No configuration change or retry was made after this discovery.
+
+Two brief nonzero input events were also observed during setup before explicit manual-drive approval; odometry was stationary at approval. Existing GUI bridge command headers were zero, so their observed simulation clock and valid odometry/sensor stamps were used for timing. The working control/bridge implementation was not changed. These observations do not attribute the GUI setting failure to a specific cause.
+
+GLIM emitted **three IMU-prediction validation warning blocks**, including suggestions about extrinsic/bias accuracy. The cause was not diagnosed; the verified extrinsic was preserved. Optional mapping settings used installed defaults. No fatal GLIM processing error or restart occurred. Zero-time Mode A remains a synthetic global-shutter approximation rather than hardware scan timing fidelity.
+
+Over **837** approximately one-second samples, GLIM used **18.90–59.81%** of one CPU core (mean **21.71%**) and **180.6–322.8 MiB RSS**. Available RAM stayed above **3059.3 MiB** with zero swap use. Observer sensor/clock stamps had no rewinds; maximum observed cloud/IMU wall gaps were about 0.135/0.024 s. These samples are not a benchmark. No GLIM-named TF publisher appeared and root TF topics had no publishers; a single sample contained transient unresolved DDS endpoint names, so no exhaustive per-transform authority claim is made.
+
+#### Archive and cleanup
+
+Prepared and verified **`/home/feras/glim_ws/runs/mode_a_mapping/slam003e_manual_001/glim_manual_mapping.tar.gz`**, **1,368,466 bytes**. It contains only unmodified `glim_dump/` plus `experiment_summary.txt` (23 regular files verified by SHA256). Raw logs, helper sources, observation JSONL, private ROS domain/network configuration, robot.yaml and ROS bags are excluded. Original native files remain unchanged. The archive has not been uploaded; the user uploads it manually.
+
+Open its folder from WSL:
+
+```bash
+cd /home/feras/glim_ws/runs/mode_a_mapping/slam003e_manual_001
+explorer.exe .
+```
+
+After packaging, stopped adapter, bridge and simulation with SIGINT. GLIM and all three launch wrappers exited 0; the adapter child retained its known SIGINT KeyboardInterrupt/-2 diagnostic. The observer had already exited after GLIM. Host process inspection found no task-owned simulation/GLIM/input/command or discovery helpers remaining. All 187 protected contents, validated/new mapping configs, previous stationary map/reload artifacts and earlier run/planning files were unchanged. Existing Git work was preserved; no commit/push, generator, package upgrade, source change, Mode B or Nav2.
+
+Evidence: [SLAM-003E sanitized validation](../evidence/command_outputs/2026-11-21-slam-003e-manual-mapping.txt). Recommended next action: upload this archive for visualization, inspect IMU warnings, and separately resolve/verify Teleop speed application before another drive. No further experiment was started.
+
+
+**Reusable figure archive (2026-11-21):** The user-supplied ChatGPT top-down map, pose-derived motion-speed plot and interactive HTML map have been copied from Downloads into the [SLAM-003E figure gallery](../evidence/figures/SLAM-003E/README.md). Original downloads and native experiment output remain unchanged; SHA256 provenance is recorded. The gallery includes captions and the experiment's limitations; the external plotting method/alignment has not been independently reproduced. New figures from later tasks follow the [task figure archive workflow](../evidence/figures/README.md).

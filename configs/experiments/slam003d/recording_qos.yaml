@@ -1,0 +1,55 @@
+/a300_00000/sensors/helios_16p/points:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 20
+/a300_00000/sensors/helios_16p/points_glim:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 20
+/a300_00000/sensors/imu_0/data:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 1000
+/a300_00000/platform/odom:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 100
+/a300_00000/platform/odom/filtered:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 100
+/clock:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 1000
+/a300_00000/cmd_vel:
+  reliability: reliable
+  durability: volatile
+  history: keep_last
+  depth: 100
+/a300_00000/platform/cmd_vel:
+  reliability: reliable
+  durability: volatile
+  history: keep_last
+  depth: 100
+/a300_00000/reference/gazebo_pose:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 20
+/a300_00000/tf:
+  reliability: best_effort
+  durability: volatile
+  history: keep_last
+  depth: 100
+/a300_00000/tf_static:
+  reliability: reliable
+  durability: transient_local
+  history: keep_last
+  depth: 100

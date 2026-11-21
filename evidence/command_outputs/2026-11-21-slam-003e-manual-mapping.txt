@@ -1,0 +1,152 @@
+SLAM-003E — User-driven GLIM moving mapping, native save/reload and archive
+Date: 2026-11-21
+Functional result: PASS WITH DEVIATIONS. Intended low-speed limits NOT achieved.
+
+Git and user gates
+- codex-work, checkpoint 60c39e30bf50b72b62d2e9c51988482790685c3f preserved.
+- main unchanged ca1140ef760bd6e28c32229347e75d896bfb38b4; no commit/push.
+- User selected(-4,3,0.3,yaw0), approved simulation, confirmed GUI placement,
+  approved GLIM, confirmed intended Teleop settings/clear space, approved manual
+  driving, then confirmed stopped and explicitly authorized graceful save.
+- No autonomous route or assistant velocity publisher/command. Existing Teleop
+  W/A/S/D, Gazebo-to-ROS bridge and Clearpath mux remained the control interface.
+
+Exact runtime launches (private ROS environment loaded without printing it)
+ros2 launch clearpath_gz simulation.launch.py \
+  setup_path:=/home/feras/clearpath_lidar11b_test world:=warehouse \
+  generate:=false rviz:=false x:=-4.0 y:=3.0 z:=0.3 yaw:=0.0
+ros2 launch husky_a300_sensor_extensions rs_helios_16p_bridge.launch.py
+ros2 launch husky_a300_sensor_extensions pointcloud2_timing_adapter.launch.py
+ros2 run glim_ros glim_rosnode --ros-args \
+  -r __ns:=/a300_00000 -r __node:=glim_manual_mapping_001 \
+  -p use_sim_time:=true -p debug:=false -p dump_on_unload:=false \
+  -p config_path:=/home/feras/glim_ws/configs/mode_a_cpu_mapping_manual_001 \
+  -p dump_path:=/home/feras/glim_ws/runs/mode_a_mapping/slam003e_manual_001/glim_dump
+
+Startup/pipeline preservation
+- World warehouse, existing combined setup; no generators, installs or upgrades.
+- Live settled model XYZ(-4,3,0.135969836), identity rotation; active joint-state
+  and platform-velocity controllers; advancing clock about333Hz.
+- ros2 control CLI unavailable; existing ListControllers service confirmed active.
+- Existing input probe passed: original/adapted clouds10.002Hz,IMU100.018Hz;
+  monotonic stamps,360x16 little-endian tightly packed cloud,zero relative times,
+  five matched byte-preserved pairs,compatible QoS and exact sensor TF.
+- Adapter use_sim_time=true verified via GetParameters. Initial param CLI graph
+  lookup said Node not found; direct read-only service passed without restart.
+- New15-file private mapping copy;14 files byte-identical to validated baseline,
+  only config_logging.json/logging.log_dir changed to unique run logs/glim.
+- CPU odometry/local/global mapping enabled, exact T_lidar_imu preserved:
+  [0,0,-0.0475,0,0,0,1]. Sensor topics,QoS,scales,offsets,Mode A unchanged.
+- extension_modules=[],publish_imu2lidar=false,debug=false,dump_on_unload=false.
+- All three CPU modules loaded; IMU initialization succeeded. No critical error.
+
+Manual operation and material deviations
+- User drove; no assistant nonzero OR zero velocity commands were sent.
+- Intended confirmed GUI limits0.10m/s and0.10rad/s did not hold at message level.
+- Actual input/mux command values: linearX=-1,0,+1m/s; angularZ=-0.5,0,+0.5rad/s.
+- Measured wheel peaks1.046975m/s,0.507143rad/s. The read-only monitor recorded
+  but did not stop the mismatch; assistant missed it during the drive. This is
+  not a validated low-speed-control experiment. No cause assigned or retry made.
+- Two brief nonzero input setup events occurred before explicit drive approval;
+  monitored wheel odometry was stationary at approval. Existing GUI command
+  header stamps were zero; observation clock plus valid sensor/odom stamps used.
+- Main observed motion1504.692--1547.826 simulation seconds,span43.134s including
+  stops;432 saved frames lie in this interval. Both forward/reverse and turn signs
+  occurred; the exact route was user-controlled, not an automated fixed route.
+- Wheel path estimate20.147m,net displacement4.298m,net yaw-1.072008rad.
+  Wheel odometry is not independent ground truth; no full reference bag recorded.
+- Initial/final Gazebo model poses were sampled only, not full ground-truth path.
+- Final Gazebo model XYZ approximately(-6.017716,-1.107853,0.135969862)m.
+
+Graceful saving and native contents
+- User confirmed stopped; two-second observer window had near-zero speed/yaw.
+- SIGINT sent only to owned GLIM node while sensor inputs/Gazebo remained active.
+- Odometry/local/global queues drained, native saved confirmation,process exit0.
+- graph.txt:num_submaps=1,num_all_frames=9579,num_matching_cost_factors=0.
+- One numbered submap000000,9579frames,7203finite points and finite matching
+  normal/intensity/covariance arrays. Nine saved JSON configs valid.
+- Native output22files,total17286200bytes. A single submap is acceptable;
+  no loop closure/map-correction or trajectory-accuracy result is claimed.
+- Four main trajectories:9579 finite eight-column TUM rows each,strictly increasing
+  simulation stamps617.901--1575.702s,span957.801s,intervals0.099--0.102s,
+  quaternion norms within about6.7e-7of1. Long stationary setup prefix included.
+- LiDAR trajectory net displacement4.583105m,maximum4.584180m;net yaw-1.023727rad.
+  Numeric polyline19.788750m includes numerical stationary noise;not true distance.
+- Poses are sensor-frame GLIM poses,not base_link/Gazebo world;no accuracy claim.
+
+Actual artifact inventory (relative to glim_dump; bytes)
+000000/covs_compact.bin	172872
+000000/data.txt	5170808
+000000/imu_rate.txt	8617731
+000000/intensities_compact.bin	28812
+000000/normals_compact.bin	86436
+000000/points_compact.bin	86436
+config/config.json	584
+config/config_global_mapping_cpu.json	619
+config/config_logging.json	209
+config/config_odometry_cpu.json	744
+config/config_preprocess.json	589
+config/config_ros.json	911
+config/config_sensors.json	1039
+config/config_sub_mapping_cpu.json	711
+config/config_viewer.json	706
+graph.bin	1463
+graph.txt	65
+odom_imu.txt	783434
+odom_lidar.txt	774012
+traj_imu.txt	783434
+traj_lidar.txt	774012
+values.bin	573
+
+One native reload, actual new-run counts
+- Existing unchanged standalone native validator,30s timeout,OMP_NUM_THREADS=2:
+  /home/feras/glim_ws/validation/slam003c_b_001/build/glim_dump_reload \
+    /home/feras/glim_ws/runs/mode_a_mapping/slam003e_manual_001/glim_dump \
+    1 9579 7203
+- Exit0 in0.082350s,Landlock ABI7 read-only restrictions active.
+- Native GlobalMapping::load/SubMap::load/graph+values deserialization PASS.
+- Loaded1submap,9579frames,7203points;4factors/4values;exported7203points.
+- Errors0,recovery=false;6optional-key/default warning lines only.
+- All22 original dump hashes unchanged. No installed GLIM/source/config edits.
+
+Warnings, input continuity and sampled resources
+- GLIM logged3 IMU prediction/validation warning blocks,including possible bias/
+  extrinsic concerns. Cause not diagnosed; exact verified extrinsic retained.
+- Startup optional-key fallbacks:submap_target_num_points=-1,voxelmax0.5,
+  voxel_dmin5,voxel_dmax20. No fatal GLIM error,exception or restart.
+- Synthetic zero-time Mode A does not establish hardware timing/deskew fidelity.
+- 837 monitor samples: CPU one-core18.90--59.81% (mean21.71%).
+- GLIM RSS180.58--322.78MiB;available memory3059.30--3295.11MiB;swap0.
+- No monitor processing/input/memory alerts. Sensor/clock rewinds0;maximum
+  cloud/IMU wall gaps0.1354/0.0241s. Sampling is not a performance benchmark.
+- Root /tf and /tf_static empty;no GLIM-named publisher in namespaced sets.
+  One monitor sample had unresolved DDS endpoint names;dynamic count never>4,
+  static count2. This is not an exhaustive per-transform authority audit.
+- Known simulation joystick/hardware-info/controller-period/SDF/render warnings
+  persisted; optional missing tools were bypassed with existing read-only APIs.
+
+Upload archive and privacy
+- Path:/home/feras/glim_ws/runs/mode_a_mapping/slam003e_manual_001/glim_manual_mapping.tar.gz
+- Bytes:1368466;SHA256:62d2501af94633550d5a897a5f327f85f2fffaead046d3f235b94e22dd737701
+- Contents only unmodified glim_dump/ plus experiment_summary.txt. All23regular
+  file hashes checked through tarfile; no absolute archive member paths/symlinks.
+- No raw logs,ROS bag,robot.yaml,private ROS domain or network settings included.
+- Original native output preserved. Archive has NOT been uploaded by assistant.
+- User opens the folder in WSL then runs explorer.exe . and uploads manually.
+
+Cleanup and protected state
+- After packaging:SIGINT owned adapter,bridge,simulation;all wrappers exited0.
+- Adapter child retained known shutdown KeyboardInterrupt/exit-2 diagnostic.
+- GLIM/observer already exited;host process check found no runtime/discovery
+  leftovers. No unrelated process signaled;no force-kill needed.
+- All187 protected file contents,validated/new mapping configs,old stationary map
+ 22files/native reload41files and prior run/planning datasets unchanged.
+- Existing documentation copied privately before current status/append updates.
+  Previous pending body content preserved;new sanitized evidence only,not bulk data.
+- Branch/checkpoint/main and empty index preserved;no commit/push/reset/stash/clean.
+
+Conclusion and next action
+- First user-driven moving GLIM native map saved and reloaded successfully,with
+  significant speed-control deviations and IMU warnings explicitly retained.
+- Upload this archive for visualization;review warnings and separately verify
+  actual Teleop limits before any further movement. No Mode B/Nav2/new experiment.

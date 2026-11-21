@@ -1,0 +1,85 @@
+SLAM-003D-R2 — Turn-First Route Static Evaluation
+Date: 2026-11-17
+Decision: FAIL TO VERIFY 0.5m clearance; no route selected or reservation created.
+
+Preservation
+- Branch codex-work, checkpoint 60c39e30bf50b72b62d2e9c51988482790685c3f;
+  main ca1140ef760bd6e28c32229347e75d896bfb38b4 unchanged.
+- Before snapshot includes all 179 existing project files, all 71 previous-run
+  files and all 18 preceding planning files, plus protected/original map hashes.
+- Original geometry module reused by import; no previous file was edited.
+- No runtime, ROS initialization, recorder, GLIM, GUI or velocity publisher.
+- No generator, software installation, environment/configuration change or motion.
+- No commit/push/reset/stash/clean; index empty.
+
+Proposed sequence (never executed)
+- Stationary >=10 simulation seconds and successful GLIM initialization.
+- Left +0.10rad/s x15.7s -> +1.57rad (89.9544deg).
+- Zero 2s; forward +0.10m/s x5s -> 0.5m in new heading; zero 8s.
+- Existing /a300_00000/cmd_vel TwistStamped mux input,20Hz fresh simulation stamps;
+  all other twist components zero. Counts315/41/101/161 for those four stages.
+- Nominal total40.7sim seconds, before startup/authorization gaps.
+
+Geometry and method
+- Reconstructed measured settled world/base XYZ=(0,0,0.13596983616624614), yaw0;
+  model/base identity and stationary saved reference asserted. Launch Z0.3 is not
+  confused with the settled pose.
+- Native in-memory xacro and existing file readers:16 full robot collision parts,
+  25 included world models/49 collision geometries. No generators or asset download.
+- Entire rotation0..1.57rad:1571 poses at0.001rad plus local minimum refinement.
+- Between-rotation-sample radial bound0.000270629m.
+- Entire forward0.5m: exact convex translation swept polygon; a separate scalar
+  pose witness agrees with the exact-sweep minimum to <1e-7m.
+- Safe broad phase uses an enclosure of every tested footprint; excluded polygons
+  are at least3.4828m away. Ground support/high-roof exclusions inherited and
+  explicit; two nominal dynamic chair poses remain unverified.
+- Same conservative footprint and unchanged0.5m requirement. Same illustrative
+  position/yaw/geometry/tilt allowance0.080824961m; not a measured control guarantee.
+
+Main1.57rad route
+- Rotation projected minimum0.493693061m at XY(0,0),yaw0: initial pose.
+- Forward projected minimum0.516212973m at XY(0,0),yaw1.57: start of translation.
+- Complete route projected minimum0.493693061m; FAIL certification.
+- Limiting obstacle:Person1-Standing/MaleVisitorOnPhone collision, located at
+  world(1,-1,0),yaw1.57. Its collision OBJ differs from visible LiDAR surfaces.
+- Endpoint worldXY=(0.000398163,0.499999841)m, consistent with1.57rad heading.
+- Continuous projected lower bound0.493422432m; adjusted bound0.412597471m.
+- Forward phase's nominal >0.5m number alone is not a complete safety certificate.
+
+Smaller turns followed by the same0.5m translation
+Degrees | rotation min(m) | forward min(m) | whole route min(m) | result
+5 | 0.493693061 | 0.385854060 | 0.385854060 | FAIL
+10 | 0.493693061 | 0.447377474 | 0.447377474 | FAIL
+15 | 0.493693061 | 0.502908089 | 0.493693061 | FAIL
+30 | 0.493693061 | 0.629563900 | 0.493693061 | FAIL
+45 | 0.493693061 | 0.690142126 | 0.493693061 | FAIL
+60 | 0.493693061 | 0.680514461 | 0.493693061 | FAIL
+- Five-degree forward minimum at s=0.346381m,XY(0.345063,0.030189).
+- Ten-degree forward minimum at s=0.5m,XY(0.492404,0.086824).
+- Every smaller positive angle includes the same initial0.493693061m projected
+  margin; none can establish the retained criterion over its entire route.
+
+3D distinction
+- Failed full-height projection is not proof of actual3D collision or a physical
+  <0.5m gap. Conservative hull/projection can include overhang and fill gaps.
+- Person-only convex3D sampled separation lower bounds: rotation0.583319769m,
+  forward0.585337045m. Sampling0.01rad/0.005m, initial/start poses limiting.
+- These are incomplete diagnostics, not actual full-world continuous3D clearance.
+- Actual full-world continuous3D clearance remains UNVERIFIED. No safety claim or
+  margin relaxation is made based on those numbers.
+
+Artifacts/reproduction
+- New caller:tools/slam_route_clearance/analyze_turn_first.py.
+- New report:docs/experiments/slam003d_r2_turn_first_review.md.
+- Full hashes/results/samples private:glim_ws/planning/slam003d_r2_001.
+- Exact offline command is recorded in the new report. Fresh output required
+  for reproduction. No original artifact/output directory overwritten.
+- Route arithmetic,endpoint transform,rotation coverage,straight-sweep witnesses
+  and common-initial-pose checks passed.
+- No slam003d_002 experiment directory or new operational config created.
+- Existing bridge/recording settings and prior three transport losses untouched.
+- All prior project files,Git changes,datasets/configurations/checkpoints preserved.
+- Stop after static analysis. No runtime or movement authorization requested.
+
+New caller SHA256:
+4f186d5667a706a0295981ef8f3e60e6fc7128141e859c3ec68c358c64d5b502

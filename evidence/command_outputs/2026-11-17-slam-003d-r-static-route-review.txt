@@ -1,0 +1,139 @@
+SLAM-003D-R — Static Safe Motion Route Review
+Date: 2026-11-17
+Decision: NO ROUTE VERIFIED. No experiment reservation or runtime.
+
+Preservation and scope
+- Branch codex-work; checkpoint 60c39e30bf50b72b62d2e9c51988482790685c3f preserved.
+- main remains ca1140ef760bd6e28c32229347e75d896bfb38b4; index empty.
+- Before snapshot: 174 existing project files, 71 SLAM-003D-B private run files,
+  187 protected file contents plus earlier native map/reload hashes.
+- Prior uncommitted modifications retained. Documentation appended only.
+- No commit/push/reset/stash/clean, generator, install/upgrade or protected edit.
+- No Gazebo, GLIM, recorder, GUI, ROS node or velocity publisher launched.
+
+Inspected evidence and geometry
+- Existing 003D-B documentation, clearance.json-equivalent route_clearance.json,
+  reviewed plan/procedure and original MCAP/metadata retained untouched.
+- Native offline rosbag2 reading inspected all 957 adapted PointCloud2 records.
+- Header span 171.702--267.501 simulation seconds; one unique XYZ geometry;
+  5,620 finite unique points. Repeated stationary scans add no viewpoints.
+- Reference metadata confirms no motion, identity model/base and verified settled
+  world base/model Z=0.13596983616624614 m; source conditions asserted.
+- In-memory native xacro inspection only: 37 links, 36 joints, 16 collision parts.
+- Collision parts include chassis, suspension, motors, wheels, bumpers and top plate.
+- Whole collision bounds in base frame: X +/-0.497704 m, Y +/-0.340050 m,
+  Z [-0.135970,0.242259] m. Sensor frames have no simulated LiDAR collision body.
+- Wheel cylinders use circumscribed 64-sided bounds, under 0.2mm radial excess;
+  continuous wheel rotation leaves these cylinders invariant. No joint is actuated.
+- Existing world: 25 included models / 49 collision geometries plus ground.
+  Cached local assets resolved without network downloads. Poses/scales applied.
+- 188 warehouse support/sub-floor triangles and intended ground plane excluded;
+  high roof surfaces beyond body+margin filtered. Not a terrain certificate.
+- chair_0/1 have no static setting, hence nominal dynamic poses remain unverified.
+- Limiting source: Person 1 - Standing / MaleVisitorOnPhone at (1,-1,0), yaw 1.57.
+- Installed collision OBJ differs from visible cloud surface. Full-height projected
+  bounds: X [0.797694,1.299276], Y [-1.113820,-0.658856] m.
+- This projection includes upper-body overhang; it is conservative for the robot.
+
+Candidates: proposed data only, never executed
+- Common: >=10s initial stationary; 8s final zero; 20Hz simulation-stamped commands
+  via existing /a300_00000/cmd_vel TwistStamped mux input.
+- A: forward 0.10m/s x3s -> +0.30m / 0rad. Total nominal 21s.
+- B: A; zero 2s; yaw left 0.10rad/s x2s -> +0.30m / +0.20rad. Total 25s.
+- C: reverse 0.10m/s x3s -> -0.30m / 0rad. Total nominal 21s.
+- Speeds below prior maxima 0.15m/s and 0.20rad/s. All other twist components zero.
+- Proposed message counts: 61 per3s,41 per2s,161 per8s; no messages published.
+
+Whole-route projected results (meters)
+A: world projected minimum=0.327962619; LiDAR-return-only minimum=0.617959961
+   limiting obstacle=Person 1 - Standing/collision; pose XY/yaw=[0.3, 0.0, 0.0]
+   exact continuous translation minimum=0.327962619
+   samples=61; conservative lower bound=0.244096401
+   person-only sampled 3D separation lower bound=0.449747159
+   retained conservative projected 0.5m requirement: FAIL TO VERIFY; no full-world 3D certificate.
+B: world projected minimum=0.327962619; LiDAR-return-only minimum=0.617959961
+   limiting obstacle=Person 1 - Standing/collision; pose XY/yaw=[0.3, 0.0, 0.0]
+   exact continuous translation minimum=0.327962619
+   samples=161; conservative lower bound=0.244096401
+   person-only sampled 3D separation lower bound=0.449747159
+   retained conservative projected 0.5m requirement: FAIL TO VERIFY; no full-world 3D certificate.
+C: world projected minimum=0.493693061; LiDAR-return-only minimum=0.762806974
+   limiting obstacle=Person 1 - Standing/collision; pose XY/yaw=[-0.0, 0.0, 0.0]
+   exact continuous translation minimum=0.493693061
+   samples=61; conservative lower bound=0.409826843
+   person-only sampled 3D separation lower bound=0.583319769
+   retained conservative projected 0.5m requirement: FAIL TO VERIFY; no full-world 3D certificate.
+
+Method and interpretation
+- Entire initial/translation/rotation/final path inspected, not endpoint-only.
+- Exact convex translation swept hulls independently reproduce minima.
+- Translation samples 5mm, rotation samples 0.002rad; generic Lipschitz allowance
+  0.003041257m covers between-sample pose displacement.
+- Illustrative uncertainty: 0.05m translation + yaw0.02rad at radius0.5413m
+  +0.01m geometry +0.01m tilt/projection =0.080824961m. Not measured tracking
+  performance; it is not tuned downward to obtain a pass.
+- Initial full-robot projected margin 0.493693061m; C moves away but includes
+  that starting state. A/B worsen the projected bound to 0.327962619m.
+- Planar convex envelope fills gaps and obstacle projection includes high parts.
+  Its failed bound is NOT evidence of an actual collision/3D violation.
+- Person-only 3D support-plane gaps are recomputed from unit-normal vertex
+  supports independently of optimization status. They explain the difference
+  between 0.494m projected and 0.583m sampled 3D bounds at the initial state.
+- These diagnostics do NOT certify full-world continuous swept volume, current
+  dynamic geometry, unobserved space, actual hardware or tracking uncertainty.
+- No candidate selected. Further continuous 3D/error-envelope review would be
+  needed to determine whether reverse motion can meet the same physical margin.
+
+No fresh runtime reservation
+- slam003d_002 and an operational configuration for it were NOT created.
+- Existing slam003d_001 remains consumed and unchanged. No path is reused.
+- Historical runtime procedure/configurations/reference bridge/QoS remain unchanged.
+- No replacement executable runtime command is issued for an unverified route.
+- No margin reduction, obstacle relocation, environment change or new spawn.
+
+Recording data quality for any later reviewed run
+- Prior three transport-layer losses remain an explicit limitation, attribution unknown.
+- Retain existing reference bridge and explicit 11-topic recording design.
+- Report loss totals/per-topic counters when available, unknown when unavailable.
+- Match metadata and native-read counts; inspect per-topic coverage/rates/gaps,
+  duplicates/decreases and matched original/adapted headers over a shared interval.
+- Separate discovery/start/stop effects from proven drops; no lossless claim from
+  counts alone. Preserve raw logs privately and report motion-time loss bursts.
+- No QoS/recorder architecture change or new recording was made.
+
+Static reproduction
+source /opt/ros/jazzy/setup.bash
+source /home/feras/clearpath_ws/install/setup.bash
+export PYTHONDONTWRITEBYTECODE=1
+python3 -B tools/slam_route_clearance/analyze_routes.py \
+  --source-run /home/feras/glim_ws/runs/mode_a_mapping/slam003d_001 \
+  --robot-xacro /home/feras/clearpath_lidar11b_test/robot.urdf.xacro \
+  --world /opt/ros/jazzy/share/clearpath_gz/worlds/warehouse.sdf \
+  --fuel-root /home/feras/.gz/fuel/fuel.gazebosim.org \
+  --output /home/feras/glim_ws/planning/slam003d_r_001/final_results
+- Executed as offline inspection. Output directory now exists; reproduce using
+  a fresh planning path. No ROS initialization or native GLIM API instantiated.
+- Existing installed dependencies only; six analytic geometry checks passed.
+- Exact continuous translation comparisons passed for all three candidate straights.
+- Preliminary static inspection corrections (missing static defaults and NumPy
+  JSON scalar conversion) were confined to the new tool; failed outputs retained
+  privately, never overwriting prior data or running/retrying any motion.
+
+New project-owned deliverables
+- tools/slam_route_clearance/analyze_routes.py and README.md.
+- docs/experiments/slam003d_r_route_review.md.
+- evidence/figures/2026-11-17-slam-003d-r-route-comparison.png, derived public
+  collision-geometry illustration; no raw point-cloud payload in Git.
+- This sanitized evidence; append-only integration and development-log records.
+- Detailed source hashes/arrays/results remain in private planning/slam003d_r_001.
+
+Key integrity identifiers
+ee8167fd55ce207c23d9029899f8a7b545a62b01c7cdd1479998791eb01ffe00  bag/bag_0.mcap
+5712d1b98356913e0eff588f09b8255aafeef241601dbef4bf2c0eef3227677d  bag/metadata.yaml
+d787a05ff0865136827a42cef033dd3a003c89b8391059e1fa635f169429405c  robot.urdf.xacro
+914da37ef8a0611ffd3e2a1a3892bb5b9dc47e00442de104b0d760401cfb14c5  chassis_collision.stl
+f28bfa410a467cc12bf3615413780315977bccd2b1c623e3ed4b0f56b61c9235  warehouse.sdf
+feded16115d772d51b75be16941e5ee376cd92bf1aee6b84f4d21fac4dc47878  MaleVisitorStatic_Col.obj
+
+Stop: static route validation complete; no route certified and no runtime begun.
+Moving-robot mapping remains untested. Wait for review.

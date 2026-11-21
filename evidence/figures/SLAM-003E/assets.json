@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "task": "SLAM-003E",
+  "source_run_id": "slam003e_manual_001",
+  "source_archive": "glim_manual_mapping.tar.gz",
+  "assets": [
+    {
+      "file": "2026-11-21_SLAM-003E_map-eagle-view_v01.png",
+      "original_download_name": "glim_3d constracted map_eagleview.png",
+      "source_location": "Windows Downloads (original retained)",
+      "bytes": 366728,
+      "sha256": "5ef147d78ce96bfb2158f305e2a360fefc85c1fde91fd31584ef8ee68be9ee1d",
+      "caption": "Top-down GLIM map and estimated trajectory; points colored by map-frame height.",
+      "producer": "User-supplied ChatGPT analysis export",
+      "imported_on": "2026-11-21",
+      "task": "SLAM-003E",
+      "source_run_id": "slam003e_manual_001",
+      "validation": "PNG visually inspected; HTML only statically inspected, not executed; rendering method not independently reproduced"
+    },
+    {
+      "file": "2026-11-21_SLAM-003E_motion-speed_v01.png",
+      "original_download_name": "glim_motion_speed.png",
+      "source_location": "Windows Downloads (original retained)",
+      "bytes": 173321,
+      "sha256": "60ad9d443c6c550147e9299c1f0fa9a4c7c7c01463fefbcfe218f525d8d2fe97",
+      "caption": "Estimated translational speed during the manual motion interval, with intended 0.10 m/s reference.",
+      "producer": "User-supplied ChatGPT analysis export",
+      "imported_on": "2026-11-21",
+      "task": "SLAM-003E",
+      "source_run_id": "slam003e_manual_001",
+      "validation": "PNG visually inspected; HTML only statically inspected, not executed; rendering method not independently reproduced"
+    },
+    {
+      "file": "2026-11-21_SLAM-003E_map-interactive_v01.html",
+      "original_download_name": "glim_map_interactive.html",
+      "source_location": "Windows Downloads (original retained)",
+      "bytes": 5249627,
+      "sha256": "b56b1ab83e6a187d4ca3d74b7c9e0b2ea775190dd144dedb05bc038b6f35d7d3",
+      "caption": "Interactive GLIM map and estimated trajectory; Plotly embedded, HTML not executed during import.",
+      "producer": "User-supplied ChatGPT analysis export",
+      "imported_on": "2026-11-21",
+      "task": "SLAM-003E",
+      "source_run_id": "slam003e_manual_001",
+      "validation": "PNG visually inspected; HTML only statically inspected, not executed; rendering method not independently reproduced"
+    }
+  ]
+}

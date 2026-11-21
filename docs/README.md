@@ -20,6 +20,7 @@ This documentation records verifiable development and inspection of the thesis p
 
 ## Evidence storage
 
+- Save reusable maps, plots and diagrams by task in `../evidence/figures/<TASK-ID>/`; start with the [figure index](../evidence/figures/README.md) and [task figure template](../evidence/figures/TEMPLATE.md).
 - Save screenshots in `../evidence/screenshots/`.
 - Save logs in `../evidence/logs/`.
 - Save concise command output captures in `../evidence/command_outputs/`.
@@ -30,6 +31,8 @@ Use descriptive filenames that include a date or task identifier where helpful. 
 ## Updating documentation during development
 
 For each future development task, update the relevant topic document with the actual configuration, procedure, results, verification status, issues, evidence, and reproducibility details. Add a dated entry to `development_log.md` after the task is complete. Add to `decisions.md` only when a decision is actually made. Documentation should describe the code and configuration that exist; it should not imply that planned work has been implemented.
+
+When a task produces or supplies diagrams, archive the actual exports in its figure folder, preserve older versions, record captions/provenance/frames/units and update the central figure index. Keep editable sources when available. Figures produced in another ChatGPT conversation must be downloaded or located before they can be archived; do not record a chat preview as a saved file. Existing legacy paths remain in place and may be indexed rather than moved. A task with no figures does not need placeholder images.
 
 ## Recording test outcomes
 

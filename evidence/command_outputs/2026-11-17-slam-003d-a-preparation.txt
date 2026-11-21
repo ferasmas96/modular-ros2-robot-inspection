@@ -1,0 +1,159 @@
+SLAM-003D-A — Controlled Moving-Robot Mapping Experiment Preparation
+Date: 2026-11-17
+Scope: STATIC PREPARATION ONLY. No runtime test or movement authorized/executed.
+
+Git checkpoint
+- Verified branch codex-work before file creation/staging.
+- Reviewed exactly seven pending SLAM-003B/C-B files: two documentation files,
+  two sanitized evidence files and three standalone native-validator source/build/
+  README files. No unrelated files, private configuration, raw logs or map payloads.
+- Created the one authorized local checkpoint:
+  60c39e30bf50b72b62d2e9c51988482790685c3f
+  SLAM-003B-C: Validate GLIM mapping and native dump reload
+- Parent SLAM-003A checkpoint: 136ca1d35404a7d4f0c361985ea2215b76e2d43e.
+- Working tree clean immediately after checkpoint.
+- main unchanged: ca1140ef760bd6e28c32229347e75d896bfb38b4.
+- No push/merge/stash/reset/clean or additional commit.
+
+Inspected control evidence and unchanged installed/generated settings
+- evidence/command_outputs/2026-11-12-ros-001-topic-info.txt
+- evidence/command_outputs/2026-11-12-gz-001-ros-keyboard-command.txt
+- evidence/command_outputs/2026-11-12-gz-001-ros-controller-command.txt
+- Combined setup platform/config/{twist_mux,control,localization}.yaml;
+  platform/launch/platform-service.launch.py.
+- Installed clearpath_gz launch and generic gazebo.urdf.xacro.
+- /a300_00000/cmd_vel: geometry_msgs/msg/TwistStamped, existing twist_mux input.
+- /a300_00000/platform/cmd_vel: mux output to existing controller/bridge.
+- use_stamped=true; external priority 1; mux and controller timeout 0.5 s.
+- Existing controller velocity bounds: 2 m/s, 2 rad/s. No edits.
+- Higher-priority joy/RC/marker inputs and emergency/safety locks are preserved.
+- Historical keyboard TwistStamped samples include zero stamps; new commands will
+  refresh explicit simulation stamps rather than rely on that behavior.
+- Installed ros2topic pub.py uses ROS-clock timers and refreshes 'now' fields
+  each publication; DirectNode spins for discovery with use_sim_time enabled.
+
+Proposed route (not executed)
+- At least 10 simulation seconds initially stationary, explicit IMU init required
+  plus 3 s stable initialized processing; no movement before separate approval.
+- Forward 8 s at 0.15 m/s; zero 2 s; left turn 8 s at 0.20 rad/s;
+  zero 2 s; forward 8 s at 0.15 m/s; final zero/stationary 8 s.
+- 20 Hz, 161 messages per 8 s stage and 41 per 2 s zero stage.
+- Nominal total 46 simulation seconds before discovery/approval gaps;
+  ideal commanded travel 2.4 m and yaw 1.6 rad, not measured motion.
+- Per CLI stage wall bound 20 s, movement sequence wall bound 90 s.
+- Route footprint/clearance NOT VERIFIED statically; required live before motion.
+- Same mux zero commands and measured-stop verification; no bypass controller.
+- Clock-stall fallback must use last numeric simulation stamp at wall-clock rate,
+  never a future wall-time header. Stop task-owned simulator if stop cannot verify.
+
+Independent reference assessment
+- Historical publisher/type: /model/a300_00000/robot/pose -> gz.msgs.Pose_V.
+- Historical sample per-pose stamp 81.333 simulation seconds includes
+  warehouse -> a300_00000/robot (world/model pose) and
+  a300_00000/robot -> a300_00000/robot::base_link (identity in that sample).
+- Other entries are model-relative links/wheels, not world base poses.
+- Installed PosePublisher: link/nested-model poses, vector message, 50 Hz.
+- Source supports model pose too via nested-model setting compatibility.
+- Native entity poses are independent of controller wheel integration.
+- Compose same-time world/model and model/base transforms for world/base.
+- Current-run availability, rates and exact relation remain live gate-1 checks.
+  If missing/ambiguous, report unavailable and stop before movement for review.
+- Installed ros_gz_bridge 1.0.24 native Pose_V -> TFMessage converter exported.
+- One-way proposed bridge only to /a300_00000/reference/gazebo_pose; never /tf.
+- Per-transform parent/child IDs and timestamps preserved; :: becomes /.
+- PoseArray avoided because it drops individual frame identities.
+- Filtered and raw nav_msgs/Odometry remain wheel-based, not ground truth.
+- GLIM poses are sensor-frame poses; common-base conversion, origin alignment,
+  and header-time interpolation are explicit in the runtime procedure.
+
+Primary source cross-checks
+- https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/systems/pose_publisher/PosePublisher.cc
+- https://github.com/gazebosim/ros_gz/blob/1.0.24/ros_gz_bridge/src/convert/tf2_msgs.cpp
+- https://github.com/gazebosim/ros_gz/blob/1.0.24/ros_gz_bridge/src/convert/geometry_msgs.cpp
+- https://github.com/koide3/glim/blob/v1.2.2/src/glim/mapping/global_mapping.cpp
+  export_points concatenates full transformed submap clouds; registration sampling
+  does not reduce native saved compact-cloud counts or merged export count.
+
+Configuration and reservation
+- Original operational Mode A mapping directory preserved.
+- New operational /home/feras/glim_ws/configs/mode_a_cpu_mapping_slam003d_001.
+- New private run /home/feras/glim_ws/runs/mode_a_mapping/slam003d_001.
+- Exactly 15 copied JSONC files; 14 byte-identical, one logging-only change:
+  config_logging.json / logging.log_dir:
+    old .../mode_a_mapping/slam003b_001/logs/glim
+    new .../mode_a_mapping/slam003d_001/logs/glim
+- New portable configs/glim/mode_a_cpu_mapping_moving/ contains 15 JSONC files;
+  relative logs/glim, all byte-identical to committed portable CPU mapping baseline.
+- Relative log path resolves from process cwd; proposed runtime selects new
+  absolute operational config, never portable repository snapshot.
+- Mapping flags true; CPU modules libodometry_estimation_cpu.so, libsub_mapping.so,
+  libglobal_mapping.so; unchanged options (local optimization false, global true).
+- LiDAR /a300_00000/sensors/helios_16p/points_glim,
+  IMU /a300_00000/sensors/imu_0/data; exact T_lidar_imu=[0,0,-0.0475,0,0,0,1].
+- All sensor/frame/offset/QoS/global-shutter settings unchanged;
+  extension_modules=[], publish_imu2lidar=false, no added TF authority.
+- Parameters planned: use_sim_time=true, debug=false, dump_on_unload=false.
+- Unique logs/glim and logs/ros reserved; glim_dump and bag do NOT yet exist.
+- Preparation manifest/static-validation JSON only; no runtime logs/maps/bag.
+
+Minimal recording and runtime procedure
+- configs/experiments/slam003d/{plan.json,recording_qos.yaml,ground_truth_bridge.yaml,README.md}.
+- docs/experiments/slam003d_b_procedure.md: exact proposed commands and gates.
+- One explicit 11-topic MCAP bag: original/adapted clouds, IMU, raw/filtered odom,
+  clock, mux input/output commands, dedicated reference, namespaced TF/static TF.
+- Recorder sensor subscriptions BEST_EFFORT/VOLATILE; static TF transient-local.
+- 8 MiB cache per buffer; no all-topic recording/compression/extra cloud hz probes.
+- Cloud payload ~3.92 MB/s before overhead; require >=2 GiB free disk initially.
+- Minimum initial available RAM 3 GiB. Require one consolidated safety observer.
+- Observation cap 90 sim s or 180 wall s from GLIM start; reserve route time.
+- New separate approvals: simulation/inputs/reference/recording; GLIM; movement.
+- Monitor errors, gaps, TF, recording, CPU/RAM/swap/disk and route safety.
+- Zero commands first on abort; verify stop, graceful GLIM SIGINT/queue drain/save
+  with 60 s allowance; recorder SIGINT/metadata flush; cleanup all task processes.
+- Actual frames/submaps/points/file sizes and finite plausible moving trajectories
+  required, with numerical motion thresholds and header coverage checks in procedure.
+- No prescribed submap/loop-closure count; no accuracy claim.
+- Hash and run existing native validator once on the NEW dump with actual counts;
+  preserve original reload build/results and never repeat stationary validation.
+
+Static checks
+- JSONC parsing of 15 operational + 15 portable files and active config references.
+- Semantic/byte diff: operational logging only; portable reference identical.
+- Mapping/TF/extrinsic invariants, route arithmetic and output uniqueness.
+- Native ros2bag.api.convert_yaml_to_qos_profile accepts all 11 profiles.
+- One-way bridge schema and installed native converter symbols verified.
+- CPU libraries resolved with ctypes.CDLL(..., RTLD_NOW), Jazzy environment sourced;
+  no module factories or GLIM objects instantiated. Unsourced ldd lacks ROS lib paths;
+  runtime environment must source Jazzy/overlay as documented.
+- bash -n for every proposed shell block; no block was executed.
+- git diff --check; local documentation links checked after evidence creation.
+- Protected integrity: 187 original contents, 22 stationary dump files (path set,
+  sizes/SHA256) and 41 original native-reload build/result files preserved.
+- New config hashes match private manifest. main/branch unchanged; index empty.
+- Four ignored nested upstream repositories remain clean.
+
+Portable configuration SHA256 (operational differs only in config_logging.json)
+6a3bfdfbac445d3a61615835589678fe6aa8aba98296ffb9ef0a7153904affcd  config.json
+1c01083275bd75b131ce3b856bd4e1dde2a18c35276c61352ad4956d06f90c06  config_global_mapping_cpu.json
+1496d97fcd47d3671845c045e0da3cc505ef016b07d57d08a6cb82a15522c80d  config_global_mapping_gpu.json
+ceb2a6e2e88ddbc79125f899e9397381b657e93e084a32900231c40a7b8b8765  config_global_mapping_pose_graph.json
+c1a7a28ba940b0b158e6fcf1a12a447517bb1f5e09eb5f6e0b88ecab72dc71f9  config_logging.json
+66442397f48f3f4ae33543949ec61d2c94571c612d8a38f4f37f89eacc1a9a68  config_odometry_cpu.json
+6070c9b20e11acb551f78d293d8358c34359e0b464e09979b3b19225de123570  config_odometry_ct.json
+62f58079053f940a014844045e2f985a82c2af2b6e47a214b7e19c2f8a8de0c5  config_odometry_gpu.json
+68d2996d4cdab4c4daace3647e6eed934092cc6529aefd0dc71d4409226eb31d  config_preprocess.json
+e1c5d5ee4fc38fe5fb67c0489e6345ad1dedbb72f420f97171432c68d0412697  config_ros.json
+65a6ce737a54a00b169c7075d3e074d108b4beee5fa8f600ad676f90cdd87564  config_sensors.json
+5aa34e56c91c5dfbbc627b2b60375a91a6c8b092adfa2b82bbd09d86aec15dec  config_sub_mapping_cpu.json
+bdc934a120fc457837190714eb888526e5a5c007762c3af6f72f4ea72f3dc380  config_sub_mapping_gpu.json
+78807724166f5096ced9fb3a19fc9cb9fcb0994209c9486f573337da99c0e6b8  config_sub_mapping_passthrough.json
+fe56516a660923cec871d8c15041d4f7fcf6ff08cb4146054b2146e14c03d6c5  config_viewer.json
+
+Final scope
+- Introductory SLAM status corrected to successful native SLAM-003C-B reload.
+- Added preparation record, exact runtime procedure, development-log entry,
+  portable config, recording/reference configuration and this sanitized evidence.
+- Only checkpoint above committed; all SLAM-003D-A changes unstaged/untracked.
+- No Gazebo/GLIM/GUI/recorder/bridge/velocity publisher/reload execution, movement,
+  package installation, Clearpath generator or upstream/protected config edit.
+- Static preparation complete; stop for review. SLAM-003D-B not started.

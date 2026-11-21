@@ -17,3 +17,7 @@ The logging directory is relative to the process working directory, not the conf
 The private operational configuration and its run manifest remain unchanged. The previous snapshot with an absolute logging path was preserved intact outside Git. Earlier SLAM-003A documentation/evidence described byte equality before this portability correction; current repository/operational copies differ only in logging.log_dir. See the supplemental static review evidence for exact locations, preservation and differences.
 
 No existing file contents were overwritten. No SLAM-003B action was performed; runtime remains pending user review and authorization.
+
+## SLAM-003D-A separate moving-experiment snapshot
+
+`mode_a_cpu_mapping_moving/` is a separate portable 15-file copy for the prepared moving experiment; its contents match the committed portable CPU mapping baseline. The new private operational configuration changes only the absolute module logging path to a fresh reserved run. See [experiment preparation](../experiments/slam003d/README.md) and [proposed runtime procedure](../../docs/experiments/slam003d_b_procedure.md). The earlier SLAM-003A review status above is historical; SLAM-003B/C-B results are checkpointed, while SLAM-003D-A remains static preparation. Do not execute either portable snapshot directly.
