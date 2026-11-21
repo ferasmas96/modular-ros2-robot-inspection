@@ -1171,3 +1171,105 @@ are archived for documentation. Full [sanitized report](../evidence/command_outp
 and [structured measurements/hashes](../evidence/command_outputs/2026-11-21-slam-004c-manual-live-pose.json)
 are available. Review the region exit, stopping tail and IMU warning before any
 separately authorized shorter manual trial. Stop after SLAM-004C; no next run.
+
+### 25. SLAM-005A — GLIM checkpoint and independent RGB-D SLAM planning
+
+Completed GLIM work was reviewed and committed first as
+`f2bad11511214a858d0e2dcf56b7016e5eb0e0d5`
+(`feat: complete GLIM mapping and live localization validation`): 62 appropriate
+project files, with private configurations, bags, native dumps and binaries
+excluded. Fresh checks passed 10 GLIM, 16 manual-guard/API and four trajectory
+tests. Created/switched to **`adding-rtab`** at that commit, initially clean;
+`codex-work` remains at the checkpoint and `main` is unchanged. No push.
+
+The [SLAM-005A plan](experiments/slam005a_rtabmap_integration_plan.md) documents
+static camera/package inspection, verified release interfaces and the exact
+SLAM-005B implementation gates. The current protected robot setup has **no RGB-D
+camera, camera topics, optical frames or camera mount**; its in-memory model
+expansion contains only IMU and Helios LiDAR sensors. Camera description/bridge
+assets are installed, but RTAB-Map is absent. Local APT candidates are wrappers
+0.23.13 and core 0.23.14. No packages were installed or refreshed.
+
+Propose RGB-D-only native visual odometry feeding its own mapper in
+`/a300_00000/slam/rtabmap`, with separate `rtabmap_odom`/`rtabmap_map` frames and
+private database. A later tiny TF-free adapter would publish base-link local
+visual odometry as PoseStamped on `/a300_00000/slam/rtabmap/pose`; native corrected
+map poses remain separate. No GLIM, LiDAR or EKF pose feeds into the new estimator.
+Both native nodes must disable TF sending, and the mapper must consume its own
+odometry topic with `odom_frame_id` empty. Existing EKF authority is preserved.
+The plan also identifies native TF-lookup fallback/wait behavior for measurement
+without adding an odometry transform.
+
+The plan flags ROS GTSAM 4.2 versus GLIM's local 4.3a1 for library-resolution
+inspection before future runtime. The observed WSL Ryzen host is not the target
+NUC; simultaneous performance is unmeasured. **No further movement is permitted
+until the SLAM-004C region-abort/1.029 s shutdown tail is addressed.**
+
+Only planning documentation and [sanitized static evidence](../evidence/command_outputs/2026-11-21-slam-005a-assessment.txt)
+were added after the checkpoint, left unstaged/uncommitted. Original protected
+files, GLIM configurations and experiment contents were hash-checked. No RTAB
+implementation, adapter, configuration, run reservation, runtime or movement was
+created. Stop after assessment; SLAM-005B needs a separate instruction.
+
+### 26. SLAM-005B — Independent RGB-D RTAB-Map stationary integration
+
+**Result (2026-11-21): functional stationary odometry/mapping PASS, with warnings
+and post-run corrections validated statically only.** Remain on `adding-rtab`,
+HEAD/checkpoint `f2bad11511214a858d0e2dcf56b7016e5eb0e0d5`; no new commit/push.
+See the [full implementation/results report](experiments/slam005b_rgbd_rtabmap_integration.md)
+and [sanitized evidence](../evidence/command_outputs/2026-11-21-slam-005b-rgbd-rtabmap.txt).
+
+The APT simulation proposed 36 new packages and zero upgrades/removals. However,
+candidate ROS GTSAM 4.2 shares `libgtsam.so.4` with GLIM's 4.3a1 and produces 54
+unresolved GLIM symbols if selected. The user approved a **private package
+installation**, instead of system APT/dpkg installation, under
+`/home/feras/rtabmap_jazzy_isolated/slam005b_001`. Native core 0.23.14/ROS wrappers
+0.23.13 run only through a scoped environment; normal GLIM still resolves local
+4.3a1 with no unresolved symbols. No global linker or GLIM configuration change.
+
+Approved forward-facing front-left D435 bottom-screw mount: base coordinates
+(0.35,0.18,0.35) m; optical origin (0.3606,0.2125,0.3625) m. The isolated setup
+`/home/feras/clearpath_rgbd005b_001` adds the native RGB-D sensor and support post
+without changing the original 16 collision parts, 37 link transforms or IMU/LiDAR
+sensor definitions. Original setup/world/generators remain untouched. Project
+[package](../src/rtabmap_husky_integration/package.xml) and [tools/commands](../tools/rtabmap_isolated/README.md)
+provide reproducible configuration, provisioning and launch.
+
+After separate camera and RTAB-Map approvals, one stationary run produced
+**379 valid local base PoseStamped messages at 12.643 Hz**, stamps 485.037–514.935 s,
+on `/a300_00000/slam/rtabmap/pose` in `rtabmap_odom`. Position remained constant,
+quaternions unit, timestamps strict. RGB-D odometry uses camera data, static TF
+and simulation clock only; no GLIM, LiDAR, wheel/EKF pose or ground-truth input.
+Mapper topic odometry, empty `odom_frame_id`, `odom_sensor_sync=false`, zero
+lookup wait and disabled estimator TF sending kept EKF authority unchanged.
+Native GID checks found **1460** `odom → base_link` records in the observed runtime
+window, solely from EKF; the two native idle broadcaster endpoints sent no TF.
+
+Saved private database: `runs/rtabmap/slam005b_001/database/rtabmap.db`,
+**5,402,624 bytes**, read-only integrity check `ok`, 29 stored sensor records and
+28 stored links. Online graph retained one node, with 28 negative-weight
+stationary records; do not interpret those as separate viewpoints. The native
+cloud contains **2411 finite XYZ points**, mostly visible floor. A reusable
+[PNG/SVG preview, CSV and plotting source](../evidence/figures/SLAM-005B/README.md)
+are archived; native DB/raw data remain private. No binary reload or moving
+accuracy test was performed.
+
+VO/map mean CPU 35.68/11.14% of one core, peak RSS 237.62/356.29 MiB; minimum
+available RAM 1499.10 MiB, peak swap about 40 KiB. Logged VO mean delay 39.56 ms,
+mapper 68.48 ms. This measures the Ryzen WSL host, not NUC or parallel performance.
+Best-effort observers missed image messages; no loss-free transport claim.
+
+Native VO/map saved and exited cleanly; the adapter's repeated-SIGINT teardown
+raised KeyboardInterrupt/−2. Cleanup now handles it and passes a deterministic
+test (12 adapter tests total). The deprecated grid parameter and native PNG
+fallback were also made explicit; these final changes were **not runtime-retested**.
+Expected missing-odometry-TF fallback warnings (278) and the optional validation
+cloud's rendering-axis/half-pixel convention are recorded in the report. Late
+CLI parameter dumps failed; startup logs/launch/static ELF/native TF checks are
+the available evidence. All task-owned processes were stopped.
+
+Original GLIM tests (10) and all 602 protected/private hashes passed; SLAM-005A
+planning contents remain intact. No movement, GLIM launch, simultaneous-SLAM
+test, Nav2 or switching was performed. **The SLAM-004C stopping delay remains
+unresolved and blocks further driving.** Review these results, then separately
+authorize a fresh stationary cleanup/config confirmation before parallel tests.

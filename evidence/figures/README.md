@@ -51,3 +51,8 @@ plots in PNG/SVG with CSV data and editable source: aligned base trajectories,
 synchronized pose errors and actual command limits. The trial was aborted at
 the reviewed region boundary; the gallery records that limitation and the
 unestimated shutdown tail.
+
+**SLAM-005B — stationary RGB-D RTAB-Map (2026-11-21):**
+[Native map preview and provenance](SLAM-005B/README.md), with PNG/SVG, the full
+small 2,411-point CSV and editable plotting source. One stationary viewpoint;
+moving-SLAM accuracy and cross-algorithm alignment are not established.

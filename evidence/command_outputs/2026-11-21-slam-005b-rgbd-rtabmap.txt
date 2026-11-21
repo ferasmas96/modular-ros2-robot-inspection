@@ -1,0 +1,90 @@
+SLAM-005B — Independent RGB-D RTAB-Map stationary integration
+2026-11-21 | STATIONARY_RGBD_ODOMETRY_MAPPING_PASS_WITH_WARNINGS
+
+Git: adding-rtab, checkpoint f2bad11511214a858d0e2dcf56b7016e5eb0e0d5.
+No commit/push; earlier planning/configurations/results preserved.
+
+Installation: user-approved private package prefix, 36 reviewed package archives.
+No system APT/dpkg install or global linker changes. APT simulation: 36 new,
+0 upgrades, 0 removals. Core 0.23.14, ROS wrappers 0.23.13, private GTSAM4.2.
+GLIM unchanged on GTSAM4.3a1; zero unresolved symbols. Wrong4.2 selection gives54.
+Private native core, rgbd_odometry and mapper relocation checks: zero unresolved.
+
+Camera: separately approved front-left D435 bottom screw (0.35,0.18,0.35)m,
+RPY0, fixed 30mm post. Color optical origin (0.3606,0.2125,0.3625)m.
+Old16 collision parts/37 link transforms/two sensor definitions identical.
+Only isolated copy changed (robot Xacro +3 rebased launch references); no generator.
+Live topics: /a300_00000/sensors/camera_0/{color/image,depth/image,color/camera_info}.
+RGB8/32FC1,640x480,fx=fy443.530008,cx320,cy240,zero distortion.
+Observed camera-only RGB13.54/depth14.11/info15.15Hz. Strict timestamps.
+Finite depth fraction43.76%,0.923-7.757m, floating meters/little-endian.
+Three same-stamp cloud checks: RGB100%, forward depth exact. Diagnostic cloud
+rendering axes need offline [-Y,-Z,X]; sampled residual<=5.48mm/half pixel.
+This cloud never entered the estimator or operational TF.
+
+Runtime: one separately authorized RTAB run; no GLIM/driving/viewer/retry.
+RGB-D-only native odometry -> mapper, own frames/database; no wheels/reference.
+Native startup logs confirm local/body frames, false VO TF, empty mapper odom
+frame, subscribe_odom=true, odom_sensor_sync=false, zero transform wait.
+379 observed local base PoseStamped messages at12.642986Hz,485.037-514.935simseconds,
+rtabmap_odom,strict finite/unit,zero positional range.392 logged VO updates.
+29 mapping updates/MapData samples,one online graph node; native2411point cloud.
+Database5402624B,SQLite read-only integrity ok;29 Node/Data records,28 links,
+1020 words/24128 features; all29 image/depth/calibration records populated.
+28 stored records have negative weight; these are not29 separate viewpoints.
+Native binary reload not performed.
+
+TF:1460 runtime-window odom/base records attributed to EKF only.
+Dynamic endpoints4->6 from idle native broadcasters;static2/root0.
+No RTAB transforms or conflicting parents; original sensor tree valid.
+Aggregate records from two overlapping probes are not a unique message count.
+
+Resources: VO CPUmean35.68%one core/peak43.90,RSSpeak237.62MiB;
+mapper CPUmean11.14/peak25.95,RSSpeak356.29MiB.
+Available RAM minimum1499.10MiB; swap peak~40KiB. VO processingmean22.29ms,
+latencymean39.56/max69ms; mapper processingmean23.57ms,delaymean68.48/max90ms.
+Ryzen WSL host; no NUC/parallel performance claim. Observer best-effort image gaps
+were present (concurrent RGB delivery3.55Hz); native input loss not inferred.
+
+Warnings and corrections:
+- Two Python observer metadata API failures retained; corrected observations
+  completed without simulation/camera restart. Native C++ TF sender probe reused.
+- 278 expected missing-odom-TF lookup warnings; native message fallback worked.
+- Deprecated Grid/FromDepth alias and32FC1 PNG fallback accepted in observed run.
+- Native VO/map saved and exited cleanly; launch wrapper0. Adapter teardown got
+  repeated SIGINT,KeyboardInterrupt/-2. New signal-safe cleanup passes its test.
+- Final canonical Grid/Sensor=1/explicit PNG and cleanup fix are STATICALLY tested
+  only. As-tested YAML retained privately; no second runtime.
+- Late CLI parameter dumps returned Node not found; no live /proc library snapshot.
+  Startup/configuration/ELF/native TF evidence retained, without claiming those captures.
+- Known joystick/controller-discovery/SDF-frame/idle braking diagnostics recorded.
+
+Final build passed;12 adapter tests and10 existing GLIM tests passed.
+Camera/registration/simulation wrappers exited0; native DB save complete; host
+process inspection empty. No movement or simulator emergency-stop trial occurred.
+SLAM-004C stopping delay still blocks movement.
+
+Full report: docs/experiments/slam005b_rgbd_rtabmap_integration.md
+Map figure/data/source: evidence/figures/SLAM-005B/ (recommended v02;v01 retained).
+Private native artifacts/logs remain outside Git; no extra experiment started.
+Next: review, then separately authorize a fresh stationary final-fix confirmation
+before preparing/authorizing any parallel stationary GLIM+RTAB test.
+
+Final verification: PASS
+602 private/protected files unchanged;252 original project files unchanged.
+Only three existing documentation/index files appended; old SLAM-005A plan/evidence unchanged.
+Index empty; no new commit or push. Native DB hash unchanged after analysis.
+Links/Python/YAML/XML/SVG/whitespace and figure manifest hashes checked.
+Final Git status:
+M docs/08_slam_integration.md
+ M docs/development_log.md
+ M evidence/figures/README.md
+?? docs/experiments/slam005a_rtabmap_integration_plan.md
+?? docs/experiments/slam005b_rgbd_rtabmap_integration.md
+?? evidence/command_outputs/2026-11-21-slam-005a-assessment.json
+?? evidence/command_outputs/2026-11-21-slam-005a-assessment.txt
+?? evidence/command_outputs/2026-11-21-slam-005b-rgbd-rtabmap.json
+?? evidence/command_outputs/2026-11-21-slam-005b-rgbd-rtabmap.txt
+?? evidence/figures/SLAM-005B/
+?? src/rtabmap_husky_integration/
+?? tools/rtabmap_isolated/

@@ -1,0 +1,1271 @@
+{
+  "task": "SLAM-005B",
+  "date": "2026-11-21",
+  "result": "STATIONARY_RGBD_ODOMETRY_MAPPING_PASS_WITH_WARNINGS",
+  "git": {
+    "branch": "adding-rtab",
+    "head": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+    "new_commits": 0,
+    "push": false
+  },
+  "authorizations": [
+    "Private isolated RTAB package installation",
+    "Proposed front-left camera mount",
+    "Stationary Gazebo and camera test",
+    "One stationary RTAB-Map test"
+  ],
+  "installation": {
+    "system_apt_dpkg_installation": false,
+    "global_linker_changes": false,
+    "apt_simulation": {
+      "new": 36,
+      "upgraded": 0,
+      "removed": 0
+    },
+    "packages": [
+      {
+        "name": "libsuitesparseconfig7",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libamd3",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libbtf2",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libcamd3",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libccolamd3",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libcolamd3",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libcholmod5",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libcxsparse4",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libklu2",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libldl3",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libumfpack6",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libparu0",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "librbio4",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libspex2",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libspqr4",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libsuitesparse-mongoose3",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "libsuitesparse-dev",
+        "version": "1:7.6.1+dfsg-1build1"
+      },
+      {
+        "name": "ros-jazzy-apriltag-msgs",
+        "version": "2.0.2-1noble.20261105.054432"
+      },
+      {
+        "name": "ros-jazzy-aruco-msgs",
+        "version": "5.0.6-1noble.20261105.055825"
+      },
+      {
+        "name": "ros-jazzy-aruco-opencv-msgs",
+        "version": "6.1.2-1noble.20261105.055839"
+      },
+      {
+        "name": "ros-jazzy-grid-map-core",
+        "version": "2.2.2-2noble.20261025.230136"
+      },
+      {
+        "name": "ros-jazzy-grid-map-cv",
+        "version": "2.2.2-2noble.20261105.103105"
+      },
+      {
+        "name": "ros-jazzy-grid-map-msgs",
+        "version": "2.2.2-2noble.20261105.085856"
+      },
+      {
+        "name": "ros-jazzy-grid-map-ros",
+        "version": "2.2.2-2noble.20261105.141014"
+      },
+      {
+        "name": "ros-jazzy-gtsam",
+        "version": "4.2.0-4noble.20260225.055319"
+      },
+      {
+        "name": "ros-jazzy-libg2o",
+        "version": "2020.5.29-6noble.20260225.235248"
+      },
+      {
+        "name": "ros-jazzy-libnabo",
+        "version": "1.1.1-2noble.20260225.055337"
+      },
+      {
+        "name": "ros-jazzy-libpointmatcher",
+        "version": "1.4.2-1noble.20260225.135343"
+      },
+      {
+        "name": "ros-jazzy-pcl-ros",
+        "version": "2.6.5-1noble.20261105.110956"
+      },
+      {
+        "name": "ros-jazzy-rtabmap",
+        "version": "0.23.14-1noble.20261105.115028"
+      },
+      {
+        "name": "ros-jazzy-rtabmap-msgs",
+        "version": "0.23.13-1noble.20261105.061621"
+      },
+      {
+        "name": "ros-jazzy-rtabmap-conversions",
+        "version": "0.23.13-1noble.20261105.141106"
+      },
+      {
+        "name": "ros-jazzy-rtabmap-sync",
+        "version": "0.23.13-1noble.20261105.143338"
+      },
+      {
+        "name": "ros-jazzy-rtabmap-util",
+        "version": "0.23.13-1noble.20261105.164942"
+      },
+      {
+        "name": "ros-jazzy-rtabmap-odom",
+        "version": "0.23.13-1noble.20261105.180524"
+      },
+      {
+        "name": "ros-jazzy-rtabmap-slam",
+        "version": "0.23.13-1noble.20261105.172039"
+      }
+    ],
+    "archive_checksums": [
+      {
+        "file": "libamd3_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 27152,
+        "sha256": "557b88b1688b6ebfb058bd6c621daadb62bbb40059a1e33ed3fd3b7bef744f06"
+      },
+      {
+        "file": "libbtf2_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 13594,
+        "sha256": "ce8d3be0501db2f6189b0a973d514e985146e1883f35e8c8e80d041ff6b0c950"
+      },
+      {
+        "file": "libcamd3_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 23788,
+        "sha256": "40c209739ede6dde19f1d32428e0ff36f1d6ba9c142762946ac486c2b45e78a8"
+      },
+      {
+        "file": "libccolamd3_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 25900,
+        "sha256": "002dc5a486cc312aececd7a92c500941a550cae1c5901e15aae2b43504431c9c"
+      },
+      {
+        "file": "libcholmod5_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 666724,
+        "sha256": "5766e1c220c315850680c4f19c6bd12b953a20ef1b30754392ef956bd65df94e"
+      },
+      {
+        "file": "libcolamd3_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 19382,
+        "sha256": "8f4c416275c325b2a14463da0e040b90802e3eb72d7fae4e4a6c3cd497e71e48"
+      },
+      {
+        "file": "libcxsparse4_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 75086,
+        "sha256": "1d8a3d16c38979c09d2a968459472073a40debab79695b8c2a17ab0fdde05a27"
+      },
+      {
+        "file": "libklu2_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 78974,
+        "sha256": "62b08bb498300c3b37ccd357de537539fd778d51879cfcacf4990cf41b079a7f"
+      },
+      {
+        "file": "libldl3_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 13326,
+        "sha256": "9e0d85b965884211fbff2b63dabb0df5e0de009cdae89ce58845b1c861371602"
+      },
+      {
+        "file": "libparu0_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 50006,
+        "sha256": "d67a7a5c0ea2ec76c35696ca91853ee07537fbbef23465c65d52cc31cbfff1e8"
+      },
+      {
+        "file": "librbio4_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 26498,
+        "sha256": "38c192a7636d017591de0f538c464d2416a442b2c4cbf29accacd9ccfc3a5b96"
+      },
+      {
+        "file": "libspex2_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 34982,
+        "sha256": "7cad97a85baa942643ee949dac1ac1b7b21916206d8da69bb10f4e70f1fbc28c"
+      },
+      {
+        "file": "libspqr4_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 134994,
+        "sha256": "d5192cfafcc9d9eca9162443985b9ed5f84cc6894bc0136e52060b8e556ccfbe"
+      },
+      {
+        "file": "libsuitesparse-dev_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 1535266,
+        "sha256": "9a4df16ca35d480fdc3935889cb026a27dae8279fcb39ed431c469511ad8f1f6"
+      },
+      {
+        "file": "libsuitesparse-mongoose3_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 33510,
+        "sha256": "866e72f382795be600a30f13b87d5879938952b4b32f5a9301a21f3b1b89ba98"
+      },
+      {
+        "file": "libsuitesparseconfig7_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 12860,
+        "sha256": "a27c55b471ebd184136567f0649f2d1425825ec535b0329ea3917c0fe6440471"
+      },
+      {
+        "file": "libumfpack6_1%3a7.6.1+dfsg-1build1_amd64.deb",
+        "bytes": 267576,
+        "sha256": "5f947859dd49e944c6e8ed3d627cfa99da29045ea301d696c88a4a8affbaf483"
+      },
+      {
+        "file": "ros-jazzy-apriltag-msgs_2.0.2-1noble.20261105.054432_amd64.deb",
+        "bytes": 73780,
+        "sha256": "be2864c4afb9484102c40d367457e73f49817a9b2f78b0dc8e0d1a8989b814d4"
+      },
+      {
+        "file": "ros-jazzy-aruco-msgs_5.0.6-1noble.20261105.055825_amd64.deb",
+        "bytes": 60684,
+        "sha256": "250c8daa9d17b5b42569d251dfa4b82d0c4e6623225d1cb29c6b03a9cf2376a2"
+      },
+      {
+        "file": "ros-jazzy-aruco-opencv-msgs_6.1.2-1noble.20261105.055839_amd64.deb",
+        "bytes": 70666,
+        "sha256": "1d7fdf3c820395615fc48d9f93910455b4f55bf8aed9a6c8f7985b471376a10f"
+      },
+      {
+        "file": "ros-jazzy-grid-map-core_2.2.2-2noble.20261025.230136_amd64.deb",
+        "bytes": 1866042,
+        "sha256": "60f4e449c9f1e7c0ce8b5af6e56b64618e0f0e6a1c3086b7501758166170d33d"
+      },
+      {
+        "file": "ros-jazzy-grid-map-cv_2.2.2-2noble.20261105.103105_amd64.deb",
+        "bytes": 101248,
+        "sha256": "fbebd2730b9477ce4ceff98f4a2be22e019673d257070a26893e15808678e0e3"
+      },
+      {
+        "file": "ros-jazzy-grid-map-msgs_2.2.2-2noble.20261105.085856_amd64.deb",
+        "bytes": 187866,
+        "sha256": "18387691e8d4ee53bde106e8282ee06dccb9efc9de4d23478b4a4eb17dc0e622"
+      },
+      {
+        "file": "ros-jazzy-grid-map-ros_2.2.2-2noble.20261105.141014_amd64.deb",
+        "bytes": 146480,
+        "sha256": "42f2a3c5506e725591f1df292dcd564e5f297f1046716a7772d9dfdd37110c05"
+      },
+      {
+        "file": "ros-jazzy-gtsam_4.2.0-4noble.20260225.055319_amd64.deb",
+        "bytes": 2166244,
+        "sha256": "496ee294ab3d67405bf2786ec3d1cd535703ba7aed1e31a7534a5cf848478435"
+      },
+      {
+        "file": "ros-jazzy-libg2o_2020.5.29-6noble.20260225.235248_amd64.deb",
+        "bytes": 1149478,
+        "sha256": "6e5d9954d3b349f42d02a22509b446532c50abe0efe870ebd6d3dfb15729641c"
+      },
+      {
+        "file": "ros-jazzy-libnabo_1.1.1-2noble.20260225.055337_amd64.deb",
+        "bytes": 94768,
+        "sha256": "1551527404a9f36428813f80d6d74c9c7d2b7d9b4b2e06fd3c8b4282399f54df"
+      },
+      {
+        "file": "ros-jazzy-libpointmatcher_1.4.2-1noble.20260225.135343_amd64.deb",
+        "bytes": 2693016,
+        "sha256": "30fc46849616a4c89234203fe9fdf551d81e7716fc16f50fe1c9ba96fb722e48"
+      },
+      {
+        "file": "ros-jazzy-pcl-ros_2.6.5-1noble.20261105.110956_amd64.deb",
+        "bytes": 584632,
+        "sha256": "8f7d9ab2c91db567ac77f06c3c8a1637a25a5fccdaf04e8934585aaf7b0a9e16"
+      },
+      {
+        "file": "ros-jazzy-rtabmap-conversions_0.23.13-1noble.20261105.141106_amd64.deb",
+        "bytes": 179912,
+        "sha256": "41a34acca26878a763e2ea2ad059a2344094c5f0f8db02c63e61bff077aad863"
+      },
+      {
+        "file": "ros-jazzy-rtabmap-msgs_0.23.13-1noble.20261105.061621_amd64.deb",
+        "bytes": 814574,
+        "sha256": "cfc29dc15670d273fadd71dbf62bf98909735924c969f7dd2109707118335197"
+      },
+      {
+        "file": "ros-jazzy-rtabmap-odom_0.23.13-1noble.20261105.180524_amd64.deb",
+        "bytes": 769440,
+        "sha256": "737ee1a55e209aebcf3c187fe6d830f386d9ca31674de4025a1bfd242c689a4d"
+      },
+      {
+        "file": "ros-jazzy-rtabmap-slam_0.23.13-1noble.20261105.172039_amd64.deb",
+        "bytes": 866428,
+        "sha256": "d5ebbb25ca4f75a9167e9a0c238e1df74838b61f4cfa5bc86d32c56f2ea43287"
+      },
+      {
+        "file": "ros-jazzy-rtabmap-sync_0.23.13-1noble.20261105.143338_amd64.deb",
+        "bytes": 1772400,
+        "sha256": "a23a5d359c7f87c8c2890f15fbb75fd27f54ee86065eedd5f7b4130bf38857b1"
+      },
+      {
+        "file": "ros-jazzy-rtabmap-util_0.23.13-1noble.20261105.164942_amd64.deb",
+        "bytes": 1008194,
+        "sha256": "c614e54f0b0059663963c76452d7a32104a2a236ec7546c3f36c33eb87b83e0b"
+      },
+      {
+        "file": "ros-jazzy-rtabmap_0.23.14-1noble.20261105.115028_amd64.deb",
+        "bytes": 6379006,
+        "sha256": "d1ea83506d1363c3d3132a144865b31ecff96161f8cfc23f908f2ebcfc966948"
+      }
+    ],
+    "scope": "Private Jazzy archive prefix, RTAB-only child environment",
+    "binary_versions": {
+      "rtabmap_core": "0.23.14",
+      "ros_wrappers": "0.23.13",
+      "private_gtsam": "4.2.0",
+      "unchanged_glim_gtsam": "4.3a1",
+      "glim": "1.2.2"
+    },
+    "same_soname": "libgtsam.so.4",
+    "glim_unresolved_if_wrong_42_selected": 54,
+    "normal_glim_unresolved": 0,
+    "private_rtab_core_and_executable_unresolved": 0
+  },
+  "camera": {
+    "mount_approval_xyz_m": [
+      0.35,
+      0.18,
+      0.35
+    ],
+    "mount_rpy_rad": [
+      0,
+      0,
+      0
+    ],
+    "body_vertical_clearance_from_old_robot_parts_m": 0.107741,
+    "old_body_forward_view_vertical_clearance_m": 0.04605221441731977,
+    "measured_base_to_camera": {
+      "xyz": [
+        0.3606,
+        0.2125,
+        0.3625
+      ],
+      "quaternion": [
+        -0.5,
+        0.4999999999999999,
+        -0.5,
+        0.5000000000000001
+      ]
+    },
+    "info": {
+      "width": 640,
+      "height": 480,
+      "k": [
+        443.5300081599877,
+        0.0,
+        320.0,
+        0.0,
+        443.53000815998763,
+        240.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "p": [
+        443.5300081599877,
+        0.0,
+        320.0,
+        0.0,
+        0.0,
+        443.53000815998763,
+        240.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "d": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "distortion_model": "plumb_bob"
+    },
+    "observed_streams": {
+      "rgb": {
+        "count": 261,
+        "first_ns": 248757000000,
+        "last_ns": 267963000000,
+        "rate_hz": 13.537436217848589,
+        "nonincreasing": 0
+      },
+      "depth": {
+        "count": 272,
+        "first_ns": 248757000000,
+        "last_ns": 267963000000,
+        "rate_hz": 14.110173903988336,
+        "nonincreasing": 0
+      },
+      "info": {
+        "count": 292,
+        "first_ns": 248757000000,
+        "last_ns": 267963000000,
+        "rate_hz": 15.151515151515152,
+        "nonincreasing": 0
+      }
+    },
+    "frame_ids": {
+      "info": [
+        "camera_0_color_optical_frame"
+      ],
+      "depth": [
+        "camera_0_color_optical_frame"
+      ],
+      "rgb": [
+        "camera_0_color_optical_frame"
+      ],
+      "cloud": [
+        "camera_0_color_optical_frame"
+      ]
+    },
+    "depth_samples": [
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      },
+      {
+        "encoding": "32FC1",
+        "width": 640,
+        "height": 480,
+        "step": 2560,
+        "bigendian": 0,
+        "finite_fraction": 0.437578125,
+        "min": 0.9231163859367371,
+        "max": 7.757436275482178
+      }
+    ],
+    "registration_samples": [
+      {
+        "stamp_ns": 326769000000,
+        "samples": 374,
+        "rgb_encoding": "rgb8",
+        "depth_encoding": "32FC1",
+        "cloud_fields": {
+          "x": {
+            "offset": 0,
+            "datatype": 7
+          },
+          "y": {
+            "offset": 4,
+            "datatype": 7
+          },
+          "z": {
+            "offset": 8,
+            "datatype": 7
+          },
+          "rgb": {
+            "offset": 16,
+            "datatype": 7
+          }
+        },
+        "xyz_backprojection_error_max_m": 8.364786011445279,
+        "xyz_rendering_to_optical_error_max_m": 0.005478126900839264,
+        "depth_rendering_x_error_max_m": 0.0,
+        "sample_native_xyz_and_depth": [
+          [
+            4.859054088592529,
+            3.500253915786743,
+            -0.49847152829170227,
+            4.859054088592529
+          ],
+          [
+            4.859054088592529,
+            3.2921011447906494,
+            -0.49847152829170227,
+            4.859054088592529
+          ],
+          [
+            4.859054088592529,
+            3.0839483737945557,
+            -0.49847152829170227,
+            4.859054088592529
+          ]
+        ],
+        "depth_z_error_max_m": 5.357525825500488,
+        "rgb_agreement_fraction": 1.0,
+        "reverse_channel_agreement_fraction": 0.011312217194570135,
+        "bigendian": false
+      },
+      {
+        "stamp_ns": 326835000000,
+        "samples": 374,
+        "rgb_encoding": "rgb8",
+        "depth_encoding": "32FC1",
+        "cloud_fields": {
+          "x": {
+            "offset": 0,
+            "datatype": 7
+          },
+          "y": {
+            "offset": 4,
+            "datatype": 7
+          },
+          "z": {
+            "offset": 8,
+            "datatype": 7
+          },
+          "rgb": {
+            "offset": 16,
+            "datatype": 7
+          }
+        },
+        "xyz_backprojection_error_max_m": 8.364786011445279,
+        "xyz_rendering_to_optical_error_max_m": 0.005478126900839264,
+        "depth_rendering_x_error_max_m": 0.0,
+        "sample_native_xyz_and_depth": [
+          [
+            4.859054088592529,
+            3.500253915786743,
+            -0.49847152829170227,
+            4.859054088592529
+          ],
+          [
+            4.859054088592529,
+            3.2921011447906494,
+            -0.49847152829170227,
+            4.859054088592529
+          ],
+          [
+            4.859054088592529,
+            3.0839483737945557,
+            -0.49847152829170227,
+            4.859054088592529
+          ]
+        ],
+        "depth_z_error_max_m": 5.357525825500488,
+        "rgb_agreement_fraction": 1.0,
+        "reverse_channel_agreement_fraction": 0.011312217194570135,
+        "bigendian": false
+      },
+      {
+        "stamp_ns": 327033000000,
+        "samples": 374,
+        "rgb_encoding": "rgb8",
+        "depth_encoding": "32FC1",
+        "cloud_fields": {
+          "x": {
+            "offset": 0,
+            "datatype": 7
+          },
+          "y": {
+            "offset": 4,
+            "datatype": 7
+          },
+          "z": {
+            "offset": 8,
+            "datatype": 7
+          },
+          "rgb": {
+            "offset": 16,
+            "datatype": 7
+          }
+        },
+        "xyz_backprojection_error_max_m": 8.364786011445279,
+        "xyz_rendering_to_optical_error_max_m": 0.005478126900839264,
+        "depth_rendering_x_error_max_m": 0.0,
+        "sample_native_xyz_and_depth": [
+          [
+            4.859054088592529,
+            3.500253915786743,
+            -0.49847152829170227,
+            4.859054088592529
+          ],
+          [
+            4.859054088592529,
+            3.2921011447906494,
+            -0.49847152829170227,
+            4.859054088592529
+          ],
+          [
+            4.859054088592529,
+            3.0839483737945557,
+            -0.49847152829170227,
+            4.859054088592529
+          ]
+        ],
+        "depth_z_error_max_m": 5.357525825500488,
+        "rgb_agreement_fraction": 1.0,
+        "reverse_channel_agreement_fraction": 0.011312217194570135,
+        "bigendian": false
+      }
+    ],
+    "registration_note": "Native diagnostic cloud XYZ uses rendering axes; offline [-Y,-Z,X] conversion. Forward depth exactly matches; RGB pixels 100%; sampled XY residual up to 5.48mm, consistent with half pixel. Cloud never feeds estimator/TF. Exact subpixel geometry not certified."
+  },
+  "runtime": {
+    "native_estimator_launches": 1,
+    "automatic_retries": 0,
+    "glim_launched": false,
+    "wheel_or_ground_truth_estimator_input": false,
+    "driving": false,
+    "viewer": false,
+    "pose": {
+      "count": 379,
+      "first_ns": 485037000000,
+      "last_ns": 514935000000,
+      "rate_hz": 12.642986152919928,
+      "nonincreasing": 0
+    },
+    "pose_frame": "rtabmap_odom",
+    "pose_body": "base_link",
+    "pose_ranges_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "pose_unit_quaternion_max_error": 0.0,
+    "pose_all_values_finite": true,
+    "pose_timestamps_strict": true,
+    "logged_vo_updates": 392,
+    "mapping_updates": 29,
+    "mapdata_samples": [
+      {
+        "stamp_ns": 484245000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 485565000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 486621000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 487677000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 488799000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 489855000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 490911000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 491967000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 493023000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 494079000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 495135000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 496191000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 497247000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 498303000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 499557000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 500613000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 501669000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 502725000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 503781000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 504837000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 505893000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 506949000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 508071000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 509193000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 510315000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 511635000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 512691000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 513747000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      },
+      {
+        "stamp_ns": 514803000000,
+        "frame": "rtabmap_map",
+        "nodes": 1,
+        "graph_nodes": 1,
+        "links": 0
+      }
+    ],
+    "native_cloud_samples": [
+      {
+        "stamp_ns": 484245000000,
+        "frame": "rtabmap_map",
+        "points": 2411,
+        "finite_z": 2411,
+        "bytes": 77152
+      }
+    ],
+    "wheel_position_ranges_m": [
+      2.187546350481752e-18,
+      5.119672412389577e-34,
+      0.0
+    ],
+    "wheel_max_linear_m_s": 1.484091547721837e-18,
+    "observer_faults": [],
+    "wrapper_exit": {
+      "exit_code": 0,
+      "elapsed_wall_s": 38.501036804998876,
+      "reason": "Bounded observation complete"
+    },
+    "native_vo_and_mapping_children": "clean exits and save complete",
+    "pose_adapter_teardown": "KeyboardInterrupt on repeated SIGINT; runtime child -2; cleanup fix statically tested after run",
+    "postrun_changes_not_runtime_retested": [
+      "Signal-safe adapter cleanup, deterministic duplicate-SIGINT test",
+      "Canonical Grid/Sensor=1 replacing accepted deprecated alias",
+      "Explicit PNG compression matching native 32FC1 fallback"
+    ],
+    "as_tested_yaml_sha256": "3a6a6b608798c1549813f98b9f3b2d05ed28b06ead49ee893aec32da1a5194f5",
+    "final_pipeline_yaml_sha256": "e6c67af2e17ca1e3d5e4589acacb1631e454f1f3ca87812087608dee4726d6e2",
+    "late_cli_parameter_query": "Node not found; unavailable, no runtime restart",
+    "live_proc_library_capture": "not obtained; prelaunch ELF/scoped runner verification available"
+  },
+  "mapping_database": {
+    "database_bytes": 5402624,
+    "database_sha256": "64ffe6f9607638eb0e264411674ad62bd0739c42742a0a258544615ca72642ad",
+    "database_integrity": "ok",
+    "tables": {
+      "Node": 29,
+      "Data": 29,
+      "Link": 28,
+      "Word": 1020,
+      "Feature": 24128,
+      "GlobalDescriptor": 0,
+      "Info": 2,
+      "Statistics": 29,
+      "Admin": 1
+    },
+    "nonempty_image_depth_calibration_rows": 29,
+    "node_weight_groups": [
+      [
+        0,
+        -9,
+        28
+      ],
+      [
+        0,
+        28,
+        1
+      ]
+    ],
+    "active_online_graph_nodes": 1,
+    "stored_rows_are_distinct_views": false,
+    "native_binary_reload_performed": false
+  },
+  "resources": {
+    "native_processes": {
+      "rtabmap": {
+        "samples": 37,
+        "cpu_mean_pct_one_core": 11.13808074937189,
+        "cpu_max_pct_one_core": 25.945985569432835,
+        "rss_peak_mib": 356.28515625
+      },
+      "rgbd_odometry": {
+        "samples": 36,
+        "cpu_mean_pct_one_core": 35.67843330614209,
+        "cpu_max_pct_one_core": 43.90483263119746,
+        "rss_peak_mib": 237.6171875
+      }
+    },
+    "available_ram_min_mib": 1499.09765625,
+    "swap_used_peak_mib": 0.0390625,
+    "vo_processing_s": {
+      "mean": 0.02229122193877551,
+      "max": 0.050129
+    },
+    "vo_delay_s": {
+      "mean": 0.039558673469387746,
+      "max": 0.069
+    },
+    "mapper_processing_s": {
+      "mean": 0.023572413793103444,
+      "max": 0.0345
+    },
+    "mapper_delay_s": {
+      "mean": 0.06848275862068966,
+      "max": 0.09
+    },
+    "host": "Ryzen 7 7800X3D WSL, not target NUC",
+    "simultaneous_glim_test": false
+  },
+  "tf_isolation": {
+    "odom_base_messages": 13225,
+    "odom_base_senders": [
+      "/a300_00000/ekf_node"
+    ],
+    "rtabmap_endpoint_names": [
+      "/a300_00000/slam/rtabmap/rgbd_odometry",
+      "/a300_00000/slam/rtabmap/rtabmap"
+    ],
+    "rtabmap_transforms_sent": 0,
+    "root_transforms": 0,
+    "conflicting_parents": {},
+    "all_endpoint_nodes": [
+      "/a300_00000/ekf_node",
+      "/a300_00000/imu_0_static_tf",
+      "/a300_00000/odom_base_tf_bridge",
+      "/a300_00000/platform_velocity_controller",
+      "/a300_00000/robot_state_publisher",
+      "/a300_00000/slam/rtabmap/rgbd_odometry",
+      "/a300_00000/slam/rtabmap/rtabmap"
+    ],
+    "aggregate_records_may_overlap": true,
+    "runtime_observation_window_odom_base_records": 1460,
+    "runtime_window_odom_base_senders": [
+      "/a300_00000/ekf_node"
+    ],
+    "runtime_probe_only_odom_records": 4736
+  },
+  "warnings": {
+    "native_tf_lookup_fallback_count": 278,
+    "deprecated_grid_alias": "Accepted in observed run; final config canonicalized statically",
+    "float_depth_compression": "Observed native PNG fallback; now explicit, no depth-unit change",
+    "python_observer_metadata_setup_errors": 2,
+    "optional_cloud_invalid_value_arithmetic": "Out-of-range infinite pixels excluded from registration samples",
+    "best_effort_observer_image_gaps": true,
+    "concurrent_observer_rgb_received_hz": 3.5453876513479163,
+    "transport_loss_free_claim": false,
+    "known_startup": [
+      "Missing joystick",
+      "Controller discovery retry before activation",
+      "Custom gz_frame_id parser warnings",
+      "Idle command timeout braking"
+    ]
+  },
+  "tests": {
+    "initial_adapter": 11,
+    "final_adapter_with_teardown_fix": 12,
+    "original_glim_cpp": 10,
+    "initial_glim_invocation_missing_env": "Retained, corrected with CMake-defined test config",
+    "package_build": "PASS",
+    "sdf_conversion": "PASS with known custom frame warnings",
+    "static_original_parts": 16,
+    "static_original_transforms": 37,
+    "static_original_sensor_xml": 2,
+    "static_final_config": "PASS",
+    "runtime_after_final_patches": false
+  },
+  "cleanup": {
+    "remaining_runtime_processes": []
+  },
+  "limitations": [
+    "Stationary single-view RGB-D map, mostly floor; no moving accuracy validation",
+    "No alignment with GLIM, existing odom or Gazebo world",
+    "No NUC or parallel performance benchmark",
+    "SLAM-004C 1.029-second stop tail unresolved; movement remains blocked"
+  ],
+  "next_steps": [
+    "Review result and warnings",
+    "Separately authorize fresh stationary verification of teardown/canonical configuration",
+    "Then prepare and seek separate approval for independent-environment parallel stationary GLIM/RTAB test",
+    "No moving experiments until control-side stop corrected and verified"
+  ],
+  "preservation": {
+    "result": "PASS",
+    "branch": "adding-rtab",
+    "refs": {
+      "HEAD": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+      "refs/heads/adding-rtab": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+      "refs/heads/codex-work": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+      "refs/heads/main": "ca1140ef760bd6e28c32229347e75d896bfb38b4"
+    },
+    "index_empty": true,
+    "new_commits": 0,
+    "pushed": false,
+    "protected_private_files_unchanged": 602,
+    "original_project_files_unchanged": 252,
+    "append_only_existing_files": [
+      "docs/08_slam_integration.md",
+      "docs/development_log.md",
+      "evidence/figures/README.md"
+    ],
+    "new_task_files": [
+      "docs/experiments/slam005b_rgbd_rtabmap_integration.md",
+      "evidence/command_outputs/2026-11-21-slam-005b-rgbd-rtabmap.json",
+      "evidence/command_outputs/2026-11-21-slam-005b-rgbd-rtabmap.txt",
+      "evidence/figures/SLAM-005B/2026-11-21_SLAM-005B_stationary-native-map_v01.png",
+      "evidence/figures/SLAM-005B/2026-11-21_SLAM-005B_stationary-native-map_v01.svg",
+      "evidence/figures/SLAM-005B/2026-11-21_SLAM-005B_stationary-native-map_v02.png",
+      "evidence/figures/SLAM-005B/2026-11-21_SLAM-005B_stationary-native-map_v02.svg",
+      "evidence/figures/SLAM-005B/README.md",
+      "evidence/figures/SLAM-005B/assets.json",
+      "evidence/figures/SLAM-005B/data/native_cloud.csv",
+      "evidence/figures/SLAM-005B/data/provenance.json",
+      "evidence/figures/SLAM-005B/source/plot_native_map.py",
+      "evidence/figures/SLAM-005B/source/plot_native_map_v01.py",
+      "src/rtabmap_husky_integration/.gitignore",
+      "src/rtabmap_husky_integration/config/camera_bridge.yaml",
+      "src/rtabmap_husky_integration/config/pipeline.yaml",
+      "src/rtabmap_husky_integration/config/registration_bridge.yaml",
+      "src/rtabmap_husky_integration/launch/camera_bridge.launch.py",
+      "src/rtabmap_husky_integration/launch/mapping.launch.py",
+      "src/rtabmap_husky_integration/package.xml",
+      "src/rtabmap_husky_integration/resource/rtabmap_husky_integration",
+      "src/rtabmap_husky_integration/rtabmap_husky_integration/__init__.py",
+      "src/rtabmap_husky_integration/rtabmap_husky_integration/pose_adapter.py",
+      "src/rtabmap_husky_integration/setup.cfg",
+      "src/rtabmap_husky_integration/setup.py",
+      "src/rtabmap_husky_integration/test/test_pose_adapter.py",
+      "src/rtabmap_husky_integration/urdf/front_left_rgbd.urdf.xacro",
+      "tools/rtabmap_isolated/README.md",
+      "tools/rtabmap_isolated/prepare_setup.py",
+      "tools/rtabmap_isolated/run_isolated.py",
+      "tools/rtabmap_isolated/validate_static.py"
+    ],
+    "all_untracked_file_count": 34,
+    "modified_tracked_file_count": 3,
+    "prior_slam005a_plan_evidence_unchanged": true,
+    "links_python_yaml_xml_svg_whitespace": "PASS",
+    "figure_assets_hashes_verified": 9,
+    "database_hash_unchanged_after_analysis": true,
+    "cleanup_host_processes": 0,
+    "runtime_after_final_fixes": false,
+    "git_status_short": "M docs/08_slam_integration.md\n M docs/development_log.md\n M evidence/figures/README.md\n?? docs/experiments/slam005a_rtabmap_integration_plan.md\n?? docs/experiments/slam005b_rgbd_rtabmap_integration.md\n?? evidence/command_outputs/2026-11-21-slam-005a-assessment.json\n?? evidence/command_outputs/2026-11-21-slam-005a-assessment.txt\n?? evidence/command_outputs/2026-11-21-slam-005b-rgbd-rtabmap.json\n?? evidence/command_outputs/2026-11-21-slam-005b-rgbd-rtabmap.txt\n?? evidence/figures/SLAM-005B/\n?? src/rtabmap_husky_integration/\n?? tools/rtabmap_isolated/"
+  }
+}

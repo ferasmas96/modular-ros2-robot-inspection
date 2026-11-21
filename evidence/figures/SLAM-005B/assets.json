@@ -1,0 +1,53 @@
+{
+  "task": "SLAM-005B",
+  "run": "slam005b_001",
+  "assets": [
+    {
+      "file": "2026-11-21_SLAM-005B_stationary-native-map_v01.png",
+      "bytes": 145770,
+      "sha256": "5842c57df86557cf00e3b7cc15e33b501434be878c76c75637febeae785a8975"
+    },
+    {
+      "file": "2026-11-21_SLAM-005B_stationary-native-map_v01.svg",
+      "bytes": 140663,
+      "sha256": "2bad798c04fd76a99e7bafb30e79a6c8da3102b69346ec415e6074ea97326e62"
+    },
+    {
+      "file": "2026-11-21_SLAM-005B_stationary-native-map_v02.png",
+      "bytes": 156679,
+      "sha256": "41b70a73b9860c0866e1629f5b7fd2ddd34880e7fe0bdde0d23f7f1d155473af"
+    },
+    {
+      "file": "2026-11-21_SLAM-005B_stationary-native-map_v02.svg",
+      "bytes": 148508,
+      "sha256": "66af534f091985366e6563a4031f5259d6a4e792db091d8376520d16b4b98cef"
+    },
+    {
+      "file": "README.md",
+      "bytes": 1999,
+      "sha256": "a77f7463f2784b6037073867252e9fcc52b606f2e5ac19a1abf685bb8f95bff7"
+    },
+    {
+      "file": "data/native_cloud.csv",
+      "bytes": 171552,
+      "sha256": "984a7d0a82ce8fa70108317b55831fb8bd2609d27daeb888560447b6cede4786"
+    },
+    {
+      "file": "data/provenance.json",
+      "bytes": 608,
+      "sha256": "9da486c1e96964a65e0bee2a687715636ce3ceaeaf18cc3df39828f167c907d8"
+    },
+    {
+      "file": "source/plot_native_map.py",
+      "bytes": 1968,
+      "sha256": "10482326951deee8718fa8932c406d8d3ba80a176866c177f7c89dd2b55a1ed1"
+    },
+    {
+      "file": "source/plot_native_map_v01.py",
+      "bytes": 1793,
+      "sha256": "71130edf3aff75271184b5598ce92a8606bbdb36eca16a0e5bf108bb54f82fdc"
+    }
+  ],
+  "recommended_version": "v02",
+  "original_v01_preserved": true
+}

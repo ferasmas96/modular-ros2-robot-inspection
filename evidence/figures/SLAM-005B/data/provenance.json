@@ -1,0 +1,16 @@
+{
+  "task": "SLAM-005B",
+  "run": "slam005b_001",
+  "topic": "/a300_00000/slam/rtabmap/cloud_map",
+  "frame": "rtabmap_map",
+  "stamp_sim_s": 484.245,
+  "points": 2411,
+  "all_xyz_finite": true,
+  "native_cloud_sha256": "6dc0e09b0d488eaa9bec9f8d46825b3a5207ae11c877989567811bf8da769485",
+  "database_sha256": "64ffe6f9607638eb0e264411674ad62bd0739c42742a0a258544615ca72642ad",
+  "limitations": [
+    "Stationary single-view map; no movement or accuracy benchmark",
+    "29 stored database sensor rows are not 29 distinct viewpoints",
+    "Local frame has no established Gazebo-world or GLIM alignment"
+  ]
+}

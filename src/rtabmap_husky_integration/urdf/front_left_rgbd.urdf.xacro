@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- Project integration; sensor description reused from Clearpath (Apache-2.0).
+     Native Gazebo RGB-D sensor renders at the declared color-frame origin. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="husky_front_left_rgbd" params="">
+    <xacro:include filename="$(find clearpath_sensors_description)/urdf/intel/d435.urdf.xacro"/>
+    <joint name="camera_0_post_joint" type="fixed">
+      <parent link="base_link"/><child link="camera_0_post"/>
+      <origin xyz="0.35 0.18 0.2961295" rpy="0 0 0"/>
+    </joint>
+    <link name="camera_0_post">
+      <visual><geometry><box size="0.03 0.03 0.107741"/></geometry></visual>
+      <collision><geometry><box size="0.03 0.03 0.107741"/></geometry></collision>
+      <inertial><mass value="0.1"/><inertia ixx="0.00010424" iyy="0.00010424" izz="0.000015" ixy="0" ixz="0" iyz="0"/></inertial>
+    </link>
+    <xacro:sensor_d435 name="camera_0" parent="camera_0_post" use_nominal_extrinsics="true">
+      <origin xyz="0 0 0.0538705" rpy="0 0 0"/>
+    </xacro:sensor_d435>
+    <gazebo reference="camera_0_color_frame">
+      <sensor name="camera_0_rgbd" type="rgbd_camera">
+        <always_on>true</always_on><update_rate>15</update_rate>
+        <topic>/a300_00000/sensors/camera_0</topic>
+        <gz_frame_id>camera_0_color_optical_frame</gz_frame_id>
+        <camera>
+          <horizontal_fov>1.25</horizontal_fov>
+          <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+          <clip><near>0.3</near><far>8.0</far></clip>
+          <depth_camera><clip><near>0.3</near><far>8.0</far></clip></depth_camera>
+          <optical_frame_id>camera_0_color_optical_frame</optical_frame_id>
+        </camera>
+        <visualize>false</visualize>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

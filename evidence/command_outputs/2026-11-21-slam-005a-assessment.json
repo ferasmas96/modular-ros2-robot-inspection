@@ -1,0 +1,316 @@
+{
+  "task": "SLAM-005A",
+  "date": "2026-11-21",
+  "result": "CHECKPOINT_AND_STATIC_PLAN_COMPLETE",
+  "scope": "No RTAB implementation, installation or runtime",
+  "git_checkpoint": {
+    "glim_checkpoint": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+    "message": "feat: complete GLIM mapping and live localization validation",
+    "current_branch": "adding-rtab",
+    "branch_preexisted": false,
+    "codex_work_preserved_at_checkpoint": true,
+    "main_unchanged": "ca1140ef760bd6e28c32229347e75d896bfb38b4",
+    "clean_after_switch": true,
+    "pushed": false
+  },
+  "checkpoint_review": {
+    "review": "PASS",
+    "files": 62,
+    "tests": {
+      "glim": 10,
+      "manual_guard": 16,
+      "trajectory_math": 4
+    },
+    "source_document_whitespace": "PASS",
+    "preserved_whitespace": "baseline JSON and generated SVG whitespace; standard CSV CRLF",
+    "svg_xml_valid": true,
+    "private_binaries_logs_bags_dumps_excluded": true,
+    "active_hooks": []
+  },
+  "camera": {
+    "configured_camera_count": 0,
+    "expanded_sensors": [
+      {
+        "name": "imu_0",
+        "type": "imu",
+        "topic": "a300_00000/sensors/imu_0/data",
+        "frame": "imu_0_link"
+      },
+      {
+        "name": "helios_16p_gpu_lidar",
+        "type": "gpu_lidar",
+        "topic": "/a300_00000/sensors/helios_16p",
+        "frame": "helios_16p_link"
+      }
+    ],
+    "expanded_camera_links": [],
+    "current_rgb_depth_camera_info_topics": "Not configured; live graph not queried",
+    "camera_mount_and_extrinsic": "Absent; pending isolated implementation",
+    "existing_macro": "intel_realsense; D435 among supported models",
+    "mount_selected": false,
+    "proposed_topics_only": [
+      "/a300_00000/sensors/camera_0/color/image",
+      "/a300_00000/sensors/camera_0/depth/image",
+      "/a300_00000/sensors/camera_0/color/camera_info",
+      "/a300_00000/sensors/camera_0/depth/camera_info"
+    ]
+  },
+  "packages": {
+    "rtabmap": "absent from sourced ament index",
+    "rtabmap_ros": "absent from sourced ament index",
+    "rtabmap_odom": "absent from sourced ament index",
+    "rtabmap_slam": "absent from sourced ament index",
+    "rtabmap_sync": "absent from sourced ament index",
+    "rtabmap_launch": "absent from sourced ament index",
+    "rtabmap_msgs": "absent from sourced ament index",
+    "rtabmap_conversions": "absent from sourced ament index",
+    "rtabmap_util": "absent from sourced ament index",
+    "ros_gz_sim": "installed/ament-discoverable",
+    "ros_gz_bridge": "installed/ament-discoverable",
+    "ros_gz_image": "installed/ament-discoverable",
+    "realsense2_description": "installed/ament-discoverable",
+    "realsense2_camera": "absent from sourced ament index",
+    "realsense2_camera_msgs": "installed/ament-discoverable",
+    "cv_bridge": "installed/ament-discoverable",
+    "message_filters": "installed/ament-discoverable",
+    "image_geometry": "installed/ament-discoverable",
+    "image_transport": "installed/ament-discoverable",
+    "image_proc": "absent from sourced ament index",
+    "depth_image_proc": "absent from sourced ament index"
+  },
+  "apt_cache_candidates_no_refresh": {
+    "ros-jazzy-rtabmap": {
+      "Installed": "(none)",
+      "Candidate": "0.23.14-1noble.20261105.115028"
+    },
+    "ros-jazzy-rtabmap-ros": {
+      "Installed": "(none)",
+      "Candidate": "0.23.13-1noble.20261109.093920"
+    },
+    "ros-jazzy-rtabmap-odom": {
+      "Installed": "(none)",
+      "Candidate": "0.23.13-1noble.20261105.180524"
+    },
+    "ros-jazzy-rtabmap-slam": {
+      "Installed": "(none)",
+      "Candidate": "0.23.13-1noble.20261105.172039"
+    },
+    "ros-jazzy-rtabmap-sync": {
+      "Installed": "(none)",
+      "Candidate": "0.23.13-1noble.20261105.143338"
+    },
+    "ros-jazzy-rtabmap-launch": {
+      "Installed": "(none)",
+      "Candidate": "0.23.13-1noble.20261105.182601"
+    },
+    "ros-jazzy-gtsam": {
+      "Installed": "(none)",
+      "Candidate": "4.2.0-4noble.20260225.055319"
+    },
+    "ros-jazzy-libg2o": {
+      "Installed": "(none)",
+      "Candidate": "2020.5.29-6noble.20260225.235248"
+    },
+    "ros-jazzy-libpointmatcher": {
+      "Installed": "(none)",
+      "Candidate": "1.4.2-1noble.20260225.135343"
+    },
+    "ros-jazzy-image-proc": {
+      "Installed": "(none)",
+      "Candidate": "5.0.13-1noble.20261105.110452"
+    },
+    "ros-jazzy-depth-image-proc": {
+      "Installed": "(none)",
+      "Candidate": "5.0.13-1noble.20261105.112212"
+    }
+  },
+  "source_inspection": {
+    "commit": "cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364",
+    "all_tag_bytes_match_pinned_revision": true,
+    "files": [
+      {
+        "path": "rtabmap_odom/CMakeLists.txt",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_odom/CMakeLists.txt",
+        "bytes": 6859,
+        "sha256": "481e33b4f5f1b9f9f32e1647ad9b07d875d22988d66b41e30ba318bf653daadb",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_odom/CMakeLists.txt"
+      },
+      {
+        "path": "rtabmap_odom/src/OdometryROS.cpp",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_odom/src/OdometryROS.cpp",
+        "bytes": 66891,
+        "sha256": "f68e29f4ef845801dfbe75f009afacefd391c642c8ada0d807d9706f9622a780",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_odom/src/OdometryROS.cpp"
+      },
+      {
+        "path": "rtabmap_odom/src/nodelets/rgbd_odometry.cpp",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_odom/src/nodelets/rgbd_odometry.cpp",
+        "bytes": 45992,
+        "sha256": "0d27152e4d46fd09afe85ce6dad60bdd08afed7e44daaa4f11ed2d3b5476a446",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_odom/src/nodelets/rgbd_odometry.cpp"
+      },
+      {
+        "path": "rtabmap_slam/CMakeLists.txt",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_slam/CMakeLists.txt",
+        "bytes": 7437,
+        "sha256": "b0ab3f22a8c97a0bbdc0bc95eebdacb5a9c360c3ffffff4b9140e002cc3a60b1",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_slam/CMakeLists.txt"
+      },
+      {
+        "path": "rtabmap_slam/src/CoreWrapper.cpp",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_slam/src/CoreWrapper.cpp",
+        "bytes": 188421,
+        "sha256": "7f07f0d47d1dcd7d0feed3c10c8c9822875d93eb930ee477027bc0b3229c6e3b",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_slam/src/CoreWrapper.cpp"
+      },
+      {
+        "path": "rtabmap_sync/CMakeLists.txt",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_sync/CMakeLists.txt",
+        "bytes": 7787,
+        "sha256": "e5a63caa1365b43c347663330e10cd7c8e3a260222265fafe75424492904dcc9",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_sync/CMakeLists.txt"
+      },
+      {
+        "path": "rtabmap_launch/launch/rtabmap.launch.py",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_launch/launch/rtabmap.launch.py",
+        "bytes": 44246,
+        "sha256": "1ac1b43e91c7d83968f731a7349d122720a24315f43fec00d2d724bc2f63ce8e",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_launch/launch/rtabmap.launch.py"
+      },
+      {
+        "path": "rtabmap_sync/src/CommonDataSubscriber.cpp",
+        "url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/0.23.13/rtabmap_sync/src/CommonDataSubscriber.cpp",
+        "bytes": 34070,
+        "sha256": "8dff506e2c9ecc343a8c7b234b42b5d7ba90e9352daf24b0812e12ba2daa6165",
+        "pinned_url": "https://raw.githubusercontent.com/introlab/rtabmap_ros/cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364/rtabmap_sync/src/CommonDataSubscriber.cpp"
+      }
+    ]
+  },
+  "inspected_local_file_hashes": [
+    {
+      "label": "validated_setup/robot.yaml",
+      "sha256": "9229c771dc9a3625e339951dd88f05e604bbb8c3e7197b5cd5c71f75b0d555cd"
+    },
+    {
+      "label": "validated_setup/robot.urdf.xacro",
+      "sha256": "d787a05ff0865136827a42cef033dd3a003c89b8391059e1fa635f169429405c"
+    },
+    {
+      "label": "workspace_overlay/intel_realsense.urdf.xacro",
+      "sha256": "28f8d9388317c21a2d3d96d9cf3a3c6ef14e0744f239d29c95c01047b6ae6c4d"
+    },
+    {
+      "label": "workspace_overlay/intel/d435.urdf.xacro",
+      "sha256": "151b7fc39885b4596a7e4353bf8e223ee90003a9d358312f020271c02f5f875d"
+    },
+    {
+      "label": "installed_generator_gz/launch/sensors.py",
+      "sha256": "fcca35279c48f0e145163613e264603751e4417a385c1755177cbb239ac6d3d5"
+    },
+    {
+      "label": "installed_generator_gz/param/sensors.py",
+      "sha256": "736a0a47a9cb30366f9231d0602b29109234d43208ab7ecca7d9c836a59e41bc"
+    },
+    {
+      "label": "installed_clearpath_gz/worlds/warehouse.sdf",
+      "sha256": "f28bfa410a467cc12bf3615413780315977bccd2b1c623e3ed4b0f56b61c9235"
+    }
+  ],
+  "recommended_architecture": {
+    "namespace": "/a300_00000/slam/rtabmap",
+    "native_processes": [
+      "rtabmap_odom/rgbd_odometry",
+      "rtabmap_slam/rtabmap"
+    ],
+    "optional_process": "rtabmap_sync/rgbd_sync",
+    "sensor_input": "RGB-D only; no GLIM, LiDAR, wheels, EKF pose, ground-truth or IMU dependency in first validation",
+    "vo_frame": "rtabmap_odom",
+    "map_frame": "rtabmap_map",
+    "body_frame": "base_link",
+    "standard_output": "/a300_00000/slam/rtabmap/pose",
+    "message_type": "geometry_msgs/msg/PoseStamped",
+    "standard_output_semantics": "Local visual base odometry, original estimator stamp; not globally corrected",
+    "adapter": "Planned only: Odometry to PoseStamped, no TF",
+    "native_corrected_pose": "localization_pose / PoseWithCovarianceStamped, separate map frame and mapping-update rate",
+    "publish_tf_both_nodes": false,
+    "mapper_odom_frame_id": "",
+    "mapper_subscribe_odom": true,
+    "tf_note": "Native broadcasters can advertise idle TF endpoints; verify no transforms sent and EKF-only authority by messages/GIDs",
+    "run_reservation_created": false,
+    "mapper_odom_sensor_sync": false,
+    "native_odom_lookup_caveat": "CoreWrapper::odomUpdate attempts TF at data stamp then falls back to message pose/stamp; warning once. Measure lookup wait and verify fallback without enabling TF."
+  },
+  "resource_assessment": {
+    "target": "Intel NUC13ANKi7 / i7-1360P, 4P+8E / 16 threads; actual RAM not measured",
+    "observed_host_cpu": "AMD Ryzen 7 7800X3D, 16 logical CPUs, Microsoft virtualization",
+    "observed_mem_total_mib": 7515,
+    "observed_mem_available_mib": 4445,
+    "observed_swap_used_mib": 0,
+    "parallel_performance_measured": false,
+    "initial_camera_proposal": [
+      640,
+      480,
+      15
+    ],
+    "raw_rgb8_plus_float_depth_bytes_per_s": 32256000,
+    "history_slam004c": {
+      "glim_cpu_mean_pct_one_core": 22.95,
+      "glim_rss_peak_mib": 213.5,
+      "system_available_ram_min_mib": 1717.1
+    },
+    "library_resolution_gate": "APT core depends on ROS GTSAM 4.2.0; existing GLIM uses local 4.3a1. Coexistence unverified; inspect transaction and resolved libraries before future launch."
+  },
+  "control_safety": {
+    "previous_outcome": "SLAM-004C ABORTED_REGION_LIMIT_PARTIAL_VALIDATION",
+    "region_limit_m": 1.25,
+    "shutdown_tail_sim_s": 1.029,
+    "shutdown_tail_travel_m": 0.092405,
+    "movement_blocked_until_control_issue_addressed": true,
+    "clearance_requirement_m": 0.5
+  },
+  "prohibited_actions_performed": {
+    "rtab_installation": false,
+    "apt_refresh": false,
+    "rtab_implementation": false,
+    "adapter_implementation": false,
+    "simulation_or_slam_launch": false,
+    "movement": false,
+    "generator": false,
+    "switching_manager": false,
+    "push": false
+  },
+  "validation": {
+    "status": "PASS",
+    "active_branch": "adding-rtab",
+    "refs": {
+      "HEAD": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+      "refs/heads/adding-rtab": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+      "refs/heads/codex-work": "f2bad11511214a858d0e2dcf56b7016e5eb0e0d5",
+      "refs/heads/main": "ca1140ef760bd6e28c32229347e75d896bfb38b4"
+    },
+    "prior_checkpoint_ancestors_verified": [
+      "f2d9d5b",
+      "60c39e3",
+      "136ca1d"
+    ],
+    "protected_private_files_compared": 602,
+    "protected_private_mismatches": 0,
+    "previous_protected_private_baseline_count": 561,
+    "unchanged_original_project_files": 250,
+    "append_only_original_documents": [
+      "docs/08_slam_integration.md",
+      "docs/development_log.md"
+    ],
+    "new_plan_evidence_files": [
+      "docs/experiments/slam005a_rtabmap_integration_plan.md",
+      "evidence/command_outputs/2026-11-21-slam-005a-assessment.json",
+      "evidence/command_outputs/2026-11-21-slam-005a-assessment.txt"
+    ],
+    "links_and_whitespace": "PASS",
+    "index_empty": true,
+    "git_status": "M docs/08_slam_integration.md\n M docs/development_log.md\n?? docs/experiments/slam005a_rtabmap_integration_plan.md\n?? evidence/command_outputs/2026-11-21-slam-005a-assessment.json\n?? evidence/command_outputs/2026-11-21-slam-005a-assessment.txt",
+    "new_commits_after_glim_checkpoint": 0,
+    "runtime_started": false,
+    "push_performed": false
+  }
+}

@@ -1,0 +1,157 @@
+SLAM-005A — Git checkpoint and RTAB-Map static assessment
+Date: 2026-11-21
+Result: CHECKPOINT_AND_STATIC_PLAN_COMPLETE
+
+Git ordering and review
+- First reviewed the 62 already-staged completed GLIM files; no unrelated changes.
+- Excluded private configurations, recordings, native dumps, binaries and logs.
+- Passed 10 GLIM C++ /16 manual guard and API /4 trajectory math tests (30 total).
+- Evidence CSV line endings, inherited baseline JSON and generated SVG whitespace
+  retained intentionally; source/doc whitespace and SVG XML checks passed.
+- Commit f2bad11511214a858d0e2dcf56b7016e5eb0e0d5
+  feat: complete GLIM mapping and live localization validation
+- Created and switched to adding-rtab, clean before planning.
+- codex-work retained at that checkpoint; main ca1140ef760bd6e28c32229347e75d896bfb38b4.
+- Previous checkpoints preserved. No push or later commit.
+
+Camera/software findings
+- Validated setup YAML camera count 0. In-memory is_sim=true Xacro expansion:
+  imu_0 /imu and helios_16p_gpu_lidar /gpu_lidar only; no camera links.
+- No configured camera RGB/depth/CameraInfo streams, mount or optical TF.
+  Live graph not queried. No physical camera assumption.
+- Existing RGB-D macro, camera assets, native bridges and image helpers are present.
+- RTAB-Map core and ROS packages/executables absent. Local APT candidates:
+  wrappers 0.23.13, core 0.23.14. No cache refresh or installation.
+- Native executable targets verified from eight release source files, byte-matched
+  against cb2117f1ed6674cf7cfc644d7bb4ffc0b567b364 (see JSON for URLs/hashes).
+- APT core dependency ROS GTSAM 4.2 versus GLIM local 4.3a1 requires future
+  library-resolution/transaction inspection; no actual conflict claimed.
+
+Plan only
+- RGB-D-only rgbd_odometry -> rtabmap mapper, own namespace, local/map frames,
+  database and diagnostics. No GLIM/LiDAR/EKF-odometry estimator input.
+- Both publish_tf=false; mapper uses its own VO topic and empty odom_frame_id.
+- Planned tiny TF-free Odometry-to-PoseStamped adapter for local base pose.
+- Native corrected localization_pose remains separate at mapping-update rate.
+- Actual WSL host is Ryzen 7 7800X3D /7515 MiB RAM, not target NUC13ANKi7.
+  NUC and simultaneous performance unmeasured; profile stationary stages later.
+- No new reservation, source package, adapter, launch or operational config.
+- SLAM-004C region abort and 1.029 s /0.092405 m shutdown tail unresolved.
+  No further movement until addressed; margin and command caps unchanged.
+
+Reproducible read-only inspection commands (paths represented by named roots)
+  git branch --show-current
+  git status --short
+  git log -3 --oneline
+  git rev-parse HEAD refs/heads/codex-work refs/heads/main
+  git show --format=fuller --stat f2bad11511214a858d0e2dcf56b7016e5eb0e0d5
+  source /opt/ros/jazzy/setup.bash
+  source "$THESIS_REPO/install/setup.bash"
+  # Parse only camera/sensor fields of "$VALIDATED_SETUP/robot.yaml" with PyYAML.
+  # Expand in memory with /usr/bin/python3 (no generator or output-file write):
+  # xacro.process_file(VALIDATED_SETUP + '/robot.urdf.xacro',
+  #                    mappings={'is_sim':'true','namespace':'a300_00000'})
+  # Inspect .//sensor and link elements; do not print full private YAML.
+  # Query ament_index_python.packages.get_packages_with_prefixes(); no ROS node.
+  apt-cache policy ros-jazzy-rtabmap ros-jazzy-rtabmap-ros ros-jazzy-rtabmap-odom ros-jazzy-rtabmap-slam ros-jazzy-rtabmap-sync ros-jazzy-rtabmap-launch
+  apt-cache show ros-jazzy-rtabmap ros-jazzy-rtabmap-odom ros-jazzy-rtabmap-slam
+  dpkg-query -W 'ros-jazzy-rtabmap*' 'rtabmap*' 'librealsense*'
+  # dpkg reported no matches; RealSense description/message packages inspected separately.
+  lscpu -J
+  free -m
+  # Read existing camera macros, Gazebo bridge templates and warehouse Sensors plugin.
+  # Read-only HTTPS GET of pinned upstream URLs in JSON; no source build/install.
+  # SHA256 comparison of original private/protected and tracked project bytes.
+
+Inspection corrections
+- First unsourced Python lacked ament_index_python; repeated successfully using
+  sourced Jazzy/workspace and /usr/bin/python3. No persistent shell change.
+- Default sandbox DNS could not fetch source; approved read-only HTTPS access
+  succeeded. No package installer or runtime was invoked.
+
+Exact reviewed checkpoint file list
+configs/experiments/slam004c/README.md
+configs/experiments/slam004c/manual_input_bridge.yaml
+configs/experiments/slam004c/recording_qos.yaml
+configs/glim/README.md
+configs/glim/mode_a_cpu_mapping_pose_output/README.md
+configs/glim/mode_a_cpu_mapping_pose_output/config.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_global_mapping_cpu.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_global_mapping_gpu.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_global_mapping_pose_graph.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_logging.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_odometry_cpu.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_odometry_ct.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_odometry_gpu.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_pose_output.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_preprocess.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_ros.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_sensors.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_sub_mapping_cpu.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_sub_mapping_gpu.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_sub_mapping_passthrough.json
+configs/glim/mode_a_cpu_mapping_pose_output/config_viewer.json
+docs/08_slam_integration.md
+docs/development_log.md
+docs/experiments/slam004a_pose_output.md
+docs/experiments/slam004c_manual_pose_procedure.md
+evidence/command_outputs/2026-11-21-slam-004a-pose-output-static.txt
+evidence/command_outputs/2026-11-21-slam-004b-live-pose-runtime.json
+evidence/command_outputs/2026-11-21-slam-004b-live-pose-runtime.txt
+evidence/command_outputs/2026-11-21-slam-004c-manual-live-pose.json
+evidence/command_outputs/2026-11-21-slam-004c-manual-live-pose.txt
+evidence/figures/README.md
+evidence/figures/SLAM-004C/2026-11-21_SLAM-004C_actual-command-limits_v01.png
+evidence/figures/SLAM-004C/2026-11-21_SLAM-004C_actual-command-limits_v01.svg
+evidence/figures/SLAM-004C/2026-11-21_SLAM-004C_aligned-base-trajectories_v01.png
+evidence/figures/SLAM-004C/2026-11-21_SLAM-004C_aligned-base-trajectories_v01.svg
+evidence/figures/SLAM-004C/2026-11-21_SLAM-004C_synchronized-pose-errors_v01.png
+evidence/figures/SLAM-004C/2026-11-21_SLAM-004C_synchronized-pose-errors_v01.svg
+evidence/figures/SLAM-004C/README.md
+evidence/figures/SLAM-004C/assets.json
+evidence/figures/SLAM-004C/data/aligned_poses.csv
+evidence/figures/SLAM-004C/data/commands_motion_window.csv
+evidence/figures/SLAM-004C/data/reference_for_plot.csv
+evidence/figures/SLAM-004C/data/summary.json
+evidence/figures/SLAM-004C/source/plot_results.py
+src/glim_pose_output/CMakeLists.txt
+src/glim_pose_output/README.md
+src/glim_pose_output/include/glim_pose_output/pose_output.hpp
+src/glim_pose_output/package.xml
+src/glim_pose_output/src/extension.cpp
+src/glim_pose_output/src/pose_output.cpp
+src/glim_pose_output/test/check_configuration.py
+src/glim_pose_output/test/test_pose_output.cpp
+tools/manual_drive_guard/README.md
+tools/manual_drive_guard/control_limits.py
+tools/manual_drive_guard/manual_guard.py
+tools/manual_drive_guard/test_control_limits.py
+tools/manual_drive_guard/test_ros_message.py
+tools/slam_route_clearance/check_manual_region.py
+tools/slam_trajectory_eval/README.md
+tools/slam_trajectory_eval/evaluate_bag.py
+tools/slam_trajectory_eval/test_trajectory_math.py
+tools/slam_trajectory_eval/trajectory_math.py
+
+Native loading/TF interface caveat
+- Mapper odom_sensor_sync=false avoids additional sensor motion compensation.
+- odomUpdate still attempts TF, falls back to topic pose/stamp, warns once.
+- Measure native wait/fallback later; do not broadcast operational TF to hide it.
+
+Final verification
+active_branch: adding-rtab
+protected_private_files_compared: 602
+protected_private_mismatches: 0
+unchanged_original_project_files: 250
+append_only_original_documents: ['docs/08_slam_integration.md', 'docs/development_log.md']
+links_and_whitespace: PASS
+index_empty: True
+new_commits_after_glim_checkpoint: 0
+runtime_started: False
+push_performed: False
+Final Git status (2 modified /3 new, unstaged):
+M docs/08_slam_integration.md
+ M docs/development_log.md
+?? docs/experiments/slam005a_rtabmap_integration_plan.md
+?? evidence/command_outputs/2026-11-21-slam-005a-assessment.json
+?? evidence/command_outputs/2026-11-21-slam-005a-assessment.txt
